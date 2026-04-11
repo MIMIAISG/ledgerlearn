@@ -2,937 +2,1792 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LedgerLearn — Free Accounting Education Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>LedgerLearn ERP v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --gold:#c9a84c; --gold2:#e8c96d; --bg:#0d1117; --bg2:#12161f;
-  --bg3:#181d2a; --bg4:#1e2538; --border:#252d42; --text:#e2ddd4;
-  --muted:#6b7a99; --blue:#5b9cf6; --green:#5dba7d; --red:#e05c5c;
-  --font-head:'Playfair Display',Georgia,serif;
-  --font-body:'Source Sans 3',sans-serif;
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#d4a843;--gold2:#f0c96a;--bg:#090c13;--bg2:#0d1119;--bg3:#131820;--bg4:#1a2030;
+  --border:#1e2840;--text:#ddd8cc;--muted:#5a6a88;--blue:#5b9cf6;--green:#4db87a;
+  --red:#e05c5c;--orange:#e8904a;--purple:#a78bfa;
+  --fh:'Playfair Display',Georgia,serif;--fb:'Source Sans 3',Arial,sans-serif;--fm:'IBM Plex Mono','Courier New',monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+html,body{height:100%;font-family:var(--fb);background:var(--bg);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
 /* HEADER */
-#header{background:linear-gradient(135deg,#161c2e,#0d1117);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px #00000055}
-.logo{display:flex;align-items:center;gap:12px}
-.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 18px #c9a84c44}
-.logo-text{font-family:var(--font-head);font-size:20px;color:var(--gold);letter-spacing:.5px}
-.logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
-.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-select,input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 12px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
-select:focus,input:focus{border-color:var(--gold)}
-.tag{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--muted)}
+#hdr{background:linear-gradient(90deg,#0d1119,#090c13);border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:0;z-index:999;box-shadow:0 2px 20px rgba(0,0,0,.6)}
+.logo-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-box{width:34px;height:34px;min-width:34px;background:linear-gradient(135deg,#d4a843,#f0c96a);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 0 14px rgba(212,168,67,.35)}
+.logo-name{font-family:var(--fh);font-size:16px;color:var(--gold)}
+.logo-sub{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.hdr-mid{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hdr-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
+select{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 9px;font-family:var(--fb);font-size:12px;outline:none;cursor:pointer}
+select:focus{border-color:var(--gold)}
+.htag{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:10px;color:var(--muted);font-family:var(--fm);white-space:nowrap}
+.savemsg{font-size:10px;color:var(--green);font-family:var(--fm);opacity:0;transition:opacity .5s}
+.savemsg.vis{opacity:1}
+.hbtn{border:1px solid var(--border);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:11px;white-space:nowrap;background:var(--bg3);color:var(--muted)}
+.hbtn:hover{border-color:var(--gold);color:var(--gold)}
+.hbtn.danger:hover{border-color:var(--red);color:var(--red)}
+
 /* LAYOUT */
-#layout{display:flex;min-height:calc(100vh - 71px)}
-/* SIDEBAR */
-#sidebar{width:190px;background:var(--bg2);border-right:1px solid var(--border);padding:12px 8px;flex-shrink:0}
-.nav-btn{width:100%;background:transparent;border:1px solid transparent;border-radius:10px;padding:10px 12px;margin-bottom:4px;cursor:pointer;text-align:left;transition:all .2s;color:var(--text);font-family:var(--font-body)}
-.nav-btn:hover{background:var(--bg3);border-color:var(--border)}
-.nav-btn.active{background:linear-gradient(135deg,#1d2d4a,#152038);border-color:#c9a84c44}
-.nav-icon{font-size:18px;margin-bottom:2px;display:block}
-.nav-title{font-size:12px;font-weight:700;color:var(--muted);display:block}
-.nav-btn.active .nav-title{color:var(--gold)}
-.nav-desc{font-size:10px;color:#3a4a6a;display:block}
-/* MAIN */
-#main{flex:1;padding:24px;overflow-y:auto}
-.section{display:none}
-.section.active{display:block}
-h2{font-family:var(--font-head);color:var(--gold);font-size:22px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+#wrap{display:flex;height:calc(100vh - 54px);overflow:hidden}
+#sidebar{width:168px;min-width:168px;background:var(--bg2);border-right:1px solid var(--border);padding:8px 5px;overflow-y:auto;flex-shrink:0}
+#content{flex:1;overflow-y:auto;padding:18px 20px}
+
+/* NAV */
+.nb{width:100%;background:transparent;border:1px solid transparent;border-radius:8px;padding:8px 9px;margin-bottom:2px;cursor:pointer;text-align:left;font-family:var(--fb);color:var(--text);transition:all .15s;display:block}
+.nb:hover{background:var(--bg3)}
+.nb.on{background:linear-gradient(135deg,#182840,#0f1c30);border-color:rgba(212,168,67,.2)}
+.nb-icon{font-size:16px;display:block;line-height:1.3}
+.nb-title{font-size:11px;font-weight:700;color:var(--muted);display:block}
+.nb.on .nb-title{color:var(--gold)}
+.nb-desc{font-size:9px;color:#1e2a3a;display:block;margin-top:1px}
+.nav-group{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:8px 9px 3px;font-family:var(--fm)}
+
+/* SECTIONS */
+.sec{display:none}.sec.on{display:block}
+h2{font-family:var(--fh);color:var(--gold);font-size:19px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h3{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;font-family:var(--fm)}
+
 /* CARDS */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:18px}
-.card-title{font-weight:700;color:var(--gold);margin-bottom:10px;font-size:14px}
-.tip{background:var(--bg3);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--muted);margin-bottom:16px}
-.tip strong{color:var(--gold)}
-/* GRID */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-/* TABLE */
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{padding:10px 12px;text-align:left;color:var(--gold);border-bottom:1px solid var(--border);font-size:11px;letter-spacing:1px;text-transform:uppercase;background:var(--bg3)}
-td{padding:9px 12px;border-bottom:1px solid #1a2030}
-tr:hover td{background:#161c2a}
-tfoot td{background:var(--bg3);font-weight:700;color:var(--gold);border-top:2px solid #c9a84c44}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+.tip{background:var(--bg3);border-left:3px solid var(--gold);border-radius:0 7px 7px 0;padding:8px 12px;font-size:11px;color:var(--muted);margin-bottom:12px}
+.tip b{color:var(--gold)}
+
+/* INPUTS */
+input[type=text],input[type=number],input[type=date],select.inp{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;font-family:var(--fb);font-size:12px;outline:none;width:100%;-webkit-appearance:none}
+input:focus,select.inp:focus{border-color:var(--gold)}
+
 /* BUTTONS */
-.btn{border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:var(--font-body);font-weight:700;font-size:13px;transition:all .2s}
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0d1117}
-.btn-gold:hover{opacity:.9;transform:translateY(-1px)}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn{border:none;border-radius:6px;padding:7px 14px;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:4px;transition:opacity .15s}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#090c13}
+.btn-gold:hover{opacity:.9}
+.btn-blue{background:linear-gradient(135deg,#1a3a6a,#122050);border:1px solid rgba(91,156,246,.3);color:var(--blue)}
+.btn-green{background:linear-gradient(135deg,#1a3a1a,#0f2a0f);border:1px solid rgba(77,184,122,.3);color:var(--green)}
+.btn-red{background:transparent;border:1px solid rgba(224,92,92,.3);color:var(--red);padding:4px 8px;font-size:11px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 12px}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
-.btn-print{background:linear-gradient(135deg,#2d4a2d,#1e3a1e);border:1px solid #5dba7d55;color:var(--green);padding:10px 20px;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
-.btn-print:hover{background:linear-gradient(135deg,#3a5a3a,#2a4a2a)}
-/* STAT CARDS */
-.stat{background:var(--bg3);border-radius:10px;padding:14px;text-align:center}
-.stat-val{font-size:22px;font-weight:700;color:var(--gold);font-family:var(--font-head)}
-.stat-label{font-size:11px;color:var(--muted);margin-top:3px}
-.stat-hint{font-size:10px;color:#3a4a6a;margin-top:2px}
-/* FORM ROW */
-.form-row{display:grid;gap:8px;margin-bottom:10px}
-.form-row.cols6{grid-template-columns:1fr 2fr 1.5fr 1.5fr 1fr auto}
-.form-row.cols3{grid-template-columns:1fr 1fr 1fr}
-.form-row.cols2{grid-template-columns:1fr 1fr}
-input[type=text],input[type=number],input[type=date]{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 12px;font-family:var(--font-body);font-size:13px;outline:none}
-input:focus{border-color:var(--gold)}
-/* BADGE */
-.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
-.badge-asset{background:#1a2d4a;color:var(--blue)}
-.badge-liability{background:#2d1a1a;color:var(--red)}
-.badge-equity{background:#1a2d1a;color:var(--green)}
-.badge-revenue{background:#1a2d1a;color:var(--green)}
-.badge-expense{background:#2d1a1a;color:var(--red)}
-/* AI CHAT */
-#chat-box{height:360px;overflow-y:auto;background:var(--bg3);border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid var(--border)}
-.msg{display:flex;margin-bottom:12px}
-.msg.user{justify-content:flex-end}
-.bubble{max-width:80%;background:var(--bg4);border:1px solid var(--border);border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.6;white-space:pre-wrap}
-.msg.user .bubble{background:#1a2d4a;border-color:#3a5a8f44;color:#9ad4ff}
-.msg-label{font-size:10px;color:var(--gold);font-weight:700;margin-bottom:4px}
-.quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.quick-btn{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--font-body)}
-.quick-btn:hover{border-color:var(--gold);color:var(--gold)}
-.chat-input-row{display:flex;gap:8px}
-.chat-input-row input{flex:1}
+.btn-print{background:var(--bg3);border:1px solid rgba(77,184,122,.3);color:var(--green);border-radius:6px;padding:6px 12px;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:11px}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
+th{padding:8px 10px;text-align:left;color:var(--gold);border-bottom:1px solid var(--border);font-size:9px;letter-spacing:1px;text-transform:uppercase;background:var(--bg3);font-family:var(--fm);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid rgba(20,27,40,.7);vertical-align:middle}
+tr:hover td{background:rgba(15,20,32,.8)}
+tfoot td{background:var(--bg3);font-weight:700;color:var(--gold);border-top:2px solid rgba(212,168,67,.15);font-family:var(--fm)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:800px){.g3,.g4,.g5{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3,.g4,.g5{grid-template-columns:1fr}}
+
+/* KPI CARDS */
+.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kpi-color,var(--gold))}
+.kpi-v{font-size:20px;font-weight:700;font-family:var(--fh);color:var(--kpi-color,var(--gold))}
+.kpi-l{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.kpi-good{--kpi-color:var(--green)}
+.kpi-warn{--kpi-color:var(--orange)}
+.kpi-bad{--kpi-color:var(--red)}
+.kpi-blue{--kpi-color:var(--blue)}
+.kpi-purple{--kpi-color:var(--purple)}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 6px;border-radius:20px;font-size:9px;font-weight:700;font-family:var(--fm)}
+.b-Asset{background:#152035;color:var(--blue)}.b-Liability{background:#2d1515;color:var(--red)}
+.b-Equity{background:#152515;color:var(--green)}.b-Revenue{background:#152515;color:var(--green)}.b-Expense{background:#2d1515;color:var(--red)}
+.tag{display:inline-block;background:#1a2d1a;border:1px solid rgba(77,184,122,.3);border-radius:20px;padding:1px 7px;font-size:10px;color:var(--green);margin:2px}
+.tag.law{background:#1a1a2d;border-color:rgba(91,156,246,.3);color:var(--blue)}
+.tag.warn{background:#2d1a1a;border-color:rgba(224,92,92,.3);color:var(--red)}
+.tag.aged{background:#2d1a0a;border-color:rgba(232,144,74,.3);color:var(--orange)}
+
+/* FORM */
+.frow{display:grid;gap:6px;align-items:end;margin-bottom:8px}
+.fl{font-size:10px;color:var(--muted);margin-bottom:2px;display:block}
+
+/* STATUS PILLS */
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.pill-green{background:#152515;color:var(--green)}
+.pill-red{background:#2d1515;color:var(--red)}
+.pill-orange{background:#2d1a0a;color:var(--orange)}
+.pill-blue{background:#152035;color:var(--blue)}
+
+/* CHAT */
+#chatbox{height:300px;overflow-y:auto;background:var(--bg3);border-radius:9px;padding:12px;margin-bottom:10px;border:1px solid var(--border)}
+.msg{display:flex;gap:7px;margin-bottom:9px;align-items:flex-start}
+.msg.u{flex-direction:row-reverse}
+.av{width:26px;height:26px;min-width:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--bg4);border:1px solid var(--border)}
+.av.ai{background:linear-gradient(135deg,var(--gold),var(--gold2))}
+.bub{max-width:82%;background:var(--bg4);border:1px solid var(--border);border-radius:9px;padding:8px 12px;font-size:12px;line-height:1.6;word-break:break-word}
+.msg.u .bub{background:#122040;border-color:rgba(91,156,246,.2);color:#8ac8ff}
+.bub-name{font-size:8px;color:var(--gold);font-weight:700;margin-bottom:2px;font-family:var(--fm);text-transform:uppercase;letter-spacing:1px}
+.qbtn{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;color:var(--muted);font-size:10px;cursor:pointer;font-family:var(--fb);margin:2px;display:inline-block}
+.qbtn:hover{border-color:var(--gold);color:var(--gold)}
+.chat-row{display:flex;gap:7px}.chat-row input{flex:1}
+
 /* QUIZ */
-.quiz-opt{display:block;width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--text);font-size:13px;text-align:left;cursor:pointer;margin-bottom:8px;font-family:var(--font-body);transition:all .2s}
-.quiz-opt:hover{border-color:var(--gold)}
-.quiz-opt.correct{background:#1a3a1a;border-color:var(--green);color:var(--green)}
-.quiz-opt.wrong{background:#3a1a1a;border-color:var(--red);color:var(--red)}
-/* INVOICE PREVIEW */
-.invoice-preview{background:#fff;color:#111;border-radius:12px;padding:32px;font-family:'Source Sans 3',sans-serif;font-size:13px}
-.inv-header{display:flex;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0d5c0}
-.inv-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#b8860b}
-.inv-table th{background:#f5f0e8;color:#555;padding:8px 12px}
-.inv-table td{padding:8px 12px;border-bottom:1px solid #eee}
+.qopt{display:block;width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-size:12px;text-align:left;cursor:pointer;margin-bottom:6px;font-family:var(--fb)}
+.qopt:hover:not([disabled]){border-color:var(--gold)}
+.qopt.ok{background:#152515;border-color:var(--green);color:var(--green)}
+.qopt.no{background:#251515;border-color:var(--red);color:var(--red)}
+.prog-bar{background:var(--bg3);border-radius:3px;height:2px;margin-bottom:14px}
+.prog-fill{background:var(--gold);height:2px;border-radius:3px;transition:width .3s}
+
+/* PRINT MODAL */
+#printModal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center}
+#printModal.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;width:400px;max-width:90vw}
+.modal-title{font-family:var(--fh);color:var(--gold);font-size:18px;margin-bottom:16px}
+.print-opt{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border-radius:8px;margin-bottom:6px;cursor:pointer;border:1px solid var(--border)}
+.print-opt:hover{border-color:var(--gold)}
+.print-opt input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--gold)}
+.print-opt-label{font-size:13px}
+.print-opt-sub{font-size:10px;color:var(--muted)}
+
+/* INVOICE WHITE */
+.inv{background:#fff;color:#111;border-radius:10px;padding:22px;font-family:'Source Sans 3',Arial,sans-serif;font-size:12px;line-height:1.5}
+.inv-ttl{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:900;color:#8b6914}
+
+/* PAYSLIP WHITE */
+.payslip{background:#fff;color:#111;padding:24px;font-family:Arial,sans-serif;font-size:12px;max-width:680px;margin:0 auto}
+.ps-header{border-bottom:3px solid #d4a843;padding-bottom:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start}
+.ps-title{font-size:20px;font-weight:900;color:#8b6914;font-family:'Playfair Display',Georgia,serif}
+.ps-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;font-size:12px}
+.ps-row.total{border-top:2px solid #d4a843;border-bottom:none;font-weight:700;font-size:14px;padding-top:8px;margin-top:4px}
+.ps-section{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin:10px 0 4px;font-weight:700}
+.ps-net{background:#fffdf5;border-radius:6px;padding:12px;text-align:right;margin-top:12px;border:2px solid #d4a843}
+.ps-net-amt{font-size:22px;font-weight:900;color:#2d7a2d;font-family:'Playfair Display',serif}
+
+/* COLORS */
+.tg{color:var(--gold)}.tgr{color:var(--green)}.tr{color:var(--red)}.tb{color:var(--blue)}.tm{color:var(--muted)}.tp{color:var(--purple)}
+.fw7{font-weight:700}.mono{font-family:var(--fm)}.fs10{font-size:10px}.fs11{font-size:11px}.fs12{font-size:12px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mt10{margin-top:10px}
+
 /* PRINT */
 @media print{
-  #header,#sidebar,.no-print{display:none!important}
-  #main{padding:0}
-  #layout{display:block}
-  .section{display:block!important}
-  body{background:#fff;color:#000}
-  .card{border:1px solid #ccc;background:#fff}
-  table th{background:#f5f5f5;color:#333}
-  h2{color:#8b6914}
-  .print-only{display:block!important}
+  #hdr,#sidebar,.noprint,#printModal{display:none!important}
+  #wrap{display:block;height:auto}#content{padding:0;overflow:visible}
+  .sec{display:block!important}body{background:#fff;color:#000;font-size:11px}
+  .card{border:1px solid #ddd;background:#fff;page-break-inside:avoid;margin-bottom:10px}
+  th{background:#f5f0e0 !important;color:#555 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h2,h3{color:#8b6914}tfoot td{background:#f5f0e0 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .kpi{background:#f9f7f0;border:1px solid #ddd;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .kpi-v{font-size:16px}.badge,.tag,.pill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
-.print-only{display:none}
-/* LAWS TABLE */
-.laws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.law-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px}
-.law-card-country{font-weight:700;color:var(--gold);font-size:14px;margin-bottom:8px}
-.law-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1a2030;font-size:12px}
-.law-row:last-child{border:none}
-.law-key{color:var(--muted)}
-.law-val{color:var(--text);font-weight:600;text-align:right;max-width:55%}
-/* LOADING */
-.loading{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* COLORS */
-.text-gold{color:var(--gold)} .text-green{color:var(--green)} .text-red{color:var(--red)} .text-blue{color:var(--blue)} .text-muted{color:var(--muted)}
-.fw7{font-weight:700} .fs12{font-size:12px} .fs11{font-size:11px} .mb8{margin-bottom:8px} .mb16{margin-bottom:16px} .mt12{margin-top:12px}
-/* PAYSLIP */
-.payslip{background:#fff;color:#111;border-radius:12px;padding:28px;font-size:13px}
-.payslip-header{display:flex;justify-content:space-between;border-bottom:2px solid #c9a84c;padding-bottom:12px;margin-bottom:16px}
-.payslip-title{font-family:'Playfair Display',serif;font-size:22px;color:#8b6914}
+.po{display:none}@media print{.po{display:block!important}}
+@media(max-width:600px){#sidebar{width:130px;min-width:130px}.nb-desc{display:none}#content{padding:10px}h2{font-size:15px}}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<div id="header">
-  <div class="logo">
-    <div class="logo-icon">📚</div>
-    <div>
-      <div class="logo-text">LedgerLearn</div>
-      <div class="logo-sub">Free Accounting Education Platform</div>
-    </div>
+<div id="hdr">
+  <div class="logo-wrap">
+    <div class="logo-box">&#128218;</div>
+    <div><div class="logo-name">LedgerLearn ERP</div><div class="logo-sub">v5 &middot; Full Edition</div></div>
   </div>
-  <div class="header-right">
-    <span style="color:var(--muted);font-size:13px">🌍 Country:</span>
-    <select id="countrySelect" onchange="setCountry(this.value)">
-      <option value="USA">🇺🇸 USA</option>
-      <option value="UK">🇬🇧 United Kingdom</option>
-      <option value="EU">🇪🇺 European Union</option>
-      <option value="India">🇮🇳 India</option>
-      <option value="Australia">🇦🇺 Australia</option>
-      <option value="UAE">🇦🇪 UAE</option>
-      <option value="Canada">🇨🇦 Canada</option>
-      <option value="Singapore">🇸🇬 Singapore</option>
-      <option value="SouthAfrica">🇿🇦 South Africa</option>
-      <option value="Nigeria">🇳🇬 Nigeria</option>
-      <option value="Kenya">🇰🇪 Kenya</option>
-      <option value="Pakistan">🇵🇰 Pakistan</option>
-      <option value="Bangladesh">🇧🇩 Bangladesh</option>
-      <option value="Malaysia">🇲🇾 Malaysia</option>
-      <option value="Philippines">🇵🇭 Philippines</option>
-    </select>
-    <div class="tag" id="countryTag">$ · Sales Tax · GAAP</div>
-    <button class="btn btn-print no-print" onclick="window.print()">🖨️ Print Report</button>
+  <div class="hdr-mid">
+    <select id="csel" onchange="setCountry(this.value)" style="min-width:158px"></select>
+    <div class="htag" id="ctag">Loading...</div>
+    <span class="savemsg" id="sv">&#10003; Saved</span>
+  </div>
+  <div class="hdr-right noprint">
+    <button class="hbtn" onclick="openPrintModal()">&#128424; Print</button>
+    <button class="hbtn danger" onclick="if(confirm('Clear ALL data?')){localStorage.removeItem('ll_v5');location.reload()}">&#128465; Clear</button>
   </div>
 </div>
 
-<div id="layout">
+<!-- PRINT MODAL -->
+<div id="printModal">
+  <div class="modal-box">
+    <div class="modal-title">&#128424; Select What to Print</div>
+    <div id="printOpts"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn btn-gold" onclick="doPrint()">Print Selected</button>
+      <button class="btn btn-outline" onclick="selectAllPrint()">Select All</button>
+      <button class="btn btn-outline" onclick="document.getElementById('printModal').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="wrap">
 <!-- SIDEBAR -->
-<div id="sidebar" class="no-print">
-  <script>
-  const NAVS=[
-    {id:'ledger',icon:'📒',title:'General Ledger',desc:'Double-entry'},
-    {id:'trial',icon:'⚖️',title:'Trial Balance',desc:'Verify D=C'},
-    {id:'financial',icon:'📊',title:'Financials',desc:'P&L · Balance Sheet'},
-    {id:'invoice',icon:'🧾',title:'Invoices',desc:'Country templates'},
-    {id:'hr',icon:'👥',title:'HR & Payroll',desc:'Payslips · Tax'},
-    {id:'tax',icon:'🏛️',title:'Tax Calc',desc:'VAT · GST · Corp Tax'},
-    {id:'laws',icon:'⚖️',title:'Country Laws',desc:'All regulations'},
-    {id:'ai',icon:'🤖',title:'AI Tutor',desc:'Ask anything'},
-    {id:'quiz',icon:'🎓',title:'Quiz',desc:'Test knowledge'},
-  ];
-  document.addEventListener('DOMContentLoaded',()=>{
-    const sb=document.getElementById('sidebar');
-    NAVS.forEach(n=>{
-      sb.innerHTML+=`<button class="nav-btn${n.id==='ledger'?' active':''}" onclick="showSection('${n.id}',this)">
-        <span class="nav-icon">${n.icon}</span>
-        <span class="nav-title">${n.title}</span>
-        <span class="nav-desc">${n.desc}</span>
-      </button>`;
-    });
-  });
-  </script>
+<div id="sidebar" class="noprint">
+  <div class="nav-group">Accounting</div>
+  <button class="nb on" onclick="show('dash',this)"><span class="nb-icon">&#127968;</span><span class="nb-title">Dashboard</span><span class="nb-desc">CEO &middot; CFO view</span></button>
+  <button class="nb" onclick="show('ledger',this)"><span class="nb-icon">&#128218;</span><span class="nb-title">Ledger</span><span class="nb-desc">Double-entry</span></button>
+  <button class="nb" onclick="show('ap',this)"><span class="nb-icon">&#128184;</span><span class="nb-title">Payables (AP)</span><span class="nb-desc">Supplier bills</span></button>
+  <button class="nb" onclick="show('ar',this)"><span class="nb-icon">&#128181;</span><span class="nb-title">Receivables (AR)</span><span class="nb-desc">Customer invoices</span></button>
+  <button class="nb" onclick="show('trial',this)"><span class="nb-icon">&#9878;</span><span class="nb-title">Trial Balance</span><span class="nb-desc">Verify D=C</span></button>
+  <button class="nb" onclick="show('fs',this)"><span class="nb-icon">&#128202;</span><span class="nb-title">Financials</span><span class="nb-desc">P&amp;L &middot; B/S &middot; CF</span></button>
+  <button class="nb" onclick="show('ratios',this)"><span class="nb-icon">&#128200;</span><span class="nb-title">Ratios</span><span class="nb-desc">CEO &middot; Sales &middot; CFO</span></button>
+  <div class="nav-group">HR &amp; Payroll</div>
+  <button class="nb" onclick="show('hr',this)"><span class="nb-icon">&#128101;</span><span class="nb-title">HR &amp; Payroll</span><span class="nb-desc">Full calculations</span></button>
+  <button class="nb" onclick="show('hrdash',this)"><span class="nb-icon">&#128203;</span><span class="nb-title">HR Dashboard</span><span class="nb-desc">Metrics &middot; KPIs</span></button>
+  <div class="nav-group">Tools</div>
+  <button class="nb" onclick="show('invoice',this)"><span class="nb-icon">&#129534;</span><span class="nb-title">Invoices</span><span class="nb-desc">Templates</span></button>
+  <button class="nb" onclick="show('tax',this)"><span class="nb-icon">&#127963;</span><span class="nb-title">Tax Calc</span><span class="nb-desc">VAT &middot; Corp</span></button>
+  <button class="nb" onclick="show('fx',this)"><span class="nb-icon">&#128177;</span><span class="nb-title">FX Rates</span><span class="nb-desc">Live currency</span></button>
+  <button class="nb" onclick="show('laws',this)"><span class="nb-icon">&#128214;</span><span class="nb-title">Laws Ref.</span><span class="nb-desc">15 countries</span></button>
+  <button class="nb" onclick="show('ai',this)"><span class="nb-icon">&#129302;</span><span class="nb-title">AI Tutor</span><span class="nb-desc">Smart detect</span></button>
+  <button class="nb" onclick="show('quiz',this)"><span class="nb-icon">&#127891;</span><span class="nb-title">Quiz</span><span class="nb-desc">Test knowledge</span></button>
 </div>
 
-<!-- MAIN -->
-<div id="main">
+<div id="content">
 
-<!-- ==================== GENERAL LEDGER ==================== -->
-<div id="sec-ledger" class="section active">
-  <h2>📒 General Ledger
-    <button class="btn-print no-print" onclick="printSection('ledger')" style="margin-left:auto">🖨️ Print Ledger</button>
-  </h2>
-  <div class="tip">💡 <strong>Double-Entry Rule:</strong> Every transaction debits one account and credits another. Total Debits always = Total Credits. Assets & Expenses ↑ with Debit. Liabilities, Equity & Revenue ↑ with Credit.</div>
-
-  <div class="card no-print">
-    <div class="card-title">➕ Add Transaction</div>
-    <div class="form-row cols6">
-      <input type="date" id="txnDate"/>
-      <input type="text" id="txnDesc" placeholder="Description"/>
-      <select id="txnDebit"></select>
-      <select id="txnCredit"></select>
-      <input type="number" id="txnAmt" placeholder="Amount" min="0"/>
-      <button class="btn btn-gold" onclick="addTxn()">Add</button>
-    </div>
+<!-- ═══ DASHBOARD ═══ -->
+<div id="s-dash" class="sec on">
+  <h2>&#127968; Executive Dashboard</h2>
+  <div id="dash-kpis" class="g5 mb12"></div>
+  <div class="g2">
+    <div class="card"><h3>&#128200; P&amp;L Summary</h3><div id="dash-pl"></div></div>
+    <div class="card"><h3>&#128184; AP &amp; AR Status</h3><div id="dash-apar"></div></div>
   </div>
+  <div class="card"><h3>&#128202; Cash Flow Overview</h3><div id="dash-cf"></div></div>
+</div>
 
+<!-- ═══ LEDGER ═══ -->
+<div id="s-ledger" class="sec">
+  <h2>&#128218; General Ledger</h2>
+  <div class="tip"><b>Double-Entry:</b> Every debit = every credit. AI detects category &amp; laws. Saves automatically.</div>
+  <div class="card noprint">
+    <h3>Add Transaction</h3>
+    <div class="frow" style="grid-template-columns:120px 1fr 150px 150px 100px 70px">
+      <div><label class="fl">Date</label><input type="date" id="tdate"/></div>
+      <div><label class="fl">Description — AI detects</label><input type="text" id="tdesc" placeholder="e.g. Paid supplier invoice" onblur="aiDetect()"/></div>
+      <div><label class="fl">Debit Account</label><select id="tdebit" class="inp" style="width:100%"></select></div>
+      <div><label class="fl">Credit Account</label><select id="tcredit" class="inp" style="width:100%"></select></div>
+      <div><label class="fl">Amount</label><input type="number" id="tamt" placeholder="0.00" min="0" step="0.01"/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addTxn()" style="width:100%;justify-content:center">Add</button></div>
+    </div>
+    <div id="airesult" style="min-height:20px;display:flex;flex-wrap:wrap;gap:3px;margin-top:4px"></div>
+  </div>
   <div class="card">
-    <table id="ledgerTable">
-      <thead><tr><th>Date</th><th>Description</th><th>Debit Account</th><th>Credit Account</th><th id="ledgerAmtHeader">Amount</th></tr></thead>
-      <tbody id="ledgerBody"></tbody>
-      <tfoot><tr><td colspan="4">Total Debits = Total Credits ✓</td><td id="ledgerTotal"></td></tr></tfoot>
-    </table>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Debit</th><th>Credit</th><th id="lamth">Amount</th><th class="noprint">Del</th></tr></thead>
+      <tbody id="ltbody"></tbody>
+      <tfoot><tr><td colspan="5">Total Debits = Total Credits &#10003;</td><td id="ltotal" class="mono"></td><td class="noprint"></td></tr></tfoot>
+    </table></div>
   </div>
 </div>
 
-<!-- ==================== TRIAL BALANCE ==================== -->
-<div id="sec-trial" class="section">
-  <h2>⚖️ Trial Balance
-    <button class="btn-print no-print" onclick="printSection('trial')" style="margin-left:auto">🖨️ Print Trial Balance</button>
-  </h2>
-  <div class="tip">💡 A Trial Balance lists every account and its running balance. If total debits ≠ total credits, there is an error in the ledger.</div>
+<!-- ═══ ACCOUNTS PAYABLE ═══ -->
+<div id="s-ap" class="sec">
+  <h2>&#128184; Accounts Payable</h2>
+  <div class="tip"><b>Accounts Payable</b> = money you OWE to suppliers. Record supplier invoices here. Track aging to avoid late payments.</div>
+  <div class="card noprint">
+    <h3>Add Supplier Invoice</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 120px 120px 100px 70px">
+      <div><label class="fl">Supplier Name</label><input type="text" id="ap-supplier" placeholder="Supplier name"/></div>
+      <div><label class="fl">Description</label><input type="text" id="ap-desc" placeholder="Invoice description"/></div>
+      <div><label class="fl">Invoice Date</label><input type="date" id="ap-date"/></div>
+      <div><label class="fl">Due Date</label><input type="date" id="ap-due"/></div>
+      <div><label class="fl">Amount</label><input type="number" id="ap-amt" placeholder="0.00" min="0"/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addAP()" style="width:100%;justify-content:center">Add</button></div>
+    </div>
+  </div>
   <div class="card">
-    <table id="trialTable">
-      <thead><tr><th>Account Code</th><th>Account Name</th><th>Type</th><th>Debit</th><th>Credit</th></tr></thead>
-      <tbody id="trialBody"></tbody>
-      <tfoot><tr><td colspan="3">TOTALS</td><td id="trialDebit"></td><td id="trialCredit"></td></tr></tfoot>
-    </table>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Supplier</th><th>Description</th><th>Invoice Date</th><th>Due Date</th><th>Amount</th><th>Days Until Due</th><th>Status</th><th class="noprint">Actions</th></tr></thead>
+      <tbody id="apbody"></tbody>
+      <tfoot><tr><td colspan="4">Total Payables Outstanding</td><td id="aptotal" class="mono"></td><td colspan="3"></td></tr></tfoot>
+    </table></div>
   </div>
 </div>
 
-<!-- ==================== FINANCIAL STATEMENTS ==================== -->
-<div id="sec-financial" class="section">
-  <h2>📊 Financial Statements
-    <button class="btn-print no-print" onclick="printSection('financial')" style="margin-left:auto">🖨️ Print Statements</button>
-  </h2>
-  <div class="grid2">
-    <div class="card" id="incomeStatement">
-      <div class="card-title">Income Statement (Profit & Loss)</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:14px">For the period ended <span id="fsDate"></span></div>
-      <div id="incomeBody"></div>
-    </div>
-    <div class="card" id="balanceSheet">
-      <div class="card-title">Balance Sheet</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:14px">As of <span id="bsDate"></span></div>
-      <div id="bsBody"></div>
+<!-- ═══ ACCOUNTS RECEIVABLE ═══ -->
+<div id="s-ar" class="sec">
+  <h2>&#128181; Accounts Receivable</h2>
+  <div class="tip"><b>Accounts Receivable</b> = money OWED to you by customers. Track outstanding invoices and collection aging.</div>
+  <div class="card noprint">
+    <h3>Add Customer Invoice</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 120px 120px 100px 70px">
+      <div><label class="fl">Customer Name</label><input type="text" id="ar-customer" placeholder="Customer name"/></div>
+      <div><label class="fl">Description</label><input type="text" id="ar-desc" placeholder="Invoice description"/></div>
+      <div><label class="fl">Invoice Date</label><input type="date" id="ar-date"/></div>
+      <div><label class="fl">Due Date</label><input type="date" id="ar-due"/></div>
+      <div><label class="fl">Amount</label><input type="number" id="ar-amt" placeholder="0.00" min="0"/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addAR()" style="width:100%;justify-content:center">Add</button></div>
     </div>
   </div>
-  <div class="card mt12">
-    <div class="card-title">Key Financial Ratios & Country Info</div>
-    <div class="grid4" id="ratioGrid"></div>
+  <div class="card">
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Customer</th><th>Description</th><th>Invoice Date</th><th>Due Date</th><th>Amount</th><th>Days Overdue</th><th>Status</th><th class="noprint">Actions</th></tr></thead>
+      <tbody id="arbody"></tbody>
+      <tfoot><tr><td colspan="4">Total Receivables Outstanding</td><td id="artotal" class="mono"></td><td colspan="3"></td></tr></tfoot>
+    </table></div>
   </div>
 </div>
 
-<!-- ==================== INVOICE ==================== -->
-<div id="sec-invoice" class="section">
-  <h2>🧾 Invoice Creator
-    <button class="btn-print no-print" onclick="printSection('invoice')" style="margin-left:auto">🖨️ Print Invoice</button>
-  </h2>
-  <div class="grid2 no-print">
+<!-- ═══ TRIAL BALANCE ═══ -->
+<div id="s-trial" class="sec">
+  <h2>&#9878; Trial Balance</h2>
+  <div class="tip">All account balances from your ledger. Total Debits must equal Total Credits.</div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>Code</th><th>Account Name</th><th>Type</th><th>Normal</th><th id="drh">Debit</th><th id="crh">Credit</th></tr></thead>
+    <tbody id="tribody"></tbody>
+    <tfoot><tr><td colspan="4">TOTALS</td><td id="tridr" class="mono"></td><td id="tricr" class="mono"></td></tr></tfoot>
+  </table></div></div>
+</div>
+
+<!-- ═══ FINANCIAL STATEMENTS ═══ -->
+<div id="s-fs" class="sec">
+  <h2>&#128202; Financial Statements</h2>
+  <div class="g2">
+    <div class="card"><h3>Income Statement (P&amp;L)</h3><div class="fs10 tm mb8">Period ended <span id="fsdate"></span></div><div id="isbody"></div></div>
+    <div class="card"><h3>Balance Sheet</h3><div class="fs10 tm mb8">As of <span id="bsdate"></span></div><div id="bsbody"></div></div>
+  </div>
+  <div class="card"><h3>Cash Flow Statement</h3><div class="g2"><div><div class="fs11 tg mb8">Operating Activities</div><div id="cfop"></div></div><div><div class="fs11 tg mb8">Investing &amp; Financing</div><div id="cfif"></div></div></div></div>
+</div>
+
+<!-- ═══ RATIOS ═══ -->
+<div id="s-ratios" class="sec">
+  <h2>&#128200; Financial Ratios &amp; Metrics</h2>
+  <div class="tip">Ratios calculated from your actual ledger data. Green = healthy, Orange = watch, Red = concern.</div>
+  <h3 style="margin-bottom:10px">&#127970; CFO / Liquidity Ratios</h3>
+  <div class="g4 mb12" id="liq-ratios"></div>
+  <h3 style="margin-bottom:10px">&#128200; CEO / Profitability Ratios</h3>
+  <div class="g4 mb12" id="prof-ratios"></div>
+  <h3 style="margin-bottom:10px">&#128099; Sales Manager Metrics</h3>
+  <div class="g4 mb12" id="sales-ratios"></div>
+  <h3 style="margin-bottom:10px">&#128184; Efficiency Ratios</h3>
+  <div class="g4 mb12" id="eff-ratios"></div>
+  <div class="card"><h3>Ratio Explanations</h3><div id="ratio-explain" style="font-size:12px;line-height:1.8;color:var(--muted)"></div></div>
+</div>
+
+<!-- ═══ HR & PAYROLL ═══ -->
+<div id="s-hr" class="sec">
+  <h2>&#128101; HR &amp; Payroll</h2>
+  <div class="card noprint">
+    <h3>Add Employee</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 1fr 100px 110px 110px 70px">
+      <div><label class="fl">Full Name</label><input type="text" id="ename" placeholder="Full Name"/></div>
+      <div><label class="fl">Job Title</label><input type="text" id="erole" placeholder="Job Title"/></div>
+      <div><label class="fl">Department</label><input type="text" id="edept" placeholder="Department"/></div>
+      <div><label class="fl">Age</label><input type="number" id="eage" placeholder="Age" min="16" max="75"/></div>
+      <div><label class="fl">Gross Monthly</label><input type="number" id="esal" placeholder="0.00" min="0"/></div>
+      <div><label class="fl">Country</label><select id="ecountry" class="inp" style="width:100%"></select></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addEmp()" style="width:100%;justify-content:center">Add</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Name</th><th>Role</th><th>Dept</th><th>Age</th><th>Country</th><th>Gross</th><th>Income Tax</th><th>Employee SS</th><th>Net Pay</th><th>Employer Cost</th><th class="noprint">Actions</th></tr></thead>
+      <tbody id="hrbody"></tbody>
+      <tfoot><tr><td colspan="5">TOTALS</td><td id="hr-gross" class="mono"></td><td id="hr-tax" class="mono"></td><td id="hr-ss" class="mono"></td><td id="hr-net" class="mono"></td><td id="hr-erco" class="mono"></td><td class="noprint"></td></tr></tfoot>
+    </table></div>
+  </div>
+  <div id="payslippo" class="po"></div>
+</div>
+
+<!-- ═══ HR DASHBOARD ═══ -->
+<div id="s-hrdash" class="sec">
+  <h2>&#128203; HR Dashboard &amp; Metrics</h2>
+  <div id="hr-kpis" class="g4 mb12"></div>
+  <div class="g2">
+    <div class="card"><h3>Department Breakdown</h3><div id="hr-dept"></div></div>
+    <div class="card"><h3>Payroll Cost Analysis</h3><div id="hr-costanalysis"></div></div>
+  </div>
+  <div class="card"><h3>Country Payroll Breakdown</h3><div id="hr-bycountry"></div></div>
+</div>
+
+<!-- ═══ INVOICE ═══ -->
+<div id="s-invoice" class="sec">
+  <h2>&#129534; Invoice Creator</h2>
+  <div class="g2 noprint">
     <div class="card">
-      <div class="card-title">Invoice Details</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <input type="text" id="invNo" placeholder="Invoice Number" value="INV-001"/>
-        <input type="date" id="invDate"/>
-        <input type="text" id="invFrom" placeholder="Your Business Name"/>
-        <input type="text" id="invFromAddr" placeholder="Your Address / Registration No."/>
-        <input type="text" id="invTo" placeholder="Client Name"/>
-        <input type="text" id="invToAddr" placeholder="Client Address"/>
-        <div id="invItems"></div>
-        <button class="btn btn-outline" onclick="addInvItem()" style="margin-top:4px">+ Add Line Item</button>
-        <button class="btn btn-gold" onclick="renderInvoice()">Generate Invoice</button>
+      <h3>Invoice Details — saves as you type</h3>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div class="g2">
+          <div><label class="fl">Invoice #</label><input type="text" id="ino" placeholder="INV-001" oninput="sInv();rInv()"/></div>
+          <div><label class="fl">Date</label><input type="date" id="idate" oninput="sInv();rInv()"/></div>
+        </div>
+        <div><label class="fl">Your Business</label><input type="text" id="ifrom" placeholder="Company Name" oninput="sInv();rInv()"/></div>
+        <div><label class="fl">Reg No. / Address</label><input type="text" id="ifromaddr" placeholder="Registration / Address" oninput="sInv();rInv()"/></div>
+        <div><label class="fl">Client Name</label><input type="text" id="ito" placeholder="Client Name" oninput="sInv();rInv()"/></div>
+        <div><label class="fl">Client Address</label><input type="text" id="itoaddr" placeholder="Client Address" oninput="sInv();rInv()"/></div>
+        <div id="iitems"></div>
+        <button class="btn btn-outline" onclick="addLine()">+ Add Line Item</button>
+        <div class="fs10 tm">&#10003; Auto-saves as you type</div>
       </div>
     </div>
-    <div id="invoicePreview"></div>
+    <div id="invprev"></div>
   </div>
-  <div id="invoicePrintArea" class="print-only"></div>
+  <div id="invpo" class="po"></div>
 </div>
 
-<!-- ==================== HR & PAYROLL ==================== -->
-<div id="sec-hr" class="section">
-  <h2>👥 HR & Payroll
-    <button class="btn-print no-print" onclick="printSection('hr')" style="margin-left:auto">🖨️ Print Payroll Report</button>
-  </h2>
-  <div class="card no-print">
-    <div class="card-title">Add Employee</div>
-    <div class="form-row" style="grid-template-columns:1fr 1fr 1fr 1fr auto">
-      <input type="text" id="empName" placeholder="Full Name"/>
-      <input type="text" id="empRole" placeholder="Job Title"/>
-      <input type="number" id="empSalary" placeholder="Gross Monthly Salary"/>
-      <select id="empCountry"></select>
-      <button class="btn btn-gold" onclick="addEmployee()">Add</button>
-    </div>
+<!-- ═══ TAX ═══ -->
+<div id="s-tax" class="sec">
+  <h2>&#127963; Tax Calculator</h2>
+  <div class="g2">
+    <div class="card"><h3 id="vattitle">VAT/GST</h3><div class="tip fs11" id="vattip"></div><div class="tbl-wrap"><table><thead><tr><th>Base</th><th>Rate</th><th>Tax</th><th>Total</th></tr></thead><tbody id="vatbody"></tbody></table></div></div>
+    <div class="card"><h3 id="corptitle">Corporate Tax</h3><div class="tbl-wrap"><table><thead><tr><th>Profit</th><th>Rate</th><th>Tax</th><th>After-Tax</th></tr></thead><tbody id="corpbody"></tbody></table></div></div>
   </div>
   <div class="card">
-    <table id="hrTable">
-      <thead><tr><th>Employee</th><th>Role</th><th>Country</th><th>Gross</th><th>Income Tax</th><th>Social Contrib.</th><th>Net Pay</th><th class="no-print">Payslip</th></tr></thead>
-      <tbody id="hrBody"></tbody>
-    </table>
+    <h3>Custom Calculator</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 1fr auto;align-items:end">
+      <div><label class="fl">Amount</label><input type="number" id="camt" placeholder="0.00" oninput="sCalc()"/></div>
+      <div><label class="fl">Tax Rate %</label><input type="number" id="crate" placeholder="e.g. 9" oninput="sCalc()"/></div>
+      <div><label class="fl">Result</label><div id="cres" style="padding:7px 10px;background:var(--bg3);border-radius:6px;font-family:var(--fm);font-size:12px;color:var(--green);min-height:34px;display:flex;align-items:center">&#8212;</div></div>
+      <button class="btn btn-gold" onclick="calcCust()" style="height:34px">Calc</button>
+    </div>
   </div>
-  <div id="payslipArea" class="print-only"></div>
 </div>
 
-<!-- ==================== TAX CALCULATOR ==================== -->
-<div id="sec-tax" class="section">
-  <h2>🏛️ Tax Calculator
-    <button class="btn-print no-print" onclick="printSection('tax')" style="margin-left:auto">🖨️ Print Tax Report</button>
-  </h2>
-  <div class="grid2">
+<!-- ═══ FX ═══ -->
+<div id="s-fx" class="sec">
+  <h2>&#128177; FX Rates</h2>
+  <div class="g2">
     <div class="card">
-      <div class="card-title" id="taxTitle">VAT / GST Calculator</div>
-      <div class="tip fs12" id="taxTip"></div>
-      <table>
-        <thead><tr><th>Base Amount</th><th>Tax Rate</th><th>Tax Amount</th><th>Total Inc. Tax</th></tr></thead>
-        <tbody id="taxBody"></tbody>
-      </table>
+      <h3>Currency Converter</h3>
+      <div class="frow" style="grid-template-columns:1fr 70px 70px 55px;align-items:end;margin-bottom:10px">
+        <div><label class="fl">Amount</label><input type="number" id="fxamt" value="100"/></div>
+        <div><label class="fl">From</label><select id="fxfrom" class="inp" style="width:100%"></select></div>
+        <div><label class="fl">To</label><select id="fxto" class="inp" style="width:100%"></select></div>
+        <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="doFX()" style="width:100%;justify-content:center;height:34px">Go</button></div>
+      </div>
+      <div id="fxres" style="padding:10px;background:var(--bg3);border-radius:7px;font-family:var(--fm);font-size:13px;color:var(--green);text-align:center;min-height:38px;display:flex;align-items:center;justify-content:center">Enter amount and click Go</div>
     </div>
-    <div class="card">
-      <div class="card-title" id="corpTaxTitle">Corporate Income Tax</div>
-      <table>
-        <thead><tr><th>Net Profit</th><th>Tax Rate</th><th>Tax Payable</th><th>After-Tax Profit</th></tr></thead>
-        <tbody id="corpTaxBody"></tbody>
-      </table>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title">Custom Tax Calculator</div>
-    <div class="form-row" style="grid-template-columns:1fr 1fr 1fr auto;align-items:end">
-      <div><div class="fs11 text-muted mb8">Amount</div><input type="number" id="custAmt" placeholder="Enter amount"/></div>
-      <div><div class="fs11 text-muted mb8">Tax Rate %</div><input type="number" id="custRate" placeholder="e.g. 20"/></div>
-      <div><div class="fs11 text-muted mb8">Result</div><div id="custResult" style="padding:9px 12px;background:var(--bg3);border-radius:8px;font-size:13px;color:var(--green);font-weight:700">—</div></div>
-      <button class="btn btn-gold" onclick="calcCustom()">Calculate</button>
-    </div>
+    <div class="card"><h3>Rates vs <span id="fxbase">USD</span></h3><div id="fxtbl" style="font-size:12px"></div></div>
   </div>
 </div>
 
-<!-- ==================== COUNTRY LAWS ==================== -->
-<div id="sec-laws" class="section">
-  <h2>⚖️ Country Laws & Regulations
-    <button class="btn-print no-print" onclick="printSection('laws')" style="margin-left:auto">🖨️ Print Laws Reference</button>
-  </h2>
-  <div class="tip">📋 Reference guide for accounting standards, tax rates, employment law and payroll obligations across all supported countries. Data reflects current legislation — always verify with local authorities for filing.</div>
-  <div class="laws-grid" id="lawsGrid"></div>
+<!-- ═══ LAWS ═══ -->
+<div id="s-laws" class="sec">
+  <h2>&#128214; Laws &amp; Regulations Reference</h2>
+  <div class="tip">Complete payroll, tax and employment law for all 15 countries. Used by AI Tutor for auto-detection.</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px" id="lawsgrid"></div>
 </div>
 
-<!-- ==================== AI TUTOR ==================== -->
-<div id="sec-ai" class="section">
-  <h2>🤖 AI Accounting Tutor</h2>
-  <div class="tip">Powered by Claude AI. Ask about accounting concepts, country-specific tax law, payroll rules, financial statements, or anything in your syllabus. The tutor knows your selected country!</div>
-  <div id="chat-box"></div>
-  <div class="quick-btns" id="quickBtns"></div>
-  <div class="chat-input-row no-print">
-    <input type="text" id="aiInput" placeholder="Ask a question about accounting..." onkeydown="if(event.key==='Enter')sendAI()"/>
-    <button class="btn btn-gold" onclick="sendAI()" id="aiSendBtn">Send</button>
+<!-- ═══ AI TUTOR ═══ -->
+<div id="s-ai" class="sec">
+  <h2>&#129302; AI Tutor</h2>
+  <div class="tip">Powered by Claude AI. I see your <b>actual ledger, AP, AR and employees</b>. I flag applicable laws automatically.</div>
+  <div id="chatbox"></div>
+  <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:8px" id="qbtns"></div>
+  <div class="chat-row noprint">
+    <input type="text" id="aiinput" placeholder="Ask about accounting, tax, payroll, ratios..." onkeydown="if(event.key==='Enter')sendAI()"/>
+    <button class="btn btn-gold" onclick="sendAI()" id="aisend">Send</button>
   </div>
 </div>
 
-<!-- ==================== QUIZ ==================== -->
-<div id="sec-quiz" class="section">
-  <h2>🎓 Accounting Quiz</h2>
-  <div id="quizArea" style="max-width:600px"></div>
+<!-- ═══ QUIZ ═══ -->
+<div id="s-quiz" class="sec">
+  <h2>&#127891; Accounting Quiz</h2>
+  <div id="quizarea" style="max-width:540px"></div>
 </div>
 
-</div><!-- /main -->
-</div><!-- /layout -->
+</div></div>
 
 <script>
-// ============================================================
-// DATA
-// ============================================================
-const COUNTRIES = {
-  USA:{flag:'🇺🇸',currency:'USD',symbol:'$',tax:'Sales Tax',vatRate:0,corpTax:21,incomeTax:'10–37%',socialSec:'6.2% SS + 1.45% Medicare',minWage:'$7.25/hr (federal)',annualLeave:'No federal minimum',standard:'US GAAP',filingBody:'IRS',corpTaxNote:'21% flat federal rate',vatNote:'No federal VAT. State sales tax varies 0–10%',pension:'401(k) optional',currency_code:'USD'},
-  UK:{flag:'🇬🇧',currency:'GBP',symbol:'£',tax:'VAT',vatRate:20,corpTax:25,incomeTax:'20–45%',socialSec:"12% NI (employee)",minWage:'£11.44/hr',annualLeave:'28 days minimum',standard:'UK GAAP / IFRS',filingBody:'HMRC',corpTaxNote:'25% main rate (>£250k profit)',vatNote:'Standard 20%, Reduced 5%, Zero 0%',pension:'Auto-enrolment 5%',currency_code:'GBP'},
-  EU:{flag:'🇪🇺',currency:'EUR',symbol:'€',tax:'VAT',vatRate:21,corpTax:22,incomeTax:'Varies by country',socialSec:'Varies by country',minWage:'Varies by country',annualLeave:'20 days EU minimum',standard:'IFRS',filingBody:'Local tax authority',corpTaxNote:'Average ~22% (varies by country)',vatNote:'Standard 21% (avg), varies 17–27%',pension:'State + supplementary',currency_code:'EUR'},
-  India:{flag:'🇮🇳',currency:'INR',symbol:'₹',tax:'GST',vatRate:18,corpTax:30,incomeTax:'5–30%',socialSec:'12% PF (employee)',minWage:'₹176/day (central)',annualLeave:'15 days minimum',standard:'Ind AS (IFRS-aligned)',filingBody:'Income Tax Dept / GSTN',corpTaxNote:'25% for domestic cos, 30% general',vatNote:'GST: 5%, 12%, 18%, 28% slabs',pension:'EPF 12% employee',currency_code:'INR'},
-  Australia:{flag:'🇦🇺',currency:'AUD',symbol:'A$',tax:'GST',vatRate:10,corpTax:30,incomeTax:'19–45%',socialSec:'N/A (no employee SS)',minWage:'A$23.23/hr',annualLeave:'4 weeks minimum',standard:'AASB (IFRS-aligned)',filingBody:'ATO',corpTaxNote:'30% general, 25% small business',vatNote:'GST 10% on most goods/services',pension:'Superannuation 11% employer',currency_code:'AUD'},
-  UAE:{flag:'🇦🇪',currency:'AED',symbol:'د.إ',tax:'VAT',vatRate:5,corpTax:9,incomeTax:'0% (no personal income tax)',socialSec:'5% (UAE nationals only)',minWage:'No statutory minimum',annualLeave:'30 calendar days',standard:'IFRS',filingBody:'FTA',corpTaxNote:'9% corporate tax (>AED 375k profit)',vatNote:'VAT 5% standard rate',pension:'DEWS / GPSSA for nationals',currency_code:'AED'},
-  Canada:{flag:'🇨🇦',currency:'CAD',symbol:'C$',tax:'GST/HST',vatRate:13,corpTax:26.5,incomeTax:'20.5–33%',socialSec:'5.95% CPP + 1.66% EI',minWage:'C$17.30/hr (federal)',annualLeave:'2 weeks minimum',standard:'ASPE / IFRS',filingBody:'CRA',corpTaxNote:'15% federal + ~11.5% provincial',vatNote:'GST 5% + PST varies, HST up to 15%',pension:'CPP 5.95%',currency_code:'CAD'},
-  Singapore:{flag:'🇸🇬',currency:'SGD',symbol:'S$',tax:'GST',vatRate:9,corpTax:17,incomeTax:'2–24%',socialSec:'20% CPF (employee)',minWage:'S$9/hr (Progressive Wage)',annualLeave:'7–14 days',standard:'SFRS (IFRS-aligned)',filingBody:'IRAS',corpTaxNote:'17% flat with exemptions',vatNote:'GST 9% (from Jan 2024)',pension:'CPF 20% employee + 17% employer',currency_code:'SGD'},
-  SouthAfrica:{flag:'🇿🇦',currency:'ZAR',symbol:'R',tax:'VAT',vatRate:15,corpTax:27,incomeTax:'18–45%',socialSec:'1% UIF (employee)',minWage:'R27.58/hr',annualLeave:'21 consecutive days',standard:'IFRS / IFRS for SMEs',filingBody:'SARS',corpTaxNote:'27% standard rate',vatNote:'VAT 15% standard',pension:'No mandatory occupational pension',currency_code:'ZAR'},
-  Nigeria:{flag:'🇳🇬',currency:'NGN',symbol:'₦',tax:'VAT',vatRate:7.5,corpTax:30,incomeTax:'7–24%',socialSec:'8% Pension (employee)',minWage:'₦70,000/month',annualLeave:'6 working days minimum',standard:'IFRS (FRCN adopted)',filingBody:'FIRS',corpTaxNote:'30% standard, 20% small companies',vatNote:'VAT 7.5% (increased from 5% in 2020)',pension:'8% employee + 10% employer (RSA)',currency_code:'NGN'},
-  Kenya:{flag:'🇰🇪',currency:'KES',symbol:'KSh',tax:'VAT',vatRate:16,corpTax:30,incomeTax:'10–35%',socialSec:'6% NSSF (employee)',minWage:'KSh 15,201/month (Nairobi)',annualLeave:'21 working days',standard:'IFRS',filingBody:'KRA',corpTaxNote:'30% resident companies',vatNote:'VAT 16% standard rate',pension:'NSSF 6%',currency_code:'KES'},
-  Pakistan:{flag:'🇵🇰',currency:'PKR',symbol:'Rs',tax:'GST',vatRate:18,corpTax:29,incomeTax:'5–35%',socialSec:'1% EOBI (employee)',minWage:'Rs 37,000/month',annualLeave:'14 days annual leave',standard:'IFRS / IFRS for SMEs',filingBody:'FBR',corpTaxNote:'29% standard rate',vatNote:'GST 18% (Sales Tax Act)',pension:'EOBI 1% + 5% employer',currency_code:'PKR'},
-  Bangladesh:{flag:'🇧🇩',currency:'BDT',symbol:'৳',tax:'VAT',vatRate:15,corpTax:27.5,incomeTax:'5–25%',socialSec:'N/A (voluntary)',minWage:'৳8,000/month (garments)',annualLeave:'10 days casual leave',standard:'BFRS (IFRS-based)',filingBody:'NBR',corpTaxNote:'27.5% (listed), 30% (unlisted)',vatNote:'VAT 15% standard',pension:'Provident fund (voluntary)',currency_code:'BDT'},
-  Malaysia:{flag:'🇲🇾',currency:'MYR',symbol:'RM',tax:'SST',vatRate:10,corpTax:24,incomeTax:'1–30%',socialSec:'11% EPF (employee)',minWage:'RM1,500/month',annualLeave:'8–16 days',standard:'MFRS (IFRS-aligned)',filingBody:'LHDN / Royal Customs',corpTaxNote:'24% standard, 17% SMEs (first RM600k)',vatNote:'SST: Sales Tax 5–10%, Service Tax 8%',pension:'EPF 11% employee + 13% employer',currency_code:'MYR'},
-  Philippines:{flag:'🇵🇭',currency:'PHP',symbol:'₱',tax:'VAT',vatRate:12,corpTax:25,incomeTax:'15–35%',socialSec:'4.5% SSS (employee)',minWage:'₱610/day (NCR)',annualLeave:'5 days service incentive',standard:'PFRS (IFRS-aligned)',filingBody:'BIR',corpTaxNote:'25% (domestic), 20% (MSME)',vatNote:'VAT 12% standard',pension:'SSS 4.5% + PhilHealth + Pag-IBIG',currency_code:'PHP'},
+// ═══════════════════════════════════════════════════════════
+// COUNTRY DATA WITH FULL PAYROLL
+// ═══════════════════════════════════════════════════════════
+const C={
+  Singapore:{f:'SG',sym:'S$',cur:'SGD',tax:'GST',vat:9,corp:17,std:'SFRS/IFRS',body:'IRAS',
+    vatNote:'GST 9% (Jan 2024). Quarterly F5 returns to IRAS.',
+    corpNote:'17% with partial tax exemption. First S$10k: 75% exempt. Next S$190k: 50% exempt.',
+    payNote:'CPF monthly by 14th. IR8A annual by 1 Mar. SDL quarterly.',
+    inc:'2-24% (progressive)',leave:'7-14 days based on service',mw:'Progressive Wage S$9/hr',
+    pension:'CPF: age <=55: EE 20%+ER 17%. 55-60: 15%+15%. 60-65: 10%+11.5%. >65: 5%+7.5%',
+    ss:'CPF — age-based rates (see payroll)',
+    cpf:{
+      u55:{ee:.20,er:.17},
+      u60:{ee:.15,er:.15},
+      u65:{ee:.10,er:.115},
+      o65:{ee:.05,er:.075},
+    },
+    sdl:.0025, // 0.25% of gross, employer
+    extraDeductions:'SDL: 0.25% employer. SHG levy: $0.50-$11.50/month based on wage.',
+  },
+  Malaysia:{f:'MY',sym:'RM',cur:'MYR',tax:'SST',vat:10,corp:24,std:'MFRS/IFRS',body:'LHDN',
+    vatNote:'SST: Sales Tax 5-10%, Service Tax 8%. Different from VAT - not on all goods.',
+    corpNote:'24% standard. 17% on first RM600k for SMEs (<RM50m revenue).',
+    payNote:'PCB monthly by 15th. EA Form by end Feb. EPF by 15th. SOCSO by 15th.',
+    inc:'0-30% (progressive)',leave:'8-16 days based on tenure',mw:'RM1,500/month',
+    pension:'EPF: EE 11%, ER 13% (salary<=RM5k) or 12% (>RM5k)',
+    ss:'SOCSO: EE 0.5%, ER 1.75% (capped RM4k wage). EIS: EE 0.2%, ER 0.2%.',
+    epf:{ee:.11,er_low:.13,er_high:.12,cap:5000},
+    socso:{ee:.005,er:.0175,cap:4000},
+    eis:{ee:.002,er:.002,cap:4000},
+    hrdLevy:.01, // 1% employer if >10 employees
+    extraDeductions:'HRD Levy: 1% employer (>10 staff). HRDF contributions mandatory.',
+  },
+  India:{f:'IN',sym:'&#8377;',cur:'INR',tax:'GST',vat:18,corp:25,std:'Ind AS',body:'CBDT/GSTN',
+    vatNote:'GST slabs: 0%, 5%, 12%, 18%, 28%. CGST+SGST or IGST. Monthly GSTR-3B.',
+    corpNote:'25% domestic (turnover <=Rs400cr). 30% others. 15% new manufacturing.',
+    payNote:'TDS monthly by 7th. Quarterly TDS returns. Form 16 annual by 15 Jun.',
+    inc:'5-30% (new regime: 5-30%)',leave:'15 days EL + 12 CL/SL minimum',mw:'Rs176/day (central advisory)',
+    pension:'EPF: EE 12%, ER 12% of basic (capped Rs15,000 basic)',
+    ss:'PF: 12% EE + 12% ER. ESI: 0.75% EE + 3.25% ER (if salary <=Rs21,000).',
+    pf:{ee:.12,er:.12,cap:15000}, // capped on basic salary Rs15k
+    esi:{ee:.0075,er:.0325,cap:21000}, // only if salary <= Rs21k
+    pt:200, // Professional Tax Rs200/month most states
+    extraDeductions:'PT (Professional Tax): Rs200/month. Gratuity: 4.81% after 5 years.',
+  },
+  Australia:{f:'AU',sym:'A$',cur:'AUD',tax:'GST',vat:10,corp:30,std:'AASB/IFRS',body:'ATO',
+    vatNote:'GST 10%. BAS quarterly. Most goods/services taxable. Some exempt (fresh food, health).',
+    corpNote:'30% general. 25% base rate for small business (aggregated turnover <A$50m).',
+    payNote:'PAYG withholding varies. Single Touch Payroll (STP) mandatory. Super quarterly.',
+    inc:'0-45% + 2% Medicare levy',leave:'4 weeks annual + 10 days personal/carer',mw:'A$23.23/hr',
+    pension:'Super: 11% employer mandatory (Jul 2023). No employee SS contribution.',
+    ss:'No employee SS. Employer pays 11% superannuation.',
+    super:{er:.11},
+    medicare:.02, // 2% of taxable income
+    extraDeductions:'Medicare Levy: 2%. PAYG progressive withholding. Workcover insurance (employer).',
+  },
+  USA:{f:'US',sym:'$',cur:'USD',tax:'Sales Tax',vat:0,corp:21,std:'US GAAP',body:'IRS',
+    vatNote:'No federal VAT. State/local sales tax 0-10.25% varies by state.',
+    corpNote:'21% flat federal. Plus state corporate tax 0-12%. FICA employer: 7.65%.',
+    payNote:'Federal income tax withholding (W-4). Quarterly Form 941. Annual W-2.',
+    inc:'10-37% (progressive)',leave:'No federal minimum (FMLA 12 weeks unpaid)',mw:'$7.25/hr federal',
+    pension:'401(k) optional. No mandatory employer contribution.',
+    ss:'SS: EE 6.2% + ER 6.2% (capped $168,600). Medicare: EE 1.45% + ER 1.45%.',
+    fica:{ss_ee:.062,ss_er:.062,ss_cap:168600,med_ee:.0145,med_er:.0145,add_med:.009,add_med_cap:200000},
+    futa:.06, // first $7k employer
+    extraDeductions:'Additional Medicare 0.9% above $200k. FUTA 6% on first $7k (employer).',
+  },
+  UK:{f:'GB',sym:'&#163;',cur:'GBP',tax:'VAT',vat:20,corp:25,std:'UK GAAP/IFRS',body:'HMRC',
+    vatNote:'Standard 20%, Reduced 5%, Zero 0%. Quarterly VAT returns. MTD required.',
+    corpNote:'25% main rate (profits >£250k). 19% small profits rate (<£50k).',
+    payNote:'PAYE monthly by 19th (22nd electronic). RTI real-time submissions. P60 annual.',
+    inc:'20-45% (basic 20%, higher 40%, additional 45%)',leave:'28 days minimum (stat)',mw:'£11.44/hr',
+    pension:'Auto-enrolment: EE 5%, ER 3% minimum.',
+    ss:'NI: EE 8% (£12,570-£50,270), 2% above. ER 13.8% above £9,100.',
+    ni:{ee_low:.08,ee_high:.02,ee_threshold:12570,ee_upper:50270,er:.138,er_threshold:9100},
+    extraDeductions:'Student loan: Plan 1/2/4/5. Apprenticeship Levy: 0.5% of payroll >£3m.',
+  },
+  EU:{f:'EU',sym:'&#8364;',cur:'EUR',tax:'VAT',vat:21,corp:22,std:'IFRS',body:'Local authority',
+    vatNote:'Standard avg 21%, range 17-27% by country. Quarterly/monthly returns.',
+    corpNote:'Average 22%. Hungary 9%, Ireland 12.5%, Germany 30%, France 25%.',
+    payNote:'Monthly payroll filings. EU Social Security Coordination Regulation.',
+    inc:'Varies by country (avg 20-50%)',leave:'20 days EU statutory minimum',mw:'Varies by country',
+    pension:'State + mandatory occupational (varies by country)',
+    ss:'Avg 14% employee + 20% employer (varies significantly)',
+    extraDeductions:'Varies by member state. Check specific country regulations.',
+  },
+  UAE:{f:'AE',sym:'AED',cur:'AED',tax:'VAT',vat:5,corp:9,std:'IFRS',body:'FTA',
+    vatNote:'VAT 5%. Quarterly returns to FTA. Input tax recovery allowed.',
+    corpNote:'9% CT on taxable profits >AED 375,000 (effective Jun 2023). 0% for SMEs.',
+    payNote:'WPS Wage Protection System mandatory. Monthly payroll by last working day.',
+    inc:'0% (no personal income tax)',leave:'30 calendar days after 1 year service',mw:'No statutory minimum',
+    pension:'DEWS for expats (end of service). GPSSA 5% for UAE nationals.',
+    ss:'UAE nationals only: GPSSA 5% employee + 12.5% employer.',
+    extraDeductions:'DEWS end of service gratuity: 21 days/year (first 5 years), 30 days after.',
+  },
+  Canada:{f:'CA',sym:'C$',cur:'CAD',tax:'GST/HST',vat:13,corp:26.5,std:'ASPE/IFRS',body:'CRA',
+    vatNote:'GST 5% federal + PST provincial. HST combined up to 15% in some provinces.',
+    corpNote:'15% federal + avg 11.5% provincial. SBD: 9% federal on first C$500k.',
+    payNote:'T4 annual. Bi-weekly source deduction remittances to CRA.',
+    inc:'20.5-33% federal + provincial',leave:'2 weeks min (most provinces 3 weeks)',mw:'C$17.30/hr federal',
+    pension:'CPP: EE 5.95% + ER 5.95% (capped C$68,500).',
+    ss:'CPP: 5.95% EE + 5.95% ER. EI: 1.66% EE + 2.32% ER.',
+    extraDeductions:'CPP2: additional 4% on earnings C$68,500-C$73,200.',
+  },
+  SouthAfrica:{f:'ZA',sym:'R',cur:'ZAR',tax:'VAT',vat:15,corp:27,std:'IFRS',body:'SARS',
+    vatNote:'VAT 15%. Two-monthly VAT201 returns to SARS.',
+    corpNote:'27% CIT. 28% for mining/other special entities. Turnover tax for micro businesses.',
+    payNote:'PAYE monthly EMP201. Annual IRP5/IT3(a). EMP501 bi-annual reconciliation.',
+    inc:'18-45% (progressive)',leave:'21 consecutive days minimum',mw:'R27.58/hr',
+    pension:'No mandatory occupational pension. Voluntary provident/pension funds.',
+    ss:'UIF: EE 1% + ER 1% (capped R17,712/month). SDL: 1% ER.',
+    extraDeductions:'SDL: 1% of payroll to SETA. UIF capped at R177/month employee.',
+  },
+  Nigeria:{f:'NG',sym:'&#8358;',cur:'NGN',tax:'VAT',vat:7.5,corp:30,std:'IFRS',body:'FIRS',
+    vatNote:'VAT 7.5% (Finance Act 2020). Monthly VAT returns. Some exempt supplies.',
+    corpNote:'30% standard. 20% small companies (turnover <&#8358;25m). 0% micro (<&#8358;25m).',
+    payNote:'PAYE monthly by 10th. Annual income tax return. WHT 10%.',
+    inc:'7-24% (PITA)',leave:'6 working days minimum statutory',mw:'&#8358;70,000/month',
+    pension:'RSA: EE 8% + ER 10% mandatory for companies >3 employees.',
+    ss:'Pension: 8% EE + 10% ER. NHIS: 5% ER + 2.5% EE recommended.',
+    extraDeductions:'Pension mandatory >3 employees. ITF: 1% of payroll for training.',
+  },
+  Kenya:{f:'KE',sym:'KSh',cur:'KES',tax:'VAT',vat:16,corp:30,std:'IFRS',body:'KRA',
+    vatNote:'VAT 16%. Monthly VAT3 returns by 20th. Some zero-rated and exempt supplies.',
+    corpNote:'30% resident companies. 37.5% non-resident branches.',
+    payNote:'PAYE monthly by 9th. Annual tax return. P9 forms by 28 Feb.',
+    inc:'10-35% (progressive)',leave:'21 working days minimum',mw:'KSh15,201/month (Nairobi)',
+    pension:'NSSF: EE KSh200 + ER KSh200 (old tier). New: 6% EE + 6% ER.',
+    ss:'NSSF 6% (new rates). NHIF: KSh150-1,700/month based on income.',
+    extraDeductions:'NHIF: income-based monthly contribution. NITA: 0.5% payroll.',
+  },
+  Pakistan:{f:'PK',sym:'Rs',cur:'PKR',tax:'GST',vat:18,corp:29,std:'IFRS',body:'FBR',
+    vatNote:'GST 18% Sales Tax Act. Monthly ST-7 returns.',
+    corpNote:'29% standard. 20% small companies. Banking: 39%. Bonus on super profit.',
+    payNote:'Monthly salary tax withholding by 15th. Annual return by 30 Sep.',
+    inc:'0-35% (progressive)',leave:'14 days annual casual leave',mw:'Rs37,000/month',
+    pension:'EOBI: EE 1% + ER 5% on Rs6,000 deemed wages.',
+    ss:'EOBI mandatory. Provincial SESSI/ESSI where applicable.',
+    extraDeductions:'EOBI: 1% EE + 5% ER. SESSI (Sindh) or provincial equivalents.',
+  },
+  Bangladesh:{f:'BD',sym:'&#2547;',cur:'BDT',tax:'VAT',vat:15,corp:27.5,std:'BFRS/IFRS',body:'NBR',
+    vatNote:'VAT 15% standard. Monthly Mushak-9.1 returns. Some truncated rates.',
+    corpNote:'27.5% listed. 30% unlisted. 20% textile/RMG. 22.5% bank/NBFI.',
+    payNote:'Monthly TDS. Annual income tax return by 30 November.',
+    inc:'0-25% (progressive)',leave:'10 casual + 14 sick + 15 festival leaves',mw:'&#2547;8,000/month RMG',
+    pension:'Voluntary provident fund. No mandatory statutory pension.',
+    ss:'No formal SS. Workmen compensation act applies.',
+    extraDeductions:'Festival bonus: 2 months (Eid). Gratuity after 5 years service.',
+  },
+  Philippines:{f:'PH',sym:'&#8369;',cur:'PHP',tax:'VAT',vat:12,corp:25,std:'PFRS/IFRS',body:'BIR',
+    vatNote:'VAT 12%. Monthly 2550M + quarterly 2550Q. Input VAT creditable.',
+    corpNote:'25% domestic. 20% MSME (net taxable income <=&#8369;5m AND assets <=&#8369;100m).',
+    payNote:'Alphalist annual. Monthly 1601C withholding. Quarterly ITR.',
+    inc:'0-35% (TRAIN Law)',leave:'5 days SIL (Service Incentive Leave) minimum',mw:'&#8369;610/day NCR',
+    pension:'SSS: EE 4.5% + ER 8.5%. PhilHealth: 5% split equally. Pag-IBIG: 2% EE+ER.',
+    ss:'SSS 4.5% EE. PhilHealth 2.5% EE. Pag-IBIG 2% EE (max &#8369;200).',
+    sss:{ee:.045,er:.085,cap:30000},
+    philhealth:{ee:.025,er:.025,cap:100000},
+    pagibig:{ee:.02,er:.02,cap:10000},
+    extraDeductions:'13th Month Pay mandatory (before Dec 24). SSS, PhilHealth, Pag-IBIG remittance by 10th.',
+  },
 };
 
-const ACCOUNTS = [
-  {code:'1000',name:'Cash',type:'Asset',normal:'Debit'},
+// ═══════════════════════════════════════════════════════════
+// CHART OF ACCOUNTS
+// ═══════════════════════════════════════════════════════════
+const ACCTS=[
+  // ASSETS
+  {code:'1000',name:'Cash & Bank',type:'Asset',normal:'Debit'},
   {code:'1100',name:'Accounts Receivable',type:'Asset',normal:'Debit'},
   {code:'1200',name:'Inventory',type:'Asset',normal:'Debit'},
   {code:'1300',name:'Prepaid Expenses',type:'Asset',normal:'Debit'},
+  {code:'1400',name:'Other Current Assets',type:'Asset',normal:'Debit'},
   {code:'1500',name:'Equipment',type:'Asset',normal:'Debit'},
-  {code:'1600',name:'Buildings',type:'Asset',normal:'Debit'},
+  {code:'1600',name:'Buildings & Property',type:'Asset',normal:'Debit'},
+  {code:'1700',name:'Vehicles',type:'Asset',normal:'Debit'},
+  {code:'1800',name:'Accumulated Depreciation',type:'Asset',normal:'Credit'},
+  // LIABILITIES
   {code:'2000',name:'Accounts Payable',type:'Liability',normal:'Credit'},
   {code:'2100',name:'Bank Loan',type:'Liability',normal:'Credit'},
   {code:'2200',name:'Tax Payable',type:'Liability',normal:'Credit'},
+  {code:'2300',name:'Salaries Payable',type:'Liability',normal:'Credit'},
+  {code:'2400',name:'CPF/SS Payable',type:'Liability',normal:'Credit'},
+  {code:'2500',name:'Accrued Liabilities',type:'Liability',normal:'Credit'},
+  {code:'2600',name:'Deferred Revenue',type:'Liability',normal:'Credit'},
+  // EQUITY
   {code:'3000',name:"Owner's Equity",type:'Equity',normal:'Credit'},
   {code:'3100',name:'Retained Earnings',type:'Equity',normal:'Credit'},
+  {code:'3200',name:'Share Capital',type:'Equity',normal:'Credit'},
+  // REVENUE
   {code:'4000',name:'Sales Revenue',type:'Revenue',normal:'Credit'},
   {code:'4100',name:'Service Revenue',type:'Revenue',normal:'Credit'},
+  {code:'4200',name:'Interest Income',type:'Revenue',normal:'Credit'},
+  {code:'4300',name:'Other Income',type:'Revenue',normal:'Credit'},
+  // EXPENSES
   {code:'5000',name:'Cost of Goods Sold',type:'Expense',normal:'Debit'},
   {code:'5100',name:'Salaries Expense',type:'Expense',normal:'Debit'},
+  {code:'5150',name:'Employer CPF/SS Expense',type:'Expense',normal:'Debit'},
   {code:'5200',name:'Rent Expense',type:'Expense',normal:'Debit'},
   {code:'5300',name:'Utilities Expense',type:'Expense',normal:'Debit'},
   {code:'5400',name:'Depreciation Expense',type:'Expense',normal:'Debit'},
   {code:'5500',name:'Tax Expense',type:'Expense',normal:'Debit'},
+  {code:'5600',name:'Marketing Expense',type:'Expense',normal:'Debit'},
+  {code:'5700',name:'Insurance Expense',type:'Expense',normal:'Debit'},
+  {code:'5800',name:'Interest Expense',type:'Expense',normal:'Debit'},
+  {code:'5900',name:'Other Expenses',type:'Expense',normal:'Debit'},
 ];
 
-const QUIZ = [
-  {q:'What is the fundamental accounting equation?',a:'Assets = Liabilities + Equity',opts:['Assets = Revenue – Expenses','Assets = Liabilities + Equity','Profit = Revenue – Costs','Debit = Credit + Balance']},
-  {q:'Which statement shows a company\'s profitability over a period?',a:'Income Statement (P&L)',opts:['Balance Sheet','Cash Flow Statement','Income Statement (P&L)','Trial Balance']},
-  {q:'A debit entry to an Asset account will:',a:'Increase the account balance',opts:['Decrease the balance','Increase the account balance','Have no effect','Close the account']},
-  {q:'What does IFRS stand for?',a:'International Financial Reporting Standards',opts:['International Financial Reporting Standards','Internal Finance Recording System','International Federal Revenue Standards','Interim Financial Reporting Schedule']},
-  {q:'Depreciation is classified as:',a:'A non-cash operating expense',opts:['A cash payment','A revenue item','A non-cash operating expense','A liability']},
-  {q:'Which account type normally has a Credit balance?',a:'Revenue',opts:['Assets','Expenses','Revenue','Drawings']},
-  {q:'VAT stands for:',a:'Value Added Tax',opts:['Variable Annual Tax','Value Added Tax','Verified Account Transfer','Volume Adjusted Tariff']},
-  {q:'The purpose of a Trial Balance is to:',a:'Verify total debits equal total credits',opts:['Calculate profit','List all assets','Verify total debits equal total credits','Show cash position']},
-  {q:'Gross Profit = ?',a:'Revenue – Cost of Goods Sold',opts:['Revenue – All Expenses','Revenue – Cost of Goods Sold','Net Income + Tax','Revenue + Expenses']},
-  {q:'Which is NOT a financial statement?',a:'Trial Balance',opts:['Income Statement','Balance Sheet','Trial Balance','Cash Flow Statement']},
+const QUIZ=[
+  {q:'What is the fundamental accounting equation?',a:'Assets = Liabilities + Equity',opts:['Assets = Revenue minus Expenses','Assets = Liabilities + Equity','Profit = Revenue minus Costs','Debit = Credit + Balance']},
+  {q:'Accounts Payable is classified as:',a:'A current liability',opts:['A current asset','A current liability','An equity account','An expense']},
+  {q:'The Current Ratio formula is:',a:'Current Assets ÷ Current Liabilities',opts:['Net Income ÷ Revenue','Current Assets ÷ Current Liabilities','Total Debt ÷ Total Equity','Revenue ÷ Total Assets']},
+  {q:'DSO (Days Sales Outstanding) measures:',a:'How long it takes to collect receivables',opts:['Profitability per sale','How long it takes to collect receivables','Daily sales volume','Debt service capacity']},
+  {q:'Singapore CPF rate for employee aged 45:',a:'20% employee, 17% employer',opts:['15% employee, 15% employer','5% employee, 7.5% employer','20% employee, 17% employer','10% employee, 11.5% employer']},
+  {q:'Malaysia EPF employee contribution rate is:',a:'11% of gross salary',opts:['5% of gross salary','11% of gross salary','20% of gross salary','13% of gross salary']},
+  {q:'India ESI applies when employee salary is:',a:'Rs21,000 or below per month',opts:['Above Rs15,000','Rs21,000 or below per month','Always mandatory','Above Rs50,000']},
+  {q:'Australia Superannuation is paid by:',a:'The employer only (11%)',opts:['Employee only (11%)','The employer only (11%)','Both equally (5.5% each)','Government funded']},
+  {q:'A Cash Flow Statement has how many sections?',a:'Three: Operating, Investing, Financing',opts:['Two: Income and Expenses','Three: Operating, Investing, Financing','Four sections','One consolidated section']},
+  {q:'Return on Equity (ROE) =',a:'Net Income ÷ Shareholders Equity',opts:['Revenue ÷ Total Assets','Net Income ÷ Shareholders Equity','Gross Profit ÷ Revenue','Current Assets ÷ Current Liabilities']},
 ];
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════
 // STATE
-// ============================================================
-let currentCountry = 'USA';
-let transactions = [
-  {id:1,date:'2024-01-15',desc:'Initial Capital Investment',debit:"Owner's Equity",credit:'Cash',amt:50000},
-  {id:2,date:'2024-01-20',desc:'Equipment Purchase',debit:'Equipment',credit:'Cash',amt:15000},
-  {id:3,date:'2024-02-01',desc:'Sales Revenue Received',debit:'Cash',credit:'Sales Revenue',amt:8000},
-  {id:4,date:'2024-02-10',desc:'Rent Payment',debit:'Rent Expense',credit:'Cash',amt:2000},
-  {id:5,date:'2024-02-15',desc:'Salaries Paid',debit:'Salaries Expense',credit:'Cash',amt:3500},
-];
-let employees = [
-  {id:1,name:'Alice Johnson',role:'Finance Manager',salary:6000,country:'USA'},
-  {id:2,name:'Bob Smith',role:'Accountant',salary:4500,country:'UK'},
-];
-let invItems = [{desc:'Professional Services',qty:10,rate:150}];
-let quizIdx=0, quizScore=0, quizDone=false, quizSelected=null;
-let chatHistory = [];
+// ═══════════════════════════════════════════════════════════
+const SK='ll_v5';
+function loadS(){
+  try{const d=localStorage.getItem(SK);if(d)return JSON.parse(d);}catch(e){}
+  const today=new Date().toISOString().split('T')[0];
+  const due30=new Date(Date.now()+30*864e5).toISOString().split('T')[0];
+  const over15=new Date(Date.now()-15*864e5).toISOString().split('T')[0];
+  return{
+    country:'Singapore',
+    txns:[
+      {id:1,date:'2024-01-15',desc:'Initial capital investment',debit:"Owner's Equity",credit:'Cash & Bank',amt:100000,cat:'Equity'},
+      {id:2,date:'2024-01-20',desc:'Office equipment purchase',debit:'Equipment',credit:'Cash & Bank',amt:25000,cat:'Asset'},
+      {id:3,date:'2024-02-01',desc:'Sales revenue from clients',debit:'Cash & Bank',credit:'Sales Revenue',amt:45000,cat:'Revenue'},
+      {id:4,date:'2024-02-10',desc:'Monthly office rent payment',debit:'Rent Expense',credit:'Cash & Bank',amt:5000,cat:'Expense'},
+      {id:5,date:'2024-02-15',desc:'Staff salaries payment',debit:'Salaries Expense',credit:'Cash & Bank',amt:18000,cat:'Payroll'},
+      {id:6,date:'2024-02-15',desc:'Employer CPF contribution',debit:'Employer CPF/SS Expense',credit:'CPF/SS Payable',amt:3060,cat:'Payroll'},
+      {id:7,date:'2024-03-01',desc:'Service revenue — consulting',debit:'Cash & Bank',credit:'Service Revenue',amt:28000,cat:'Revenue'},
+      {id:8,date:'2024-03-05',desc:'Marketing and advertising',debit:'Marketing Expense',credit:'Cash & Bank',amt:3500,cat:'Expense'},
+      {id:9,date:'2024-03-10',desc:'Supplier payment — inventory',debit:'Cost of Goods Sold',credit:'Accounts Payable',amt:12000,cat:'COGS'},
+      {id:10,date:'2024-03-15',desc:'Depreciation on equipment',debit:'Depreciation Expense',credit:'Accumulated Depreciation',amt:520,cat:'Depreciation'},
+    ],
+    ap:[
+      {id:1,supplier:'Office Supplies Co',desc:'Monthly stationery',date:'2024-03-01',due:'2024-04-01',amt:1200,paid:false},
+      {id:2,supplier:'Tech Services Ltd',desc:'IT support contract',date:'2024-02-15',due:'2024-03-15',amt:3500,paid:false},
+      {id:3,supplier:'Cleaning Services',desc:'Monthly cleaning',date:'2024-03-10',due:'2024-04-10',amt:800,paid:false},
+    ],
+    ar:[
+      {id:1,customer:'ABC Corp',desc:'Consulting project Q1',date:'2024-02-01',due:'2024-03-01',amt:15000,paid:false},
+      {id:2,customer:'XYZ Pte Ltd',desc:'Software implementation',date:'2024-03-01',due:'2024-04-01',amt:28000,paid:false},
+      {id:3,customer:'Global Trade Inc',desc:'Training services',date:'2024-01-15',due:'2024-02-15',amt:8500,paid:false},
+    ],
+    emps:[
+      {id:1,name:'Alice Tan',role:'Finance Manager',dept:'Finance',age:35,sal:8000,country:'Singapore'},
+      {id:2,name:'Ravi Kumar',role:'Senior Accountant',dept:'Finance',age:42,sal:6000,country:'Singapore'},
+      {id:3,name:'Sarah Lim',role:'HR Manager',dept:'HR',age:52,sal:7000,country:'Singapore'},
+      {id:4,name:'James Wong',role:'Sales Director',dept:'Sales',age:45,sal:9000,country:'Malaysia'},
+      {id:5,name:'Priya Shah',role:'Developer',dept:'IT',age:28,sal:75000,country:'India'},
+    ],
+    inv:{no:'INV-001',date:today,from:'My Business Pte Ltd',fromaddr:'UEN: 202312345A',to:'',toaddr:'',items:[{desc:'Professional Services',qty:10,rate:500},{desc:'Expenses Reimbursement',qty:1,rate:1200}]},
+    calc:{amt:'',rate:''},
+  };
+}
+let S=loadS();
+let FX={};
+let chat=[];
+let qi=0,qs=0,qd=false,qsel=null;
 
-// ============================================================
-// INIT
-// ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-  populateSelects();
-  document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('txnDate').value = new Date().toISOString().split('T')[0];
-  setCountry('USA');
-  renderLedger();
-  renderTrial();
-  renderFinancials();
-  renderInvoiceItems();
-  renderHR();
-  renderTax();
-  renderLaws();
-  renderQuiz();
-  renderChat([{role:'assistant',text:`👋 Welcome to LedgerLearn AI Tutor!\n\nI'm powered by Claude AI and I know the accounting laws for all 15 countries in this platform.\n\nCurrently showing: 🇺🇸 USA — GAAP · Sales Tax · 21% Corp Tax\n\nAsk me anything — accounting concepts, tax rules, payroll calculations, financial statements, or exam prep!`}]);
-  updateQuickBtns();
+function saveS(){
+  try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}
+  const el=document.getElementById('sv');
+  if(el){el.classList.add('vis');setTimeout(()=>el.classList.remove('vis'),1800);}
+}
+
+// ═══════════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',function(){
+  buildSelects();
+  document.getElementById('csel').value=S.country;
+  document.getElementById('tdate').value=new Date().toISOString().split('T')[0];
+  document.getElementById('ap-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('ar-date').value=new Date().toISOString().split('T')[0];
+  const due=new Date(Date.now()+30*864e5).toISOString().split('T')[0];
+  document.getElementById('ap-due').value=due;
+  document.getElementById('ar-due').value=due;
+  applyCountry(S.country,false);
+  loadInvForm();
+  if(S.calc.amt)document.getElementById('camt').value=S.calc.amt;
+  if(S.calc.rate)document.getElementById('crate').value=S.calc.rate;
+  renderAll();
+  initChat();
+  rQuiz();
+  loadFX();
+  buildPrintOpts();
 });
 
-function populateSelects() {
-  const accts = ACCOUNTS.map(a=>a.name);
-  ['txnDebit','txnCredit'].forEach(id=>{
-    const sel = document.getElementById(id);
-    sel.innerHTML = accts.map(a=>`<option>${a}</option>`).join('');
-  });
-  const countries = Object.keys(COUNTRIES);
-  const empSel = document.getElementById('empCountry');
-  empSel.innerHTML = countries.map(c=>`<option value="${c}">${COUNTRIES[c].flag} ${c}</option>`).join('');
+function buildSelects(){
+  const ckeys=Object.keys(C);
+  const copts=ckeys.map(k=>'<option value="'+k+'">'+C[k].f+' '+k+'</option>').join('');
+  ['csel','ecountry'].forEach(id=>document.getElementById(id).innerHTML=copts);
+  const aopts=ACCTS.map(a=>'<option value="'+a.name+'">'+a.code+' '+a.name+'</option>').join('');
+  ['tdebit','tcredit'].forEach(id=>{document.getElementById(id).innerHTML=aopts;});
+  document.getElementById('tdebit').value='Cash & Bank';
+  document.getElementById('tcredit').value="Owner's Equity";
+  const curs=[...new Set(ckeys.map(k=>C[k].cur))].sort();
+  const fopts=curs.map(c=>'<option value="'+c+'">'+c+'</option>').join('');
+  ['fxfrom','fxto'].forEach(id=>document.getElementById(id).innerHTML=fopts);
+  document.getElementById('fxto').value='USD';
 }
 
-function setCountry(c) {
-  currentCountry = c;
-  const cfg = COUNTRIES[c];
-  document.getElementById('countryTag').textContent = `${cfg.symbol} · ${cfg.tax} ${cfg.vatRate}% · ${cfg.standard}`;
-  renderLedger(); renderTrial(); renderFinancials();
-  renderTax(); renderLaws();
-  updateQuickBtns();
+function setCountry(c){S.country=c;saveS();applyCountry(c,true);}
+
+function applyCountry(c,re){
+  const cfg=C[c]||C.Singapore;
+  document.getElementById('ctag').textContent=cfg.sym+' · '+cfg.tax+' '+cfg.vat+'% · '+cfg.std;
+  document.getElementById('fxfrom').value=cfg.cur;
+  document.getElementById('fxbase').textContent=cfg.cur;
+  if(re)renderAll();
+  buildQBtns();
 }
 
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('sec-'+id).classList.add('active');
-  if(btn) btn.classList.add('active');
-  if(id==='financial') renderFinancials();
-  if(id==='trial') renderTrial();
-  if(id==='tax') renderTax();
+function show(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+  const refresh={trial:rTrial,fs:rFS,ratios:rRatios,tax:rTax,invoice:()=>{loadInvForm();rInv();},fx:rFXTable,hrdash:rHRDash,dash:rDash};
+  if(refresh[id])refresh[id]();
 }
 
-// ============================================================
+function renderAll(){rDash();rLedger();rTrial();rFS();rRatios();rAP();rAR();rHR();rHRDash();rTax();rLaws();}
+
+// ═══════════════════════════════════════════════════════════
+// AI DETECTION
+// ═══════════════════════════════════════════════════════════
+function aiDetect(){
+  const d=document.getElementById('tdesc').value.toLowerCase();
+  if(!d){document.getElementById('airesult').innerHTML='';return;}
+  let cat='General',laws=[],dr='',cr='';
+  if(/salary|wage|payroll|staff|bonus|allowance/.test(d)){cat='Payroll';laws=['Income tax (PAYE) withholding required','Employee SS contributions due','Employer SS contributions due'];dr='Salaries Expense';cr='Cash & Bank';}
+  else if(/cpf|ss payable|provident|epf|pf contribution/.test(d)){cat='SS Contribution';laws=['Statutory deadline: by 14th (SG), 15th (MY)'];dr='Employer CPF/SS Expense';cr='CPF/SS Payable';}
+  else if(/rent|lease|premises/.test(d)){cat='Rent';laws=['Deductible operating expense','Withholding tax may apply'];dr='Rent Expense';cr='Cash & Bank';}
+  else if(/equipment|machinery|computer|vehicle|asset purchase/.test(d)){cat='Capital Asset';laws=['Capital allowance applicable — not fully deductible','Depreciation over useful life'];dr='Equipment';cr='Cash & Bank';}
+  else if(/sale|revenue|income|service fee/.test(d)){cat='Revenue';laws:['Taxable income','Output '+C[S.country].tax+' may apply'];dr='Cash & Bank';cr='Sales Revenue';}
+  else if(/supplier|accounts payable|vendor/.test(d)){cat='AP/Payable';laws=['Record as Accounts Payable liability'];dr='Cost of Goods Sold';cr='Accounts Payable';}
+  else if(/depreciation|amortis/.test(d)){cat='Depreciation';laws=['Non-cash. Tax treatment varies'];dr='Depreciation Expense';cr='Accumulated Depreciation';}
+  else if(/loan|borrow|finance/.test(d)){cat='Financing';laws=['Interest deductible, principal not'];dr='Cash & Bank';cr='Bank Loan';}
+  else if(/utility|electricity|water|internet/.test(d)){cat='Utilities';laws=['Deductible operating expense'];dr='Utilities Expense';cr='Cash & Bank';}
+  else if(/tax|vat|gst|sst/.test(d)){cat='Tax';laws:['Submit periodic return to '+C[S.country].body];dr='Tax Expense';cr='Tax Payable';}
+  if(dr)document.getElementById('tdebit').value=dr;
+  if(cr)document.getElementById('tcredit').value=cr;
+  document.getElementById('airesult').innerHTML=
+    '<span class="fs10 tm">AI: </span><span class="tag">'+cat+'</span>'+
+    laws.map(l=>'<span class="tag law">'+l+'</span>').join('')+
+    '<span class="tag" style="background:#1a1020;color:var(--muted)">'+S.country+' '+C[S.country].tax+' '+C[S.country].vat+'%</span>';
+}
+
+// ═══════════════════════════════════════════════════════════
 // LEDGER
-// ============================================================
-function addTxn() {
-  const date=document.getElementById('txnDate').value;
-  const desc=document.getElementById('txnDesc').value.trim();
-  const debit=document.getElementById('txnDebit').value;
-  const credit=document.getElementById('txnCredit').value;
-  const amt=parseFloat(document.getElementById('txnAmt').value);
-  if(!date||!desc||!amt||isNaN(amt)) return alert('Please fill all fields');
-  if(debit===credit) return alert('Debit and Credit accounts must be different');
-  transactions.push({id:Date.now(),date,desc,debit,credit,amt});
-  document.getElementById('txnDesc').value='';
-  document.getElementById('txnAmt').value='';
-  renderLedger(); renderTrial(); renderFinancials();
+// ═══════════════════════════════════════════════════════════
+function addTxn(){
+  const date=document.getElementById('tdate').value;
+  const desc=document.getElementById('tdesc').value.trim();
+  const debit=document.getElementById('tdebit').value;
+  const credit=document.getElementById('tcredit').value;
+  const amt=parseFloat(document.getElementById('tamt').value);
+  if(!date||!desc||!amt||isNaN(amt)||amt<=0){alert('Fill Date, Description and Amount');return;}
+  if(debit===credit){alert('Debit and Credit must be different');return;}
+  const r=document.getElementById('airesult');
+  const catEl=r.querySelector('.tag:not(.law)');
+  const cat=catEl?catEl.textContent:'General';
+  S.txns.push({id:Date.now(),date,desc,debit,credit,amt,cat});
+  saveS();
+  document.getElementById('tdesc').value='';document.getElementById('tamt').value='';
+  document.getElementById('airesult').innerHTML='';
+  rLedger();rTrial();rFS();rRatios();rDash();
+}
+function delTxn(id){if(!confirm('Delete entry?'))return;S.txns=S.txns.filter(t=>t.id!==id);saveS();rLedger();rTrial();rFS();rRatios();rDash();}
+
+function rLedger(){
+  const cfg=C[S.country];
+  document.getElementById('lamth').textContent='Amount ('+cfg.sym+')';
+  document.getElementById('ltbody').innerHTML=S.txns.map(t=>
+    '<tr><td class="tm fs10 mono">'+t.date+'</td><td>'+t.desc+'</td>'+
+    '<td><span class="tag">'+t.cat+'</span></td>'+
+    '<td class="tb">'+t.debit+'</td><td class="tgr">'+t.credit+'</td>'+
+    '<td class="fw7 mono">'+cfg.sym+t.amt.toLocaleString()+'</td>'+
+    '<td class="noprint"><button class="btn-red" onclick="delTxn('+t.id+')">X</button></td></tr>'
+  ).join('');
+  document.getElementById('ltotal').textContent=cfg.sym+S.txns.reduce((s,t)=>s+t.amt,0).toLocaleString();
 }
 
-function renderLedger() {
-  const cfg = COUNTRIES[currentCountry];
-  document.getElementById('ledgerAmtHeader').textContent = `Amount (${cfg.symbol})`;
-  const tbody = document.getElementById('ledgerBody');
-  tbody.innerHTML = transactions.map((t,i)=>`
-    <tr>
-      <td class="text-muted">${t.date}</td>
-      <td>${t.desc}</td>
-      <td class="text-blue">${t.debit}</td>
-      <td class="text-green">${t.credit}</td>
-      <td class="fw7">${cfg.symbol}${t.amt.toLocaleString()}</td>
-    </tr>`).join('');
-  const total = transactions.reduce((s,t)=>s+t.amt,0);
-  document.getElementById('ledgerTotal').textContent = `${cfg.symbol}${total.toLocaleString()}`;
+// ═══════════════════════════════════════════════════════════
+// AP & AR
+// ═══════════════════════════════════════════════════════════
+function addAP(){
+  const supplier=document.getElementById('ap-supplier').value.trim();
+  const desc=document.getElementById('ap-desc').value.trim();
+  const date=document.getElementById('ap-date').value;
+  const due=document.getElementById('ap-due').value;
+  const amt=parseFloat(document.getElementById('ap-amt').value);
+  if(!supplier||!amt||isNaN(amt)){alert('Fill Supplier, Description and Amount');return;}
+  S.ap.push({id:Date.now(),supplier,desc,date,due,amt,paid:false});
+  saveS();rAP();rDash();
+  document.getElementById('ap-supplier').value='';document.getElementById('ap-desc').value='';document.getElementById('ap-amt').value='';
 }
-
-// ============================================================
-// TRIAL BALANCE
-// ============================================================
-function renderTrial() {
-  const cfg = COUNTRIES[currentCountry];
-  const balances = {};
-  ACCOUNTS.forEach(a=>{ balances[a.name]={...a,bal:0}; });
-  transactions.forEach(t=>{
-    if(balances[t.debit]) balances[t.debit].bal += t.amt;
-    if(balances[t.credit]) balances[t.credit].bal -= t.amt;
-  });
-  let totalDr=0, totalCr=0;
-  const rows = ACCOUNTS.filter(a=>balances[a.name].bal!==0).map(a=>{
-    const b = balances[a.name].bal;
-    const dr = b>0?b:0, cr = b<0?Math.abs(b):0;
-    totalDr+=dr; totalCr+=cr;
-    const badgeClass = `badge-${a.type.toLowerCase()}`;
-    return `<tr>
-      <td class="text-muted fs11">${a.code}</td>
-      <td>${a.name}</td>
-      <td><span class="badge ${badgeClass}">${a.type}</span></td>
-      <td class="text-blue">${dr?cfg.symbol+dr.toLocaleString():'—'}</td>
-      <td class="text-green">${cr?cfg.symbol+cr.toLocaleString():'—'}</td>
-    </tr>`;
-  });
-  document.getElementById('trialBody').innerHTML = rows.join('');
-  document.getElementById('trialDebit').textContent = cfg.symbol+totalDr.toLocaleString();
-  document.getElementById('trialCredit').textContent = cfg.symbol+totalCr.toLocaleString()+' ✓';
+function addAR(){
+  const customer=document.getElementById('ar-customer').value.trim();
+  const desc=document.getElementById('ar-desc').value.trim();
+  const date=document.getElementById('ar-date').value;
+  const due=document.getElementById('ar-due').value;
+  const amt=parseFloat(document.getElementById('ar-amt').value);
+  if(!customer||!amt||isNaN(amt)){alert('Fill Customer, Description and Amount');return;}
+  S.ar.push({id:Date.now(),customer,desc,date,due,amt,paid:false});
+  saveS();rAR();rDash();
+  document.getElementById('ar-customer').value='';document.getElementById('ar-desc').value='';document.getElementById('ar-amt').value='';
 }
-
-// ============================================================
-// FINANCIALS
-// ============================================================
-function renderFinancials() {
-  const cfg = COUNTRIES[currentCountry];
-  const now = new Date().toLocaleDateString();
-  document.getElementById('fsDate').textContent = now;
-  document.getElementById('bsDate').textContent = now;
-
-  const rev = transactions.filter(t=>['Sales Revenue','Service Revenue'].includes(t.credit)).reduce((s,t)=>s+t.amt,0);
-  const cogs = transactions.filter(t=>t.debit==='Cost of Goods Sold').reduce((s,t)=>s+t.amt,0);
-  const grossProfit = rev - cogs;
-  const opex = transactions.filter(t=>['Salaries Expense','Rent Expense','Utilities Expense','Depreciation Expense'].includes(t.debit)).reduce((s,t)=>s+t.amt,0);
-  const ebit = grossProfit - opex;
-  const taxExp = ebit * cfg.corpTax / 100;
-  const netIncome = ebit - taxExp;
-
-  document.getElementById('incomeBody').innerHTML = `
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">Revenue</span><span class="text-green fw7">${cfg.symbol}${rev.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">Cost of Goods Sold</span><span class="text-red">(${cfg.symbol}${cogs.toLocaleString()})</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:2px solid var(--border)"><span class="fw7">Gross Profit</span><span class="fw7 text-green">${cfg.symbol}${grossProfit.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">Operating Expenses</span><span class="text-red">(${cfg.symbol}${opex.toLocaleString()})</span></div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">EBIT</span><span>${cfg.symbol}${ebit.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">Corp Tax (${cfg.corpTax}%)</span><span class="text-red">(${cfg.symbol}${taxExp.toFixed(0)})</span></div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0;margin-top:4px"><span class="fw7 text-gold" style="font-size:15px">Net Income</span><span class="fw7" style="font-size:18px;color:${netIncome>=0?'var(--green)':'var(--red)'}">${cfg.symbol}${netIncome.toFixed(0)}</span></div>`;
-
-  const cash = transactions.filter(t=>t.credit==='Cash').reduce((s,t)=>s+t.amt,0) - transactions.filter(t=>t.debit==='Cash').reduce((s,t)=>s+t.amt,0);
-  // Flip: Cash debits increase it
-  const cashBal = transactions.filter(t=>t.debit==='Cash').reduce((s,t)=>s+t.amt,0) - transactions.filter(t=>t.credit==='Cash').reduce((s,t)=>s+t.amt,0);
-  const equityBal = transactions.filter(t=>t.credit==="Owner's Equity").reduce((s,t)=>s+t.amt,0);
-  const eqptBal = transactions.filter(t=>t.debit==='Equipment').reduce((s,t)=>s+t.amt,0);
-  const loanBal = transactions.filter(t=>t.credit==='Bank Loan').reduce((s,t)=>s+t.amt,0);
-  const totalAssets = cashBal + eqptBal;
-  const totalEquityLiab = equityBal + netIncome + loanBal;
-
-  document.getElementById('bsBody').innerHTML = `
-    <div class="text-blue fs11" style="text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">ASSETS</div>
-    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px"><span>Cash & Bank</span><span class="text-blue">${cfg.symbol}${cashBal.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:2px solid var(--border);font-size:13px"><span>Equipment</span><span class="text-blue">${cfg.symbol}${eqptBal.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span class="fw7">Total Assets</span><span class="fw7 text-blue">${cfg.symbol}${totalAssets.toLocaleString()}</span></div>
-    <div class="text-green fs11" style="text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">EQUITY & LIABILITIES</div>
-    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px"><span>Owner's Equity</span><span class="text-green">${cfg.symbol}${equityBal.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px"><span>Retained Earnings</span><span class="text-green">${cfg.symbol}${netIncome.toFixed(0)}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:2px solid var(--border);font-size:13px"><span>Bank Loan</span><span class="text-red">${cfg.symbol}${loanBal.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:7px 0"><span class="fw7">Total Equity & Liab.</span><span class="fw7 text-green">${cfg.symbol}${totalEquityLiab.toFixed(0)}</span></div>`;
-
-  const margin = rev>0?((netIncome/rev)*100).toFixed(1)+'%':'N/A';
-  document.getElementById('ratioGrid').innerHTML = [
-    {label:'Profit Margin',val:margin,hint:'Net Income ÷ Revenue'},
-    {label:'Corp Tax Rate',val:cfg.corpTax+'%',hint:currentCountry+' rate'},
-    {label:cfg.tax+' Rate',val:cfg.vatRate+'%',hint:'On goods & services'},
-    {label:'Std',val:cfg.standard,hint:'Reporting framework'},
-  ].map(r=>`<div class="stat"><div class="stat-val">${r.val}</div><div class="stat-label">${r.label}</div><div class="stat-hint">${r.hint}</div></div>`).join('');
+function markPaid(type,id){
+  const arr=type==='ap'?S.ap:S.ar;
+  const item=arr.find(x=>x.id===id);
+  if(item)item.paid=!item.paid;
+  saveS();type==='ap'?rAP():rAR();rDash();
 }
+function delAP(id){if(!confirm('Delete?'))return;S.ap=S.ap.filter(x=>x.id!==id);saveS();rAP();rDash();}
+function delAR(id){if(!confirm('Delete?'))return;S.ar=S.ar.filter(x=>x.id!==id);saveS();rAR();rDash();}
 
-// ============================================================
-// INVOICE
-// ============================================================
-function renderInvoiceItems() {
-  document.getElementById('invItems').innerHTML = invItems.map((item,i)=>`
-    <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:6px;margin-bottom:6px">
-      <input type="text" placeholder="Description" value="${item.desc}" oninput="invItems[${i}].desc=this.value;renderInvoice()"/>
-      <input type="number" placeholder="Qty" value="${item.qty}" oninput="invItems[${i}].qty=+this.value;renderInvoice()"/>
-      <input type="number" placeholder="Rate" value="${item.rate}" oninput="invItems[${i}].rate=+this.value;renderInvoice()"/>
-      <button class="btn btn-outline" onclick="invItems.splice(${i},1);renderInvoiceItems();renderInvoice()" style="padding:8px 10px">✕</button>
-    </div>`).join('');
+function daysDiff(dateStr){
+  const d=new Date(dateStr);const now=new Date();
+  return Math.round((d-now)/(1000*60*60*24));
 }
-
-function addInvItem() {
-  invItems.push({desc:'',qty:1,rate:0});
-  renderInvoiceItems();
-}
-
-function renderInvoice() {
-  const cfg = COUNTRIES[currentCountry];
-  const from = document.getElementById('invFrom').value || 'Your Business';
-  const fromAddr = document.getElementById('invFromAddr').value || '';
-  const to = document.getElementById('invTo').value || 'Client Name';
-  const toAddr = document.getElementById('invToAddr').value || '';
-  const invNo = document.getElementById('invNo').value || 'INV-001';
-  const invDate = document.getElementById('invDate').value || new Date().toISOString().split('T')[0];
-  const subtotal = invItems.reduce((s,i)=>s+(i.qty*i.rate),0);
-  const taxAmt = subtotal * cfg.vatRate/100;
-  const total = subtotal + taxAmt;
-
-  const html = `<div class="invoice-preview">
-    <div class="inv-header">
-      <div><div class="inv-title">INVOICE</div><div style="color:#888;font-size:12px">#${invNo} · ${invDate}</div></div>
-      <div style="text-align:right"><div style="font-weight:700;font-size:15px">${from}</div><div style="color:#666;font-size:12px">${fromAddr}</div><div style="color:#888;font-size:11px;margin-top:4px">${cfg.standard} · ${cfg.tax}</div></div>
-    </div>
-    <div style="margin-bottom:16px"><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px">Bill To</div><div style="font-weight:700">${to}</div><div style="color:#555;font-size:12px">${toAddr}</div></div>
-    <table class="inv-table" style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
-      <thead><tr><th style="text-align:left">Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
-      <tbody>${invItems.map(i=>`<tr><td>${i.desc||'—'}</td><td style="text-align:center">${i.qty}</td><td style="text-align:right">${cfg.symbol}${i.rate.toLocaleString()}</td><td style="text-align:right;font-weight:600">${cfg.symbol}${(i.qty*i.rate).toLocaleString()}</td></tr>`).join('')}</tbody>
-    </table>
-    <div style="text-align:right;border-top:1px solid #ddd;padding-top:12px">
-      <div style="color:#666;font-size:13px">Subtotal: ${cfg.symbol}${subtotal.toLocaleString()}</div>
-      ${cfg.vatRate>0?`<div style="color:#666;font-size:13px">${cfg.tax} (${cfg.vatRate}%): ${cfg.symbol}${taxAmt.toFixed(2)}</div>`:''}
-      <div style="font-size:20px;font-weight:900;color:#8b6914;margin-top:6px">TOTAL: ${cfg.symbol}${total.toFixed(2)} ${cfg.currency}</div>
-    </div>
-    <div style="margin-top:20px;font-size:11px;color:#aaa;border-top:1px solid #eee;padding-top:10px">Prepared under ${cfg.standard} standards · ${currentCountry} ${cfg.tax} regulations apply</div>
-  </div>`;
-  document.getElementById('invoicePreview').innerHTML = html;
-  document.getElementById('invoicePrintArea').innerHTML = html;
-}
-
-// ============================================================
-// HR & PAYROLL
-// ============================================================
-function calcPayroll(salary, country) {
-  const c = COUNTRIES[country]||COUNTRIES['USA'];
-  let taxRate, socialRate;
-  switch(country) {
-    case 'USA': taxRate=0.22; socialRate=0.0765; break;
-    case 'UK': taxRate=0.20; socialRate=0.12; break;
-    case 'India': taxRate=0.20; socialRate=0.12; break;
-    case 'Australia': taxRate=0.325; socialRate=0; break;
-    case 'UAE': taxRate=0; socialRate=0.05; break;
-    case 'Singapore': taxRate=0.07; socialRate=0.20; break;
-    case 'Canada': taxRate=0.205; socialRate=0.0761; break;
-    case 'SouthAfrica': taxRate=0.26; socialRate=0.01; break;
-    case 'Nigeria': taxRate=0.15; socialRate=0.08; break;
-    case 'Kenya': taxRate=0.25; socialRate=0.06; break;
-    case 'Pakistan': taxRate=0.20; socialRate=0.01; break;
-    case 'Bangladesh': taxRate=0.15; socialRate=0; break;
-    case 'Malaysia': taxRate=0.13; socialRate=0.11; break;
-    case 'Philippines': taxRate=0.20; socialRate=0.045; break;
-    default: taxRate=0.20; socialRate=0.05;
+function agingPill(days,type){
+  if(type==='ap'){
+    if(days>14)return '<span class="pill pill-green">'+days+'d</span>';
+    if(days>0)return '<span class="pill pill-orange">'+days+'d</span>';
+    return '<span class="pill pill-red">'+Math.abs(days)+'d overdue</span>';
+  }else{
+    if(days>0)return '<span class="pill pill-blue">Due in '+days+'d</span>';
+    if(days>=-30)return '<span class="pill pill-orange">'+Math.abs(days)+'d overdue</span>';
+    return '<span class="pill pill-red">'+Math.abs(days)+'d overdue</span>';
   }
-  const incomeTax = salary*taxRate;
-  const social = salary*socialRate;
-  const net = salary - incomeTax - social;
-  return {gross:salary, incomeTax, social, net, taxRate, socialRate};
 }
 
-function addEmployee() {
-  const name=document.getElementById('empName').value.trim();
-  const role=document.getElementById('empRole').value.trim();
-  const salary=parseFloat(document.getElementById('empSalary').value);
-  const country=document.getElementById('empCountry').value;
-  if(!name||!salary||isNaN(salary)) return alert('Please fill all fields');
-  employees.push({id:Date.now(),name,role,salary,country});
-  document.getElementById('empName').value='';
-  document.getElementById('empRole').value='';
-  document.getElementById('empSalary').value='';
-  renderHR();
+function rAP(){
+  const cfg=C[S.country];
+  const outstanding=S.ap.filter(x=>!x.paid);
+  document.getElementById('aptotal').textContent=cfg.sym+outstanding.reduce((s,x)=>s+x.amt,0).toLocaleString();
+  document.getElementById('apbody').innerHTML=S.ap.map(x=>{
+    const days=daysDiff(x.due);
+    return '<tr style="opacity:'+(x.paid?.5:1)+'">'+
+      '<td class="fw7">'+x.supplier+'</td><td>'+x.desc+'</td>'+
+      '<td class="tm fs11">'+x.date+'</td><td class="tm fs11">'+x.due+'</td>'+
+      '<td class="mono">'+cfg.sym+x.amt.toLocaleString()+'</td>'+
+      '<td>'+agingPill(days,'ap')+'</td>'+
+      '<td>'+(x.paid?'<span class="pill pill-green">Paid</span>':'<span class="pill pill-orange">Outstanding</span>')+'</td>'+
+      '<td class="noprint" style="display:flex;gap:4px">'+
+      '<button class="btn btn-green" style="font-size:10px;padding:3px 7px" onclick="markPaid(\'ap\','+x.id+')">'+(x.paid?'Unpay':'Pay')+'</button>'+
+      '<button class="btn-red" onclick="delAP('+x.id+')">X</button></td></tr>';
+  }).join('');
 }
 
-function renderHR() {
-  const rows = employees.map(e=>{
-    const p = calcPayroll(e.salary, e.country);
-    const cfg = COUNTRIES[e.country]||COUNTRIES['USA'];
-    return `<tr>
-      <td class="fw7">${e.name}</td>
-      <td class="text-muted">${e.role}</td>
-      <td>${cfg.flag} ${e.country}</td>
-      <td>${cfg.symbol}${p.gross.toLocaleString()}</td>
-      <td class="text-red">–${cfg.symbol}${p.incomeTax.toFixed(0)}<div class="fs11 text-muted">${(p.taxRate*100).toFixed(0)}% rate</div></td>
-      <td class="text-red">–${cfg.symbol}${p.social.toFixed(0)}<div class="fs11 text-muted">${(p.socialRate*100).toFixed(0)}% rate</div></td>
-      <td class="fw7 text-green">${cfg.symbol}${p.net.toFixed(0)}</td>
-      <td class="no-print"><button class="btn btn-outline" style="font-size:11px;padding:5px 10px" onclick="printPayslip(${e.id})">🖨️ Payslip</button></td>
-    </tr>`;
+function rAR(){
+  const cfg=C[S.country];
+  const outstanding=S.ar.filter(x=>!x.paid);
+  document.getElementById('artotal').textContent=cfg.sym+outstanding.reduce((s,x)=>s+x.amt,0).toLocaleString();
+  document.getElementById('arbody').innerHTML=S.ar.map(x=>{
+    const days=daysDiff(x.due);
+    return '<tr style="opacity:'+(x.paid?.5:1)+'">'+
+      '<td class="fw7">'+x.customer+'</td><td>'+x.desc+'</td>'+
+      '<td class="tm fs11">'+x.date+'</td><td class="tm fs11">'+x.due+'</td>'+
+      '<td class="mono">'+cfg.sym+x.amt.toLocaleString()+'</td>'+
+      '<td>'+agingPill(days,'ar')+'</td>'+
+      '<td>'+(x.paid?'<span class="pill pill-green">Collected</span>':'<span class="pill pill-orange">Outstanding</span>')+'</td>'+
+      '<td class="noprint" style="display:flex;gap:4px">'+
+      '<button class="btn btn-green" style="font-size:10px;padding:3px 7px" onclick="markPaid(\'ar\','+x.id+')">'+(x.paid?'Uncollect':'Collect')+'</button>'+
+      '<button class="btn-red" onclick="delAR('+x.id+')">X</button></td></tr>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// TRIAL BALANCE
+// ═══════════════════════════════════════════════════════════
+function getBals(){
+  const bal={};
+  ACCTS.forEach(a=>{bal[a.name]={...a,v:0};});
+  S.txns.forEach(t=>{
+    if(bal[t.debit])bal[t.debit].v+=t.amt;
+    if(bal[t.credit])bal[t.credit].v-=t.amt;
   });
-  document.getElementById('hrBody').innerHTML = rows.join('') || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">No employees added yet</td></tr>`;
+  return bal;
+}
+function rTrial(){
+  const cfg=C[S.country];
+  document.getElementById('drh').textContent='Debit ('+cfg.sym+')';
+  document.getElementById('crh').textContent='Credit ('+cfg.sym+')';
+  const bal=getBals();
+  let td=0,tc=0;
+  const rows=ACCTS.filter(a=>bal[a.name].v!==0).map(a=>{
+    const v=bal[a.name].v;const dr=v>0?v:0,cr=v<0?Math.abs(v):0;
+    td+=dr;tc+=cr;
+    return '<tr><td class="mono tm fs10">'+a.code+'</td><td>'+a.name+'</td>'+
+      '<td><span class="badge b-'+a.type+'">'+a.type+'</span></td>'+
+      '<td class="tm fs10">'+a.normal+'</td>'+
+      '<td class="tb mono">'+(dr?cfg.sym+dr.toLocaleString():'&mdash;')+'</td>'+
+      '<td class="tgr mono">'+(cr?cfg.sym+cr.toLocaleString():'&mdash;')+'</td></tr>';
+  });
+  document.getElementById('tribody').innerHTML=rows.join('');
+  document.getElementById('tridr').textContent=cfg.sym+td.toLocaleString();
+  document.getElementById('tricr').textContent=cfg.sym+tc.toLocaleString()+' &#10003;';
 }
 
-function printPayslip(id) {
-  const e = employees.find(x=>x.id===id);
-  if(!e) return;
-  const p = calcPayroll(e.salary, e.country);
-  const cfg = COUNTRIES[e.country]||COUNTRIES['USA'];
-  const html = `<div class="payslip">
-    <div class="payslip-header">
-      <div><div class="payslip-title">PAYSLIP</div><div style="font-size:11px;color:#888">Period: ${new Date().toLocaleDateString('en',{month:'long',year:'numeric'})}</div></div>
-      <div style="text-align:right"><div style="font-weight:700">${e.name}</div><div style="color:#666;font-size:12px">${e.role}</div><div style="font-size:11px;color:#aaa">${cfg.flag} ${e.country}</div></div>
-    </div>
-    <table style="width:100%;font-size:13px;border-collapse:collapse">
-      <tr style="background:#f5f0e8"><td style="padding:8px"><strong>Earnings</strong></td><td></td><td style="padding:8px"><strong>Deductions</strong></td><td></td></tr>
-      <tr><td style="padding:6px 8px;color:#555">Gross Salary</td><td style="padding:6px 8px;font-weight:700">${cfg.symbol}${p.gross.toLocaleString()}</td><td style="padding:6px 8px;color:#555">Income Tax (${(p.taxRate*100).toFixed(0)}%)</td><td style="padding:6px 8px;color:#c00">–${cfg.symbol}${p.incomeTax.toFixed(0)}</td></tr>
-      <tr><td></td><td></td><td style="padding:6px 8px;color:#555">Social Contrib. (${(p.socialRate*100).toFixed(0)}%)</td><td style="padding:6px 8px;color:#c00">–${cfg.symbol}${p.social.toFixed(0)}</td></tr>
-      <tr style="border-top:2px solid #c9a84c;background:#fffdf5"><td style="padding:10px 8px;font-weight:700">NET PAY</td><td style="padding:10px 8px;font-weight:900;font-size:18px;color:#2d7a2d">${cfg.symbol}${p.net.toFixed(0)}</td><td></td><td></td></tr>
-    </table>
-    <div style="font-size:10px;color:#aaa;margin-top:16px">Calculated under ${e.country} tax law · ${cfg.standard} · This is an educational document</div>
-  </div>`;
-  document.getElementById('payslipArea').innerHTML = html;
+// ═══════════════════════════════════════════════════════════
+// FINANCIAL STATEMENTS + CASH FLOW
+// ═══════════════════════════════════════════════════════════
+function getFinData(){
+  const cfg=C[S.country];
+  const rev=S.txns.filter(t=>['Sales Revenue','Service Revenue','Interest Income','Other Income'].includes(t.credit)).reduce((s,t)=>s+t.amt,0);
+  const cogs=S.txns.filter(t=>t.debit==='Cost of Goods Sold').reduce((s,t)=>s+t.amt,0);
+  const gp=rev-cogs;
+  const sal=S.txns.filter(t=>t.debit==='Salaries Expense').reduce((s,t)=>s+t.amt,0);
+  const erss=S.txns.filter(t=>t.debit==='Employer CPF/SS Expense').reduce((s,t)=>s+t.amt,0);
+  const rent=S.txns.filter(t=>t.debit==='Rent Expense').reduce((s,t)=>s+t.amt,0);
+  const util=S.txns.filter(t=>t.debit==='Utilities Expense').reduce((s,t)=>s+t.amt,0);
+  const mkt=S.txns.filter(t=>t.debit==='Marketing Expense').reduce((s,t)=>s+t.amt,0);
+  const ins=S.txns.filter(t=>t.debit==='Insurance Expense').reduce((s,t)=>s+t.amt,0);
+  const dep=S.txns.filter(t=>t.debit==='Depreciation Expense').reduce((s,t)=>s+t.amt,0);
+  const intexp=S.txns.filter(t=>t.debit==='Interest Expense').reduce((s,t)=>s+t.amt,0);
+  const other=S.txns.filter(t=>t.debit==='Other Expenses').reduce((s,t)=>s+t.amt,0);
+  const opex=sal+erss+rent+util+mkt+ins+other;
+  const ebitda=gp-opex;
+  const ebit=ebitda-dep;
+  const ebt=ebit-intexp;
+  const tax=Math.max(0,ebt*cfg.corp/100);
+  const net=ebt-tax;
+  const cashBal=S.txns.filter(t=>t.debit==='Cash & Bank').reduce((s,t)=>s+t.amt,0)-S.txns.filter(t=>t.credit==='Cash & Bank').reduce((s,t)=>s+t.amt,0);
+  const ar=S.ar.filter(x=>!x.paid).reduce((s,x)=>s+x.amt,0);
+  const ap=S.ap.filter(x=>!x.paid).reduce((s,x)=>s+x.amt,0);
+  const eqptBal=S.txns.filter(t=>t.debit==='Equipment').reduce((s,t)=>s+t.amt,0)-dep;
+  const loanBal=S.txns.filter(t=>t.credit==='Bank Loan').reduce((s,t)=>s+t.amt,0);
+  const eqBal=S.txns.filter(t=>t.credit==="Owner's Equity").reduce((s,t)=>s+t.amt,0)+S.txns.filter(t=>t.credit==='Share Capital').reduce((s,t)=>s+t.amt,0);
+  const curAssets=cashBal+ar;
+  const totAssets=curAssets+eqptBal;
+  const curLiab=ap;
+  const totLiab=curLiab+loanBal;
+  const totEquity=eqBal+net;
+  return{rev,cogs,gp,sal,erss,rent,util,mkt,ins,dep,intexp,other,opex,ebitda,ebit,ebt,tax,net,cashBal,ar,ap,eqptBal,loanBal,eqBal,curAssets,totAssets,curLiab,totLiab,totEquity,cfg};
+}
+
+function rFS(){
+  const F=getFinData();const cfg=F.cfg;
+  const now=new Date().toLocaleDateString();
+  document.getElementById('fsdate').textContent=now;
+  document.getElementById('bsdate').textContent=now;
+  const row=(l,v,cls,b,indent)=>'<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px'+(b?';font-weight:700':'')+'">'+'<span class="'+(b?'':'tm')+'">'+(indent?'&nbsp;&nbsp;':'')+l+'</span><span class="mono '+(cls||'')+'">'+v+'</span></div>';
+  document.getElementById('isbody').innerHTML=
+    row('Revenue',cfg.sym+F.rev.toLocaleString(),'tgr',true)+
+    row('Cost of Goods Sold','('+cfg.sym+F.cogs.toLocaleString()+')')+
+    row('Gross Profit',cfg.sym+F.gp.toLocaleString(),'tgr',true)+
+    row('Staff Costs','('+cfg.sym+(F.sal+F.erss).toLocaleString()+')',null,false,true)+
+    row('Rent','('+cfg.sym+F.rent.toLocaleString()+')',null,false,true)+
+    row('Other OpEx','('+cfg.sym+(F.util+F.mkt+F.ins+F.other).toLocaleString()+')',null,false,true)+
+    row('EBITDA',cfg.sym+F.ebitda.toLocaleString(),'tg')+
+    row('Depreciation','('+cfg.sym+F.dep.toLocaleString()+')')+
+    row('EBIT',cfg.sym+F.ebit.toLocaleString(),'tg')+
+    row('Interest','('+cfg.sym+F.intexp.toLocaleString()+')')+
+    row('EBT',cfg.sym+F.ebt.toLocaleString())+
+    row('Tax ('+cfg.corp+'%)','('+cfg.sym+F.tax.toFixed(0)+')',null)+
+    '<div style="display:flex;justify-content:space-between;padding:8px 0;margin-top:4px"><span class="tg fw7">Net Income</span><span class="fw7 mono" style="font-size:16px;color:'+(F.net>=0?'var(--green)':'var(--red)')+'">'+cfg.sym+F.net.toFixed(0)+'</span></div>';
+
+  document.getElementById('bsbody').innerHTML=
+    '<div class="tb fs10 mb8" style="text-transform:uppercase;letter-spacing:1px">Assets</div>'+
+    row('Cash &amp; Bank',cfg.sym+F.cashBal.toLocaleString(),'tb',false,true)+
+    row('Accounts Receivable',cfg.sym+F.ar.toLocaleString(),'tb',false,true)+
+    row('Equipment (net)',cfg.sym+F.eqptBal.toLocaleString(),'tb',false,true)+
+    row('Total Assets',cfg.sym+F.totAssets.toLocaleString(),'tb',true)+
+    '<div class="tr fs10" style="text-transform:uppercase;letter-spacing:1px;margin:10px 0 4px">Liabilities</div>'+
+    row('Accounts Payable',cfg.sym+F.ap.toLocaleString(),'tr',false,true)+
+    row('Bank Loan',cfg.sym+F.loanBal.toLocaleString(),'tr',false,true)+
+    row('Total Liabilities',cfg.sym+F.totLiab.toLocaleString(),'tr',true)+
+    '<div class="tgr fs10" style="text-transform:uppercase;letter-spacing:1px;margin:10px 0 4px">Equity</div>'+
+    row('Paid-in Capital',cfg.sym+F.eqBal.toLocaleString(),'tgr',false,true)+
+    row('Net Income',cfg.sym+F.net.toFixed(0),'tgr',false,true)+
+    row('Total Equity',cfg.sym+F.totEquity.toFixed(0),'tgr',true)+
+    '<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:6px;font-size:11px;text-align:center;color:'+(Math.abs(F.totAssets-(F.totLiab+F.totEquity))<1?'var(--green)':'var(--red)')+'">'+
+    (Math.abs(F.totAssets-(F.totLiab+F.totEquity))<1?'&#10003; Assets = Liabilities + Equity':'&#9888; Balance Sheet does not balance — check entries')+'</div>';
+
+  // CASH FLOW
+  const cfOp=F.net+F.dep-F.ar+F.ap;
+  const cfInv=-(S.txns.filter(t=>t.debit==='Equipment').reduce((s,t)=>s+t.amt,0));
+  const cfFin=S.txns.filter(t=>t.credit==='Bank Loan').reduce((s,t)=>s+t.amt,0)-S.txns.filter(t=>t.debit==='Bank Loan').reduce((s,t)=>s+t.amt,0);
+  const netCF=cfOp+cfInv+cfFin;
+  document.getElementById('cfop').innerHTML=
+    row('Net Income',cfg.sym+F.net.toFixed(0))+
+    row('Add: Depreciation','+'+cfg.sym+F.dep.toLocaleString())+
+    row('Change in AR',(F.ar>0?'-':'')+cfg.sym+Math.abs(F.ar).toLocaleString())+
+    row('Change in AP','+'+cfg.sym+F.ap.toLocaleString())+
+    '<div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700;border-top:2px solid var(--border);font-size:12px"><span class="tg">Net Operating CF</span><span class="mono" style="color:'+(cfOp>=0?'var(--green)':'var(--red)')+'">'+cfg.sym+cfOp.toFixed(0)+'</span></div>';
+  document.getElementById('cfif').innerHTML=
+    row('Equipment Purchased',cfInv.toFixed(0)>=0?'+'+cfg.sym+Math.abs(cfInv).toLocaleString():'-'+cfg.sym+Math.abs(cfInv).toLocaleString())+
+    row('Net Investing CF',cfg.sym+cfInv.toLocaleString())+
+    row('Loans Received/Repaid',cfg.sym+cfFin.toLocaleString())+
+    row('Net Financing CF',cfg.sym+cfFin.toLocaleString())+
+    '<div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700;border-top:2px solid var(--border);font-size:12px"><span class="tg">Net Change in Cash</span><span class="mono" style="color:'+(netCF>=0?'var(--green)':'var(--red)')+'">'+cfg.sym+netCF.toFixed(0)+'</span></div>';
+}
+
+// ═══════════════════════════════════════════════════════════
+// RATIOS
+// ═══════════════════════════════════════════════════════════
+function rRatios(){
+  const F=getFinData();const cfg=F.cfg;const s=cfg.sym;
+  function kpi(v,l,sub,good,warn,bad){
+    const n=parseFloat(v);let cls='';
+    if(!isNaN(n)){if(n>=good)cls='kpi-good';else if(n>=warn)cls='kpi-warn';else cls='kpi-bad';}
+    return '<div class="kpi '+cls+'"><div class="kpi-v">'+v+'</div><div class="kpi-l">'+l+'</div><div class="kpi-sub">'+sub+'</div></div>';
+  }
+  const cur=F.curLiab>0?(F.curAssets/F.curLiab).toFixed(2):'N/A';
+  const quick=F.curLiab>0?((F.cashBal+F.ar)/F.curLiab).toFixed(2):'N/A';
+  const dso=F.rev>0?((F.ar/F.rev)*365).toFixed(0):'N/A';
+  const dpo=F.cogs>0?((F.ap/F.cogs)*365).toFixed(0):'N/A';
+  document.getElementById('liq-ratios').innerHTML=
+    kpi(cur,'Current Ratio','Target: >2.0',2,1.5,0)+
+    kpi(quick,'Quick Ratio','Target: >1.0',1,.7,0)+
+    kpi(F.cashBal>0?s+(F.cashBal/1000).toFixed(0)+'k':'N/A','Cash Balance','Operating buffer','','','')+
+    kpi(F.totLiab>0&&F.totEquity>0?(F.totLiab/F.totEquity).toFixed(2):'N/A','Debt-to-Equity','Target: <2.0',0,0,0);
+
+  const gm=F.rev>0?((F.gp/F.rev)*100).toFixed(1)+'%':'N/A';
+  const nm=F.rev>0?((F.net/F.rev)*100).toFixed(1)+'%':'N/A';
+  const roa=F.totAssets>0?((F.net/F.totAssets)*100).toFixed(1)+'%':'N/A';
+  const roe=F.totEquity>0?((F.net/F.totEquity)*100).toFixed(1)+'%':'N/A';
+  document.getElementById('prof-ratios').innerHTML=
+    kpi(gm,'Gross Margin','Target: >40%',40,25,0)+
+    kpi(nm,'Net Margin','Target: >10%',10,5,0)+
+    kpi(roa,'ROA','Return on Assets',8,4,0)+
+    kpi(roe,'ROE','Return on Equity',15,8,0);
+
+  const arOut=S.ar.filter(x=>!x.paid).length;
+  const topCust=S.ar.length>0?S.ar.sort((a,b)=>b.amt-a.amt)[0].customer:'None';
+  document.getElementById('sales-ratios').innerHTML=
+    kpi(s+F.rev.toLocaleString(),'Total Revenue','Period to date','','','')+
+    kpi(s+F.gp.toLocaleString(),'Gross Profit','After COGS','','','')+
+    kpi(arOut+' invoices','Open AR','Uncollected',0,3,6)+
+    kpi(dso+'d','DSO','Avg collection days',30,45,60);
+
+  document.getElementById('eff-ratios').innerHTML=
+    kpi(dso+'d','Days Sales Outstanding','AR collection speed',30,45,60)+
+    kpi(dpo+'d','Days Payable Outstanding','AP payment days',30,45,60)+
+    kpi(F.rev>0&&F.totAssets>0?(F.rev/F.totAssets).toFixed(2):'N/A','Asset Turnover','Revenue per $ asset',1,.5,0)+
+    kpi(F.rev>0&&F.opex>0?(F.opex/F.rev*100).toFixed(1)+'%':'N/A','OpEx Ratio','Expenses / Revenue',0,0,60);
+
+  document.getElementById('ratio-explain').innerHTML=
+    '<b class="tg">Current Ratio</b> = Current Assets / Current Liabilities. Measures ability to pay short-term debts. >2 is healthy.<br/>'+
+    '<b class="tg">Quick Ratio</b> = (Cash + AR) / Current Liabilities. Stricter liquidity test. >1 is good.<br/>'+
+    '<b class="tg">Gross Margin</b> = Gross Profit / Revenue. Shows profitability before overheads.<br/>'+
+    '<b class="tg">Net Margin</b> = Net Income / Revenue. Bottom-line profitability after all costs.<br/>'+
+    '<b class="tg">ROE</b> = Net Income / Equity. How well the company uses shareholders money.<br/>'+
+    '<b class="tg">DSO</b> = (Accounts Receivable / Revenue) x 365. Days to collect from customers. Lower is better.<br/>'+
+    '<b class="tg">DPO</b> = (Accounts Payable / COGS) x 365. Days to pay suppliers. Higher preserves cash.<br/>'+
+    '<b class="tg">Debt-to-Equity</b> = Total Liabilities / Total Equity. Financial leverage. <2 generally acceptable.';
+}
+
+// ═══════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════
+function rDash(){
+  const F=getFinData();const cfg=F.cfg;const s=cfg.sym;
+  const arOut=S.ar.filter(x=>!x.paid).reduce((t,x)=>t+x.amt,0);
+  const apOut=S.ap.filter(x=>!x.paid).reduce((t,x)=>t+x.amt,0);
+  document.getElementById('dash-kpis').innerHTML=[
+    {v:s+F.rev.toLocaleString(),l:'Revenue',sub:'All periods',cls:'kpi-good'},
+    {v:s+Math.abs(F.net).toLocaleString(),l:F.net>=0?'Net Profit':'Net Loss',sub:(F.rev>0?((F.net/F.rev)*100).toFixed(1):'0')+'% margin',cls:F.net>=0?'kpi-good':'kpi-bad'},
+    {v:s+F.cashBal.toLocaleString(),l:'Cash Balance',sub:'Bank & cash',cls:F.cashBal>0?'kpi-blue':'kpi-bad'},
+    {v:s+arOut.toLocaleString(),l:'AR Outstanding',sub:S.ar.filter(x=>!x.paid).length+' invoices',cls:'kpi-purple'},
+    {v:s+apOut.toLocaleString(),l:'AP Outstanding',sub:S.ap.filter(x=>!x.paid).length+' bills',cls:'kpi-warn'},
+  ].map(k=>'<div class="kpi '+k.cls+'"><div class="kpi-v">'+k.v+'</div><div class="kpi-l">'+k.l+'</div><div class="kpi-sub">'+k.sub+'</div></div>').join('');
+
+  document.getElementById('dash-pl').innerHTML=
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span class="tm">Revenue</span><span class="tgr mono">'+s+F.rev.toLocaleString()+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span class="tm">Gross Profit</span><span class="mono">'+s+F.gp.toLocaleString()+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span class="tm">EBITDA</span><span class="tg mono">'+s+F.ebitda.toLocaleString()+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span class="tm">Tax ('+cfg.corp+'%)</span><span class="tr mono">('+s+F.tax.toFixed(0)+')</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:8px 0;font-weight:700;font-size:14px"><span class="tg">Net Income</span><span class="mono" style="color:'+(F.net>=0?'var(--green)':'var(--red)')+'">'+s+F.net.toFixed(0)+'</span></div>';
+
+  const overdue=S.ar.filter(x=>!x.paid&&daysDiff(x.due)<0);
+  document.getElementById('dash-apar').innerHTML=
+    '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Accounts Receivable</div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Outstanding</span><span class="tp mono">'+s+arOut.toLocaleString()+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px"><span class="tr">Overdue</span><span class="tr mono">'+s+overdue.reduce((t,x)=>t+x.amt,0).toLocaleString()+'</span></div>'+
+    '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Accounts Payable</div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Outstanding</span><span class="tr mono">'+s+apOut.toLocaleString()+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:12px"><span>Net Working Capital</span><span class="mono" style="color:'+(arOut-apOut>=0?'var(--green)':'var(--red)')+'">'+s+(arOut-apOut).toLocaleString()+'</span></div>';
+
+  const cfOp=F.net+F.dep-F.ar+F.ap;
+  const cfInv=-(S.txns.filter(t=>t.debit==='Equipment').reduce((s,t)=>s+t.amt,0));
+  const cfFin=S.txns.filter(t=>t.credit==='Bank Loan').reduce((s,t)=>s+t.amt,0);
+  document.getElementById('dash-cf').innerHTML='<div class="g3">'+
+    [['Operating',cfOp,'+Net income, +Depreciation, -AR change'],['Investing',cfInv,'Capital expenditures'],['Financing',cfFin,'Loans & equity']].map(([l,v,h])=>
+      '<div class="stat"><div class="stat-v" style="color:'+(v>=0?'var(--green)':'var(--red)')+'">'+cfg.sym+v.toFixed(0)+'</div><div class="stat-l">'+l+' CF</div><div class="fs10 tm">'+h+'</div></div>'
+    ).join('')+'</div>';
+}
+
+// ═══════════════════════════════════════════════════════════
+// PAYROLL — FULL ACCURATE CALCULATIONS
+// ═══════════════════════════════════════════════════════════
+function payCalc(sal,country,age){
+  age=age||35;
+  const cfg=C[country]||C.Singapore;
+  let inctax=0,ee_ss=0,er_ss=0,breakdown=[],er_breakdown=[];
+
+  if(country==='Singapore'){
+    // CPF age bands
+    let cpfRates=cfg.cpf.u55;
+    let band='<=55';
+    if(age>65){cpfRates=cfg.cpf.o65;band='>65';}
+    else if(age>60){cpfRates=cfg.cpf.u65;band='61-65';}
+    else if(age>55){cpfRates=cfg.cpf.u60;band='56-60';}
+    const cpfWage=Math.min(sal,6800); // CPF ordinary wage ceiling S$6,800/month
+    ee_ss=cpfWage*cpfRates.ee;
+    er_ss=cpfWage*cpfRates.er+(sal*cfg.sdl); // CPF + SDL
+    breakdown.push({l:'CPF Employee ('+Math.round(cpfRates.ee*100)+'%, age band '+band+')',v:ee_ss});
+    er_breakdown.push({l:'CPF Employer ('+Math.round(cpfRates.er*100)+'%)',v:cpfWage*cpfRates.er});
+    er_breakdown.push({l:'SDL (0.25%)',v:sal*cfg.sdl});
+    // SG income tax estimate (simplified progressive)
+    const annual=sal*12;
+    if(annual<=20000)inctax=0;
+    else if(annual<=30000)inctax=(annual-20000)*.02/12;
+    else if(annual<=40000)inctax=(200+(annual-30000)*.035)/12;
+    else if(annual<=80000)inctax=(550+(annual-40000)*.07)/12;
+    else if(annual<=120000)inctax=(3350+(annual-80000)*.115)/12;
+    else if(annual<=160000)inctax=(7950+(annual-120000)*.15)/12;
+    else if(annual<=200000)inctax=(13950+(annual-160000)*.18)/12;
+    else inctax=(21150+(annual-200000)*.19)/12;
+    breakdown.push({l:'Income Tax (progressive, SG)',v:inctax});
+  }
+  else if(country==='Malaysia'){
+    // EPF
+    const epfCap=Math.min(sal,cfg.epf?Infinity:sal);
+    const er_rate=sal<=cfg.epf.cap?cfg.epf.er_low:cfg.epf.er_high;
+    ee_ss=sal*cfg.epf.ee;
+    er_ss=sal*er_rate;
+    breakdown.push({l:'EPF Employee (11%)',v:ee_ss});
+    er_breakdown.push({l:'EPF Employer ('+(er_rate*100)+'%)',v:er_ss});
+    // SOCSO (capped RM4k)
+    const socsoWage=Math.min(sal,cfg.socso.cap);
+    const socso_ee=socsoWage*cfg.socso.ee;
+    const socso_er=socsoWage*cfg.socso.er;
+    ee_ss+=socso_ee;er_ss+=socso_er;
+    breakdown.push({l:'SOCSO Employee (0.5%, capped RM4k)',v:socso_ee});
+    er_breakdown.push({l:'SOCSO Employer (1.75%)',v:socso_er});
+    // EIS (capped RM4k)
+    const eisWage=Math.min(sal,cfg.eis.cap);
+    const eis_ee=eisWage*cfg.eis.ee;
+    const eis_er=eisWage*cfg.eis.er;
+    ee_ss+=eis_ee;er_ss+=eis_er;
+    breakdown.push({l:'EIS Employee (0.2%, capped RM4k)',v:eis_ee});
+    er_breakdown.push({l:'EIS Employer (0.2%)',v:eis_er});
+    // PCB (simplified)
+    const annual=sal*12;
+    if(annual<=5000)inctax=0;
+    else if(annual<=20000)inctax=(annual-5000)*.01/12;
+    else if(annual<=35000)inctax=(150+(annual-20000)*.03)/12;
+    else if(annual<=50000)inctax=(600+(annual-35000)*.08)/12;
+    else if(annual<=70000)inctax=(1800+(annual-50000)*.13)/12;
+    else if(annual<=100000)inctax=(4400+(annual-70000)*.21)/12;
+    else inctax=(10700+(annual-100000)*.24)/12;
+    breakdown.push({l:'PCB/Income Tax (progressive)',v:inctax});
+    er_breakdown.push({l:'HRD Levy (1%, if >10 staff)',v:sal*cfg.hrdLevy});
+    er_ss+=sal*cfg.hrdLevy;
+  }
+  else if(country==='India'){
+    // PF on basic (assume basic = 50% of gross, capped Rs15k)
+    const basic=Math.min(sal*0.5,cfg.pf.cap);
+    const pf_ee=basic*cfg.pf.ee;
+    const pf_er=basic*cfg.pf.er;
+    ee_ss=pf_ee;er_ss=pf_er;
+    breakdown.push({l:'PF Employee (12% of basic, capped &#8377;15k)',v:pf_ee});
+    er_breakdown.push({l:'PF Employer (12%)',v:pf_er});
+    // ESI if salary <= Rs21k
+    if(sal<=cfg.esi.cap){
+      ee_ss+=sal*cfg.esi.ee;er_ss+=sal*cfg.esi.er;
+      breakdown.push({l:'ESI Employee (0.75%, salary <=&#8377;21k)',v:sal*cfg.esi.ee});
+      er_breakdown.push({l:'ESI Employer (3.25%)',v:sal*cfg.esi.er});
+    }
+    // PT
+    ee_ss+=cfg.pt;
+    breakdown.push({l:'Professional Tax (PT)',v:cfg.pt});
+    // TDS (simplified)
+    const annual=sal*12;
+    if(annual<=250000)inctax=0;
+    else if(annual<=500000)inctax=(annual-250000)*.05/12;
+    else if(annual<=1000000)inctax=(12500+(annual-500000)*.20)/12;
+    else inctax=(112500+(annual-1000000)*.30)/12;
+    breakdown.push({l:'TDS Income Tax (progressive)',v:inctax});
+  }
+  else if(country==='Australia'){
+    // Super — employer only, no EE SS
+    er_ss=sal*cfg.super.er;
+    er_breakdown.push({l:'Superannuation (11%, employer)',v:er_ss});
+    ee_ss=0;
+    // PAYG + Medicare Levy
+    const annual=sal*12;
+    let payg=0;
+    if(annual<=18200)payg=0;
+    else if(annual<=45000)payg=(annual-18200)*.19;
+    else if(annual<=120000)payg=(5092+(annual-45000)*.325);
+    else if(annual<=180000)payg=(29467+(annual-120000)*.37);
+    else payg=(51667+(annual-180000)*.45);
+    const medicare=annual*cfg.medicare;
+    inctax=(payg+medicare)/12;
+    breakdown.push({l:'PAYG Withholding (progressive)',v:payg/12});
+    breakdown.push({l:'Medicare Levy (2%)',v:medicare/12});
+  }
+  else if(country==='USA'){
+    // FICA
+    const ssCap=Math.min(sal*12,cfg.fica.ss_cap);
+    const ss_ee=Math.min(sal,ssCap/12)*cfg.fica.ss_ee;
+    const ss_er=Math.min(sal,ssCap/12)*cfg.fica.ss_er;
+    const med_ee=sal*cfg.fica.med_ee;
+    const med_er=sal*cfg.fica.med_er;
+    const addMed=sal*12>cfg.fica.add_med_cap?sal*cfg.fica.add_med:0;
+    ee_ss=ss_ee+med_ee+addMed;
+    er_ss=ss_er+med_er;
+    breakdown.push({l:'Social Security EE (6.2%, cap $168.6k/yr)',v:ss_ee});
+    breakdown.push({l:'Medicare EE (1.45%)',v:med_ee});
+    if(addMed>0)breakdown.push({l:'Additional Medicare (0.9%)',v:addMed});
+    er_breakdown.push({l:'SS Employer (6.2%)',v:ss_er});
+    er_breakdown.push({l:'Medicare Employer (1.45%)',v:med_er});
+    // Federal income tax
+    const annual=sal*12;
+    let fit=0;
+    if(annual<=11600)fit=annual*.10;
+    else if(annual<=47150)fit=(1160+(annual-11600)*.12);
+    else if(annual<=100525)fit=(5426+(annual-47150)*.22);
+    else if(annual<=191950)fit=(17168+(annual-100525)*.24);
+    else if(annual<=243725)fit=(39110+(annual-191950)*.32);
+    else if(annual<=609350)fit=(55678+(annual-243725)*.35);
+    else fit=(183647+(annual-609350)*.37);
+    inctax=fit/12;
+    breakdown.push({l:'Federal Income Tax (progressive)',v:inctax});
+  }
+  else if(country==='UK'){
+    // NI Employee
+    const annual=sal*12;
+    const niEE=annual>cfg.ni.ee_threshold?Math.min(annual,cfg.ni.ee_upper)*cfg.ni.ee_low+Math.max(0,annual-cfg.ni.ee_upper)*cfg.ni.ee_high:0;
+    const niER=annual>cfg.ni.er_threshold?(annual-cfg.ni.er_threshold)*cfg.ni.er:0;
+    ee_ss=niEE/12;er_ss=niER/12;
+    breakdown.push({l:'National Insurance EE (8%/2%)',v:niEE/12});
+    er_breakdown.push({l:'NI Employer (13.8% above £9,100)',v:niER/12});
+    // PAYE
+    let paye=0;
+    const personalAllowance=12570;
+    if(annual>personalAllowance){
+      const taxable=annual-personalAllowance;
+      if(taxable<=37700)paye=taxable*.20;
+      else if(taxable<=125140)paye=(7540+(taxable-37700)*.40);
+      else paye=(42140+(taxable-125140)*.45);
+    }
+    inctax=paye/12;
+    breakdown.push({l:'PAYE Income Tax (20/40/45%)',v:inctax});
+    // Auto-enrolment pension
+    const pension_ee=sal*.05;const pension_er=sal*.03;
+    ee_ss+=pension_ee;er_ss+=pension_er;
+    breakdown.push({l:'Auto-enrolment Pension EE (5%)',v:pension_ee});
+    er_breakdown.push({l:'Pension Employer (3%)',v:pension_er});
+  }
+  else if(country==='Philippines'){
+    // SSS
+    const sssCap=Math.min(sal,(cfg.sss?cfg.sss.cap:30000));
+    const sss_ee=sssCap*(cfg.sss?cfg.sss.ee:.045);
+    const sss_er=sssCap*(cfg.sss?cfg.sss.er:.085);
+    // PhilHealth
+    const phCap=Math.min(sal,(cfg.philhealth?cfg.philhealth.cap:100000));
+    const ph_ee=phCap*(cfg.philhealth?cfg.philhealth.ee:.025);
+    const ph_er=ph_ee;
+    // Pag-IBIG (max ₱200)
+    const pi_ee=Math.min(sal*(cfg.pagibig?cfg.pagibig.ee:.02),200);
+    const pi_er=Math.min(sal*(cfg.pagibig?cfg.pagibig.er:.02),200);
+    ee_ss=sss_ee+ph_ee+pi_ee;er_ss=sss_er+ph_er+pi_er;
+    breakdown.push({l:'SSS Employee (4.5%, cap &#8369;30k)',v:sss_ee});
+    breakdown.push({l:'PhilHealth Employee (2.5%)',v:ph_ee});
+    breakdown.push({l:'Pag-IBIG Employee (2%, max &#8369;200)',v:pi_ee});
+    er_breakdown.push({l:'SSS Employer (8.5%)',v:sss_er});
+    er_breakdown.push({l:'PhilHealth Employer (2.5%)',v:ph_er});
+    er_breakdown.push({l:'Pag-IBIG Employer',v:pi_er});
+    // TRAIN Law income tax
+    const annual=sal*12;
+    if(annual<=250000)inctax=0;
+    else if(annual<=400000)inctax=(annual-250000)*.15/12;
+    else if(annual<=800000)inctax=(22500+(annual-400000)*.20)/12;
+    else if(annual<=2000000)inctax=(102500+(annual-800000)*.25)/12;
+    else if(annual<=8000000)inctax=(402500+(annual-2000000)*.30)/12;
+    else inctax=(2202500+(annual-8000000)*.35)/12;
+    breakdown.push({l:'Income Tax (TRAIN Law)',v:inctax});
+  }
+  else{
+    // Generic fallback
+    const rates={EU:{t:.22,s:.14,er:.20},Canada:{t:.205,s:.0761,er:.0761},UAE:{t:0,s:.05,er:.125},SouthAfrica:{t:.26,s:.01,er:.01},Nigeria:{t:.15,s:.08,er:.10},Kenya:{t:.25,s:.06,er:.06},Pakistan:{t:.20,s:.01,er:.05},Bangladesh:{t:.15,s:0,er:0}};
+    const r=rates[country]||{t:.20,s:.05,er:.05};
+    inctax=sal*r.t;ee_ss=sal*r.s;er_ss=sal*r.er;
+    breakdown.push({l:'Income Tax (estimated)',v:inctax});
+    breakdown.push({l:'Employee SS/Pension',v:ee_ss});
+    er_breakdown.push({l:'Employer SS/Pension',v:er_ss});
+  }
+  const net=sal-inctax-ee_ss;
+  const totalErCost=sal+er_ss;
+  return{gross:sal,inctax,ee_ss,er_ss,net,totalErCost,breakdown,er_breakdown};
+}
+
+function addEmp(){
+  const name=document.getElementById('ename').value.trim();
+  const role=document.getElementById('erole').value.trim();
+  const dept=document.getElementById('edept').value.trim()||'General';
+  const age=parseInt(document.getElementById('eage').value)||35;
+  const sal=parseFloat(document.getElementById('esal').value);
+  const country=document.getElementById('ecountry').value;
+  if(!name||!sal||isNaN(sal)||sal<=0){alert('Fill Name, Role and Salary');return;}
+  S.emps.push({id:Date.now(),name,role,dept,age,sal,country});
+  saveS();
+  ['ename','erole','edept','esal'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('eage').value='';
+  rHR();rHRDash();rDash();
+}
+function delEmp(id){if(!confirm('Remove?'))return;S.emps=S.emps.filter(e=>e.id!==id);saveS();rHR();rHRDash();}
+
+function rHR(){
+  const cfg=C[S.country];
+  let totGross=0,totTax=0,totSS=0,totNet=0,totErCo=0;
+  const rows=S.emps.map(e=>{
+    const p=payCalc(e.sal,e.country,e.age);
+    const ec=C[e.country]||C.Singapore;
+    totGross+=p.gross;totTax+=p.inctax;totSS+=p.ee_ss;totNet+=p.net;totErCo+=p.totalErCost;
+    return '<tr>'+
+      '<td class="fw7">'+e.name+'</td><td class="tm fs11">'+e.role+'</td>'+
+      '<td class="tm fs11">'+e.dept+'</td><td class="tm fs11">'+e.age+'</td>'+
+      '<td>'+ec.f+' '+e.country+'</td>'+
+      '<td class="mono">'+ec.sym+p.gross.toLocaleString()+'</td>'+
+      '<td class="tr mono">-'+ec.sym+p.inctax.toFixed(0)+'</td>'+
+      '<td class="tr mono">-'+ec.sym+p.ee_ss.toFixed(0)+'</td>'+
+      '<td class="tgr fw7 mono">'+ec.sym+p.net.toFixed(0)+'</td>'+
+      '<td class="tp mono">'+ec.sym+p.totalErCost.toFixed(0)+' <span class="tm fs10">(+'+ec.sym+p.er_ss.toFixed(0)+' ER)</span></td>'+
+      '<td class="noprint" style="display:flex;gap:4px">'+
+      '<button class="btn btn-green" style="font-size:10px;padding:3px 7px" onclick="printPayslip('+e.id+')">&#128424;</button>'+
+      '<button class="btn-red" onclick="delEmp('+e.id+')">X</button></td></tr>';
+  });
+  document.getElementById('hrbody').innerHTML=rows.join('')||'<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">No employees. Add above.</td></tr>';
+  const sym=cfg.sym;
+  document.getElementById('hr-gross').textContent=sym+totGross.toLocaleString();
+  document.getElementById('hr-tax').textContent='-'+sym+totTax.toFixed(0);
+  document.getElementById('hr-ss').textContent='-'+sym+totSS.toFixed(0);
+  document.getElementById('hr-net').textContent=sym+totNet.toFixed(0);
+  document.getElementById('hr-erco').textContent=sym+totErCo.toFixed(0);
+}
+
+function rHRDash(){
+  const F=getFinData();
+  const totGross=S.emps.reduce((s,e)=>s+e.sal,0);
+  const totErCost=S.emps.reduce((s,e)=>s+payCalc(e.sal,e.country,e.age).totalErCost,0);
+  const payrollPct=F.rev>0?(totErCost/F.rev*100).toFixed(1)+'%':'N/A';
+  const avgSal=S.emps.length>0?(totGross/S.emps.length).toFixed(0):0;
+  const cfg=C[S.country];
+  document.getElementById('hr-kpis').innerHTML=[
+    {v:S.emps.length,l:'Total Headcount',cls:'kpi-blue'},
+    {v:cfg.sym+totGross.toLocaleString(),l:'Total Gross Payroll',cls:'kpi-good'},
+    {v:cfg.sym+totErCost.toFixed(0),l:'Total Employer Cost',cls:'kpi-warn'},
+    {v:payrollPct,l:'Payroll % of Revenue',cls:parseFloat(payrollPct)<40?'kpi-good':parseFloat(payrollPct)<60?'kpi-warn':'kpi-bad'},
+  ].map(k=>'<div class="kpi '+k.cls+'"><div class="kpi-v">'+k.v+'</div><div class="kpi-l">'+k.l+'</div></div>').join('');
+
+  // Dept breakdown
+  const depts={};
+  S.emps.forEach(e=>{
+    if(!depts[e.dept])depts[e.dept]={count:0,cost:0};
+    depts[e.dept].count++;
+    depts[e.dept].cost+=payCalc(e.sal,e.country,e.age).totalErCost;
+  });
+  document.getElementById('hr-dept').innerHTML=Object.entries(depts).map(([d,v])=>
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px">'+
+    '<span>'+d+' ('+v.count+')</span><span class="mono tg">'+cfg.sym+v.cost.toFixed(0)+'</span></div>'
+  ).join('')||'<div class="tm fs11">No employees yet</div>';
+
+  // Cost analysis
+  document.getElementById('hr-costanalysis').innerHTML=S.emps.map(e=>{
+    const p=payCalc(e.sal,e.country,e.age);const ec=C[e.country]||C.Singapore;
+    return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px">'+
+      '<span>'+e.name+'</span><div style="text-align:right"><span class="tm fs10">gross '+ec.sym+p.gross.toLocaleString()+' | </span><span class="tp mono">total '+ec.sym+p.totalErCost.toFixed(0)+'</span></div></div>';
+  }).join('')||'<div class="tm fs11">No employees yet</div>';
+
+  // By country
+  const bycountry={};
+  S.emps.forEach(e=>{
+    if(!bycountry[e.country])bycountry[e.country]={count:0,gross:0,erCost:0};
+    const p=payCalc(e.sal,e.country,e.age);
+    bycountry[e.country].count++;
+    bycountry[e.country].gross+=p.gross;
+    bycountry[e.country].erCost+=p.totalErCost;
+  });
+  document.getElementById('hr-bycountry').innerHTML='<div class="tbl-wrap"><table><thead><tr><th>Country</th><th>Staff</th><th>Total Gross</th><th>Employer Cost</th><th>SS System</th></tr></thead><tbody>'+
+    Object.entries(bycountry).map(([c,v])=>{
+      const cc=C[c]||C.Singapore;
+      return '<tr><td>'+cc.f+' '+c+'</td><td>'+v.count+'</td><td class="mono">'+cc.sym+v.gross.toLocaleString()+'</td><td class="tp mono">'+cc.sym+v.erCost.toFixed(0)+'</td><td class="tm fs11">'+cc.ss.substring(0,50)+'</td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+function printPayslip(id){
+  const e=S.emps.find(x=>x.id===id);if(!e)return;
+  const p=payCalc(e.sal,e.country,e.age);
+  const cfg=C[e.country]||C.Singapore;
+  const period=new Date().toLocaleDateString('en',{month:'long',year:'numeric'});
+  document.getElementById('payslippo').innerHTML=
+  '<div class="payslip">'+
+  '<div class="ps-header">'+
+    '<div><div class="ps-title">PAYSLIP</div><div style="font-size:11px;color:#888">Period: '+period+'</div><div style="font-size:11px;color:#888">Country: '+cfg.f+' '+e.country+' | Standard: '+cfg.std+'</div></div>'+
+    '<div style="text-align:right"><div style="font-weight:700;font-size:15px">'+e.name+'</div><div style="color:#555">'+e.role+' | '+e.dept+'</div><div style="color:#888;font-size:11px">Age: '+e.age+' | EmpID: EMP-'+e.id.toString().slice(-4)+'</div></div>'+
+  '</div>'+
+  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
+    '<div>'+
+      '<div class="ps-section">Earnings</div>'+
+      '<div class="ps-row"><span>Basic Salary</span><span>'+cfg.sym+e.sal.toLocaleString()+'</span></div>'+
+      '<div class="ps-row total"><span>Gross Pay</span><span>'+cfg.sym+p.gross.toLocaleString()+'</span></div>'+
+    '</div>'+
+    '<div>'+
+      '<div class="ps-section">Deductions</div>'+
+      p.breakdown.map(d=>'<div class="ps-row"><span>'+d.l+'</span><span style="color:#c00">-'+cfg.sym+d.v.toFixed(2)+'</span></div>').join('')+
+      '<div class="ps-row total"><span>Total Deductions</span><span style="color:#c00">-'+cfg.sym+(p.inctax+p.ee_ss).toFixed(2)+'</span></div>'+
+    '</div>'+
+  '</div>'+
+  '<div class="ps-net"><div style="font-size:11px;color:#888;margin-bottom:4px">NET PAY (Take-Home)</div><div class="ps-net-amt">'+cfg.sym+p.net.toFixed(2)+'</div></div>'+
+  '<div style="margin-top:12px;padding:10px;background:#f9f7f0;border-radius:6px;font-size:11px">'+
+    '<div style="font-weight:700;margin-bottom:4px">Employer Cost Breakdown (Not deducted from employee)</div>'+
+    p.er_breakdown.map(d=>'<div style="display:flex;justify-content:space-between"><span>'+d.l+'</span><span>'+cfg.sym+d.v.toFixed(2)+'</span></div>').join('')+
+    '<div style="font-weight:700;margin-top:4px;border-top:1px solid #ddd;padding-top:4px;display:flex;justify-content:space-between"><span>Total Employer Cost</span><span>'+cfg.sym+p.totalErCost.toFixed(2)+'</span></div>'+
+  '</div>'+
+  '<div style="margin-top:10px;padding:8px;background:#f0f4ff;border-radius:6px;font-size:10px;color:#555">'+
+    '<b>Regulatory Note ('+e.country+'):</b> '+cfg.payNote+'<br/>Filing Body: '+cfg.body+' | Standard: '+cfg.std+
+  '</div>'+
+  '<div style="font-size:9px;color:#bbb;margin-top:8px;border-top:1px solid #eee;padding-top:6px">LedgerLearn ERP v5 &middot; Educational Document &middot; Verify with certified payroll provider &middot; '+new Date().toLocaleDateString()+'</div>'+
+  '</div>';
   window.print();
 }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════
+// INVOICE
+// ═══════════════════════════════════════════════════════════
+function loadInvForm(){
+  const v=S.inv;
+  document.getElementById('ino').value=v.no||'';
+  document.getElementById('idate').value=v.date||'';
+  document.getElementById('ifrom').value=v.from||'';
+  document.getElementById('ifromaddr').value=v.fromaddr||'';
+  document.getElementById('ito').value=v.to||'';
+  document.getElementById('itoaddr').value=v.toaddr||'';
+  rInvItems();rInv();
+}
+function sInv(){
+  S.inv.no=document.getElementById('ino').value;
+  S.inv.date=document.getElementById('idate').value;
+  S.inv.from=document.getElementById('ifrom').value;
+  S.inv.fromaddr=document.getElementById('ifromaddr').value;
+  S.inv.to=document.getElementById('ito').value;
+  S.inv.toaddr=document.getElementById('itoaddr').value;
+  saveS();
+}
+function rInvItems(){
+  document.getElementById('iitems').innerHTML=(S.inv.items||[]).map((item,i)=>
+    '<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:5px;margin-bottom:5px">'+
+    '<input type="text" placeholder="Description" value="'+(item.desc||'')+'" oninput="S.inv.items['+i+'].desc=this.value;saveS();rInv()"/>'+
+    '<input type="number" placeholder="Qty" value="'+(item.qty||'')+'" oninput="S.inv.items['+i+'].qty=+this.value;saveS();rInv()"/>'+
+    '<input type="number" placeholder="Rate" value="'+(item.rate||'')+'" oninput="S.inv.items['+i+'].rate=+this.value;saveS();rInv()"/>'+
+    '<button class="btn-red" onclick="S.inv.items.splice('+i+',1);saveS();rInvItems();rInv()">X</button></div>'
+  ).join('');
+}
+function addLine(){S.inv.items.push({desc:'',qty:1,rate:0});saveS();rInvItems();rInv();}
+function rInv(){
+  const cfg=C[S.country];const v=S.inv;
+  const sub=(v.items||[]).reduce((s,i)=>s+(i.qty*i.rate),0);
+  const taxAmt=sub*cfg.vat/100;const total=sub+taxAmt;
+  const html='<div class="inv">'+
+    '<div style="display:flex;justify-content:space-between;border-bottom:2px solid #d4a843;padding-bottom:12px;margin-bottom:14px">'+
+    '<div><div class="inv-ttl">INVOICE</div><div style="color:#888;font-size:11px">#'+(v.no||'---')+' &bull; '+(v.date||'')+'</div></div>'+
+    '<div style="text-align:right"><div style="font-weight:700">'+(v.from||'Your Business')+'</div><div style="color:#666;font-size:11px">'+(v.fromaddr||'')+'</div><div style="font-size:10px;color:#aaa">'+cfg.std+' &bull; '+cfg.tax+' Registered &bull; '+S.country+'</div></div></div>'+
+    '<div style="margin-bottom:12px"><div style="font-size:9px;color:#999;text-transform:uppercase;letter-spacing:1px">Bill To</div><div style="font-weight:700">'+(v.to||'Client Name')+'</div><div style="color:#555;font-size:11px">'+(v.toaddr||'')+'</div></div>'+
+    '<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px">'+
+    '<thead><tr style="background:#f5f0e0"><th style="padding:6px 8px;text-align:left;color:#555">Description</th><th style="padding:6px 8px;text-align:center;color:#555">Qty</th><th style="padding:6px 8px;text-align:right;color:#555">Rate</th><th style="padding:6px 8px;text-align:right;color:#555">Amount</th></tr></thead>'+
+    '<tbody>'+(v.items||[]).map(i=>'<tr><td style="padding:6px 8px;border-bottom:1px solid #eee">'+(i.desc||'&mdash;')+'</td><td style="text-align:center;padding:6px 8px;border-bottom:1px solid #eee">'+i.qty+'</td><td style="text-align:right;padding:6px 8px;border-bottom:1px solid #eee">'+cfg.sym+i.rate.toLocaleString()+'</td><td style="text-align:right;font-weight:700;padding:6px 8px;border-bottom:1px solid #eee">'+cfg.sym+(i.qty*i.rate).toLocaleString()+'</td></tr>').join('')+'</tbody></table>'+
+    '<div style="text-align:right;border-top:1px solid #ddd;padding-top:8px">'+
+    '<div style="color:#666">Subtotal: '+cfg.sym+sub.toLocaleString()+'</div>'+
+    (cfg.vat>0?'<div style="color:#666">'+cfg.tax+' ('+cfg.vat+'%): '+cfg.sym+taxAmt.toFixed(2)+'</div>':'')+
+    '<div style="font-size:18px;font-weight:900;color:#8b6914;margin-top:4px">TOTAL: '+cfg.sym+total.toFixed(2)+' '+cfg.cur+'</div></div>'+
+    '<div style="margin-top:10px;font-size:9px;color:#bbb;border-top:1px solid #eee;padding-top:6px">'+cfg.std+' &bull; '+S.country+' '+cfg.tax+' Regulations &bull; LedgerLearn ERP v5</div></div>';
+  document.getElementById('invprev').innerHTML=html;
+  document.getElementById('invpo').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
 // TAX
-// ============================================================
-function renderTax() {
-  const cfg = COUNTRIES[currentCountry];
-  document.getElementById('taxTitle').textContent = `${cfg.tax} Calculator — ${currentCountry}`;
-  document.getElementById('taxTip').innerHTML = `<strong>${cfg.tax}</strong> rate in ${currentCountry}: <strong>${cfg.vatRate}%</strong>${cfg.vatRate===0?' (No federal indirect tax — state/local rates apply)':''}. Standard: ${cfg.standard}`;
-  document.getElementById('corpTaxTitle').textContent = `Corporate Tax — ${currentCountry} (${cfg.corpTax}%)`;
-  const amts = [100,500,1000,5000,10000,50000];
-  document.getElementById('taxBody').innerHTML = amts.map(a=>`<tr>
-    <td>${cfg.symbol}${a.toLocaleString()}</td>
-    <td>${cfg.vatRate}%</td>
-    <td class="text-red">${cfg.symbol}${(a*cfg.vatRate/100).toFixed(2)}</td>
-    <td class="text-green fw7">${cfg.symbol}${(a*(1+cfg.vatRate/100)).toFixed(2)}</td>
-  </tr>`).join('');
-  const profits = [50000,100000,250000,500000,1000000,5000000];
-  document.getElementById('corpTaxBody').innerHTML = profits.map(p=>`<tr>
-    <td>${cfg.symbol}${p.toLocaleString()}</td>
-    <td>${cfg.corpTax}%</td>
-    <td class="text-red">${cfg.symbol}${(p*cfg.corpTax/100).toLocaleString()}</td>
-    <td class="text-green fw7">${cfg.symbol}${(p*(1-cfg.corpTax/100)).toLocaleString()}</td>
-  </tr>`).join('');
+// ═══════════════════════════════════════════════════════════
+function rTax(){
+  const cfg=C[S.country];
+  document.getElementById('vattitle').textContent=cfg.tax+' — '+S.country;
+  document.getElementById('corptitle').textContent='Corp Tax — '+S.country+' ('+cfg.corp+'%)';
+  document.getElementById('vattip').innerHTML='<b>'+cfg.tax+'</b>: '+cfg.vatNote;
+  document.getElementById('vatbody').innerHTML=[100,500,1000,5000,10000,50000].map(a=>
+    '<tr><td class="mono">'+cfg.sym+a.toLocaleString()+'</td><td>'+cfg.vat+'%</td><td class="tr mono">'+cfg.sym+(a*cfg.vat/100).toFixed(2)+'</td><td class="tgr fw7 mono">'+cfg.sym+(a*(1+cfg.vat/100)).toFixed(2)+'</td></tr>'
+  ).join('');
+  document.getElementById('corpbody').innerHTML=[50000,100000,250000,500000,1000000,5000000].map(p=>
+    '<tr><td class="mono">'+cfg.sym+p.toLocaleString()+'</td><td>'+cfg.corp+'%</td><td class="tr mono">'+cfg.sym+(p*cfg.corp/100).toLocaleString()+'</td><td class="tgr fw7 mono">'+cfg.sym+(p*(1-cfg.corp/100)).toLocaleString()+'</td></tr>'
+  ).join('');
+}
+function sCalc(){S.calc.amt=document.getElementById('camt').value;S.calc.rate=document.getElementById('crate').value;saveS();}
+function calcCust(){
+  const a=parseFloat(document.getElementById('camt').value);
+  const r=parseFloat(document.getElementById('crate').value);
+  if(isNaN(a)||isNaN(r))return;
+  const cfg=C[S.country];
+  document.getElementById('cres').textContent='Tax: '+cfg.sym+(a*r/100).toFixed(2)+' | Total: '+cfg.sym+(a*(1+r/100)).toFixed(2);
 }
 
-function calcCustom() {
-  const amt = parseFloat(document.getElementById('custAmt').value);
-  const rate = parseFloat(document.getElementById('custRate').value);
-  if(isNaN(amt)||isNaN(rate)) return;
-  const cfg = COUNTRIES[currentCountry];
-  const tax = amt*rate/100;
-  document.getElementById('custResult').textContent = `Tax: ${cfg.symbol}${tax.toFixed(2)} → Total: ${cfg.symbol}${(amt+tax).toFixed(2)}`;
+// ═══════════════════════════════════════════════════════════
+// FX
+// ═══════════════════════════════════════════════════════════
+async function loadFX(){
+  try{const r=await fetch('https://open.er-api.com/v6/latest/USD');const d=await r.json();if(d&&d.rates)FX=d.rates;}catch(e){}
+  if(!FX.USD)FX={USD:1,GBP:.79,EUR:.92,INR:83.1,AUD:1.53,AED:3.67,CAD:1.36,SGD:1.34,ZAR:18.6,NGN:1580,KES:129,PKR:278,BDT:110,MYR:4.72,PHP:56.2};
+  const cfg=C[S.country];
+  document.getElementById('ctag').textContent=cfg.sym+' · '+cfg.tax+' '+cfg.vat+'% · '+cfg.std+(FX[cfg.cur]?' · 1USD='+(FX[cfg.cur]).toFixed(2)+cfg.cur:'');
+  rFXTable();
+}
+function rFXTable(){
+  const cfg=C[S.country];const base=cfg.cur;const br=FX[base]||1;
+  document.getElementById('fxtbl').innerHTML=Object.keys(C).map(k=>{
+    const cc=C[k];const rate=FX[cc.cur]?((FX[cc.cur]/br)).toFixed(4):'N/A';
+    return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px"><span>'+cc.f+' '+k+'</span><span class="tm fs10">'+cc.cur+'</span><span class="mono tg">'+rate+'</span></div>';
+  }).join('');
+}
+function doFX(){
+  const amt=parseFloat(document.getElementById('fxamt').value)||1;
+  const from=document.getElementById('fxfrom').value;const to=document.getElementById('fxto').value;
+  if(!FX[from]||!FX[to]){document.getElementById('fxres').textContent='Rate not available';return;}
+  document.getElementById('fxres').textContent=amt.toLocaleString()+' '+from+' = '+((amt/FX[from])*FX[to]).toFixed(4)+' '+to;
 }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════
 // LAWS
-// ============================================================
-function renderLaws() {
-  document.getElementById('lawsGrid').innerHTML = Object.entries(COUNTRIES).map(([c,d])=>`
-    <div class="law-card">
-      <div class="law-card-country">${d.flag} ${c}</div>
-      <div class="law-row"><span class="law-key">Currency</span><span class="law-val">${d.currency} (${d.symbol})</span></div>
-      <div class="law-row"><span class="law-key">Tax System</span><span class="law-val">${d.tax} ${d.vatRate}%</span></div>
-      <div class="law-row"><span class="law-key">Corp Tax</span><span class="law-val">${d.corpTaxNote}</span></div>
-      <div class="law-row"><span class="law-key">Income Tax</span><span class="law-val">${d.incomeTax}</span></div>
-      <div class="law-row"><span class="law-key">Social Security</span><span class="law-val">${d.socialSec}</span></div>
-      <div class="law-row"><span class="law-key">Min Wage</span><span class="law-val">${d.minWage}</span></div>
-      <div class="law-row"><span class="law-key">Annual Leave</span><span class="law-val">${d.annualLeave}</span></div>
-      <div class="law-row"><span class="law-key">Pension</span><span class="law-val">${d.pension}</span></div>
-      <div class="law-row"><span class="law-key">Standard</span><span class="law-val">${d.standard}</span></div>
-      <div class="law-row"><span class="law-key">Filing Body</span><span class="law-val">${d.filingBody}</span></div>
-    </div>`).join('');
+// ═══════════════════════════════════════════════════════════
+function rLaws(){
+  document.getElementById('lawsgrid').innerHTML=Object.entries(C).map(([k,v])=>
+    '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:12px">'+
+    '<div style="font-weight:700;color:var(--gold);font-size:12px;margin-bottom:7px">'+v.f+' '+k+'</div>'+
+    [['Currency',v.cur+' ('+v.sym+')'],['Tax',v.tax+' '+v.vat+'%'],['Corp Tax',v.corp+'%'],['Income Tax',v.inc],['SS/CPF/EPF',v.ss.substring(0,35)+'...'],['Min Wage',v.mw],['Leave',v.leave],['Pension',v.pension.substring(0,35)+'...'],['Standard',v.std],['Filing',v.body]].map(([k2,v2])=>
+      '<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(20,27,40,.6);font-size:10px"><span style="color:var(--muted)">'+k2+'</span><span style="font-weight:600;text-align:right;max-width:60%">'+v2+'</span></div>'
+    ).join('')+'</div>'
+  ).join('');
 }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════
+// PRINT MODAL — INDIVIDUAL PRINT SELECTION
+// ═══════════════════════════════════════════════════════════
+const PRINT_SECTIONS=[
+  {id:'dash',label:'Executive Dashboard',sub:'KPIs, P&L summary, cash flow overview'},
+  {id:'ledger',label:'General Ledger',sub:'All journal entries with categories'},
+  {id:'ap',label:'Accounts Payable',sub:'Supplier invoices and aging'},
+  {id:'ar',label:'Accounts Receivable',sub:'Customer invoices and aging'},
+  {id:'trial',label:'Trial Balance',sub:'All account balances, debits = credits'},
+  {id:'fs',label:'Financial Statements',sub:'P&L, Balance Sheet, Cash Flow'},
+  {id:'ratios',label:'Financial Ratios',sub:'CEO, CFO, Sales Manager metrics'},
+  {id:'hr',label:'HR Payroll Report',sub:'Full payroll with all deductions'},
+  {id:'hrdash',label:'HR Dashboard',sub:'Headcount, cost analysis, by department'},
+  {id:'invoice',label:'Invoice',sub:'Current invoice with tax'},
+  {id:'tax',label:'Tax Calculator',sub:'VAT/GST and corporate tax tables'},
+  {id:'laws',label:'Laws Reference',sub:'All 15 countries regulations'},
+];
+
+function buildPrintOpts(){
+  document.getElementById('printOpts').innerHTML=PRINT_SECTIONS.map(s=>
+    '<label class="print-opt"><input type="checkbox" id="pchk-'+s.id+'"/>'+
+    '<div><div class="print-opt-label">'+s.label+'</div><div class="print-opt-sub">'+s.sub+'</div></div></label>'
+  ).join('');
+}
+function openPrintModal(){document.getElementById('printModal').classList.add('open');}
+function selectAllPrint(){PRINT_SECTIONS.forEach(s=>{const el=document.getElementById('pchk-'+s.id);if(el)el.checked=true;});}
+
+function doPrint(){
+  const selected=PRINT_SECTIONS.filter(s=>{const el=document.getElementById('pchk-'+s.id);return el&&el.checked;});
+  if(selected.length===0){alert('Please select at least one section to print');return;}
+  document.getElementById('printModal').classList.remove('open');
+  // Show only selected sections, hide others, then print
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  selected.forEach(s=>{
+    const el=document.getElementById('s-'+s.id);
+    if(el)el.classList.add('on');
+  });
+  // Refresh data for selected
+  if(selected.find(s=>s.id==='fs'))rFS();
+  if(selected.find(s=>s.id==='trial'))rTrial();
+  if(selected.find(s=>s.id==='ratios'))rRatios();
+  if(selected.find(s=>s.id==='invoice')){loadInvForm();rInv();}
+  if(selected.find(s=>s.id==='dash'))rDash();
+  setTimeout(()=>{
+    window.print();
+    // Restore current view
+    setTimeout(()=>{
+      document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+      const cur=document.querySelector('.nb.on');
+      const curId=cur?cur.getAttribute('onclick').match(/show\('(\w+)'/)[1]:'dash';
+      const curEl=document.getElementById('s-'+curId);
+      if(curEl)curEl.classList.add('on');
+    },500);
+  },300);
+}
+
+// ═══════════════════════════════════════════════════════════
 // AI TUTOR
-// ============================================================
-function renderChat(msgs) {
-  const box = document.getElementById('chat-box');
-  box.innerHTML = msgs.map(m=>`
-    <div class="msg ${m.role}">
-      <div class="bubble">
-        ${m.role==='assistant'?'<div class="msg-label">🤖 AI Tutor</div>':''}
-        ${m.text.replace(/</g,'&lt;').replace(/\n/g,'<br/>')}
-      </div>
-    </div>`).join('');
-  box.scrollTop = box.scrollHeight;
+// ═══════════════════════════════════════════════════════════
+function initChat(){
+  const cfg=C[S.country];
+  chat=[{role:'assistant',text:'Welcome to LedgerLearn ERP AI Tutor!\n\nI can see your actual data:\n- '+S.txns.length+' ledger entries\n- '+S.ap.length+' AP bills ('+S.ap.filter(x=>!x.paid).length+' outstanding)\n- '+S.ar.length+' AR invoices ('+S.ar.filter(x=>!x.paid).length+' outstanding)\n- '+S.emps.length+' employees\n- Country: '+S.country+' ('+cfg.tax+' '+cfg.vat+'% | Corp '+cfg.corp+'% | '+cfg.std+')\n\nI know Singapore CPF age bands, Malaysia EPF+SOCSO+EIS, India PF+ESI+PT, Australia Super, UK NI, US FICA — and can explain any ratio or law.\n\nAsk me anything!'}];
+  rChat();buildQBtns();
 }
-
-function updateQuickBtns() {
-  const cfg = COUNTRIES[currentCountry];
-  const qs = [
-    `Explain double-entry bookkeeping`,
-    `How does ${cfg.tax} work in ${currentCountry}?`,
-    `What is the ${currentCountry} corporate tax rate?`,
-    `How to read a Balance Sheet?`,
-    `Explain depreciation`,
-    `${currentCountry} minimum wage and leave laws`,
-  ];
-  document.getElementById('quickBtns').innerHTML = qs.map(q=>`<button class="quick-btn" onclick="document.getElementById('aiInput').value='${q}';sendAI()">${q}</button>`).join('');
+function rChat(){
+  const b=document.getElementById('chatbox');
+  b.innerHTML=chat.map(m=>
+    '<div class="msg '+(m.role==='user'?'u':'')+'">'+
+    '<div class="av '+(m.role==='user'?'':'ai')+'">'+(m.role==='user'?'&#128100;':'&#129302;')+'</div>'+
+    '<div class="bub">'+(m.role==='assistant'?'<div class="bub-name">AI Tutor</div>':'')+
+    m.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br/>')+'</div></div>'
+  ).join('');
+  b.scrollTop=b.scrollHeight;
 }
-
-async function sendAI() {
-  const input = document.getElementById('aiInput');
-  const msg = input.value.trim();
-  if(!msg) return;
-  const cfg = COUNTRIES[currentCountry];
-  chatHistory.push({role:'user',content:msg});
-  input.value='';
-  document.getElementById('aiSendBtn').disabled=true;
-  document.getElementById('aiSendBtn').textContent='...';
-  const displayMsgs = [{role:'assistant',text:`👋 Welcome to LedgerLearn AI Tutor!\n\nI'm powered by Claude AI and I know the accounting laws for all 15 countries in this platform.\n\nCurrently showing: ${cfg.flag} ${currentCountry} — ${cfg.standard} · ${cfg.tax} · ${cfg.corpTax}% Corp Tax\n\nAsk me anything — accounting concepts, tax rules, payroll calculations, financial statements, or exam prep!`}];
-  chatHistory.forEach(m=>{ if(m.role==='user') displayMsgs.push({role:'user',text:m.content}); else displayMsgs.push({role:'assistant',text:m.content}); });
-  displayMsgs.push({role:'assistant',text:'⏳ Thinking...'});
-  renderChat(displayMsgs);
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+function buildQBtns(){
+  const cfg=C[S.country];
+  const qs=['Singapore CPF rates by age','Malaysia EPF+SOCSO+EIS explained','India PF+ESI+PT calculation','Explain Current Ratio','What is DSO?',cfg.tax+' in '+S.country,'How to read Cash Flow?','Payroll compliance '+S.country];
+  document.getElementById('qbtns').innerHTML=qs.map(q=>'<button class="qbtn" onclick="document.getElementById(\'aiinput\').value=\''+q.replace(/'/g,"\\'")+'\'">'+q+'</button>').join('');
+}
+async function sendAI(){
+  const inp=document.getElementById('aiinput');
+  const msg=inp.value.trim();if(!msg)return;
+  const cfg=C[S.country];
+  const txnCtx=S.txns.slice(-5).map(t=>t.date+': '+t.desc+' Dr:'+t.debit+' Cr:'+t.credit+' Amt:'+t.amt).join('\n');
+  const empCtx=S.emps.map(e=>e.name+' age:'+e.age+' '+e.country+' gross:'+e.sal).join('; ');
+  const apCtx='AP outstanding: '+S.ap.filter(x=>!x.paid).reduce((s,x)=>s+x.amt,0);
+  const arCtx='AR outstanding: '+S.ar.filter(x=>!x.paid).reduce((s,x)=>s+x.amt,0);
+  chat.push({role:'user',text:msg});inp.value='';
+  const btn=document.getElementById('aisend');btn.disabled=true;btn.textContent='...';
+  chat.push({role:'assistant',text:'Thinking...'});rChat();chat.pop();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:`You are an expert accounting tutor for students. Selected country: ${currentCountry}.
-Laws for ${currentCountry}: Currency ${cfg.currency} (${cfg.symbol}), ${cfg.tax} at ${cfg.vatRate}%, Corporate Tax ${cfg.corpTax}%, Income Tax ${cfg.incomeTax}, Social Security: ${cfg.socialSec}, Min Wage: ${cfg.minWage}, Annual Leave: ${cfg.annualLeave}, Accounting Standard: ${cfg.standard}, Filing Body: ${cfg.filingBody}.
-Explain concepts clearly for students. Use ${cfg.symbol} for examples. Be encouraging, concise, and accurate. For complex topics, use numbered steps. Always relate to ${currentCountry} where relevant.`,
-        messages: chatHistory
+        model:'claude-sonnet-4-20250514',max_tokens:1200,
+        system:`You are an expert ERP accounting tutor. Student's data:
+
+COUNTRY: ${S.country} | Currency: ${cfg.cur} (${cfg.sym}) | Tax: ${cfg.tax} ${cfg.vat}% | Corp: ${cfg.corp}% | Standard: ${cfg.std} | Body: ${cfg.body}
+SS LAW: ${cfg.ss}
+PAYROLL LAW: ${cfg.payNote}
+VAT: ${cfg.vatNote}
+
+LEDGER (last 5): ${txnCtx}
+EMPLOYEES: ${empCtx}
+${apCtx} | ${arCtx}
+
+PAYROLL KNOWLEDGE:
+- Singapore CPF: age<=55: EE 20% ER 17% | 56-60: EE 15% ER 15% | 61-65: EE 10% ER 11.5% | >65: EE 5% ER 7.5% | OW ceiling S$6,800 | SDL 0.25% ER
+- Malaysia: EPF EE 11% ER 13%/12% | SOCSO EE 0.5% ER 1.75% cap RM4k | EIS EE 0.2% ER 0.2% | HRD 1% ER
+- India: PF EE 12% ER 12% capped Rs15k basic | ESI EE 0.75% ER 3.25% if <=Rs21k | PT Rs200/month
+- Australia: Super 11% employer only | PAYG progressive | Medicare 2%
+- UK: NI EE 8%/2% | NI ER 13.8% | PAYE progressive | Pension EE 5% ER 3%
+- USA: SS EE/ER 6.2% cap $168.6k | Medicare 1.45% | Federal income tax progressive | FUTA 6%
+- Philippines: SSS EE 4.5% ER 8.5% | PhilHealth EE/ER 2.5% | Pag-IBIG 2% max ₱200 | 13th month mandatory
+
+RATIOS: Current=CA/CL(>2 good) | Quick=(Cash+AR)/CL(>1) | DSO=AR/Rev*365 | Gross Margin=GP/Rev | ROE=Net/Equity | D/E=Liab/Equity
+
+Answer clearly, use ${cfg.sym}, flag specific ${S.country} laws, be concise and encouraging.`,
+        messages:chat.map(m=>({role:m.role,content:m.text}))
       })
     });
-    const data = await res.json();
-    const reply = data.content?.map(b=>b.text||'').join('')||'Sorry, could not get a response.';
-    chatHistory.push({role:'assistant',content:reply});
-    const finalMsgs = [{role:'assistant',text:`👋 Welcome to LedgerLearn AI Tutor!\n\nI'm powered by Claude AI and I know the accounting laws for all 15 countries in this platform.\n\nCurrently showing: ${cfg.flag} ${currentCountry} — ${cfg.standard} · ${cfg.tax} · ${cfg.corpTax}% Corp Tax\n\nAsk me anything!`}];
-    chatHistory.forEach(m=>{ finalMsgs.push({role:m.role==='user'?'user':'assistant', text:m.content}); });
-    renderChat(finalMsgs);
-  } catch(e) {
-    chatHistory.push({role:'assistant',content:'Connection error. Please try again.'});
-  }
-  document.getElementById('aiSendBtn').disabled=false;
-  document.getElementById('aiSendBtn').textContent='Send';
+    const d=await res.json();
+    const reply=d.content?d.content.map(b=>b.text||'').join(''):'Could not connect. Check internet.';
+    chat.push({role:'assistant',text:reply});
+  }catch(e){chat.push({role:'assistant',text:'Connection error. Please try again.'});}
+  btn.disabled=false;btn.textContent='Send';rChat();
 }
 
-// ============================================================
+// ═══════════════════════════════════════════════════════════
 // QUIZ
-// ============================================================
-function renderQuiz() {
-  const area = document.getElementById('quizArea');
-  if(quizDone) {
-    area.innerHTML=`<div class="card" style="text-align:center;padding:40px">
-      <div style="font-size:48px;margin-bottom:12px">🏆</div>
-      <div style="font-family:var(--font-head);font-size:24px;color:var(--gold);margin-bottom:8px">Quiz Complete!</div>
-      <div style="font-size:40px;font-weight:700;color:var(--green);margin-bottom:8px">${quizScore}/${QUIZ.length}</div>
-      <div style="color:var(--muted);margin-bottom:24px">${quizScore===QUIZ.length?'🎉 Perfect score!':quizScore>=7?'Great job!':quizScore>=5?'Good effort — keep practicing!':'Keep studying — you can do it!'}</div>
-      <button class="btn btn-gold" onclick="quizIdx=0;quizScore=0;quizDone=false;quizSelected=null;renderQuiz()">Try Again</button>
-    </div>`;
+// ═══════════════════════════════════════════════════════════
+function rQuiz(){
+  const a=document.getElementById('quizarea');
+  if(qd){
+    a.innerHTML='<div class="card" style="text-align:center;padding:28px"><div style="font-size:40px;margin-bottom:8px">&#127942;</div><div style="font-family:var(--fh);font-size:20px;color:var(--gold);margin-bottom:4px">Quiz Complete!</div><div style="font-size:32px;font-weight:700;color:'+(qs>=7?'var(--green)':'var(--orange)')+';margin-bottom:6px">'+qs+'/'+QUIZ.length+'</div><div class="tm fs12 mb12">'+(qs===QUIZ.length?'Perfect!':qs>=7?'Great job!':qs>=5?'Good effort - keep practising!':'Keep studying!')+'</div><button class="btn btn-gold" onclick="qi=0;qs=0;qd=false;qsel=null;rQuiz()">Try Again</button></div>';
     return;
   }
-  const q = QUIZ[quizIdx];
-  const progress = Math.round((quizIdx/QUIZ.length)*100);
-  area.innerHTML=`<div class="card">
-    <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-      <span class="text-muted fs13">Question ${quizIdx+1} of ${QUIZ.length}</span>
-      <span class="text-gold fs13">Score: ${quizScore}/${quizIdx}</span>
-    </div>
-    <div style="background:var(--bg3);border-radius:4px;height:4px;margin-bottom:18px"><div style="background:var(--gold);height:4px;border-radius:4px;width:${progress}%;transition:width .3s"></div></div>
-    <div style="font-size:17px;font-weight:600;margin-bottom:20px;line-height:1.5">${q.q}</div>
-    ${q.opts.map(opt=>{
-      let cls='quiz-opt';
-      if(quizSelected){ if(opt===q.a) cls+=' correct'; else if(opt===quizSelected) cls+=' wrong'; }
-      return `<button class="${cls}" onclick="answerQuiz('${opt.replace(/'/g,"\\'")}')">
-        ${quizSelected&&opt===q.a?'✅ ':''}${quizSelected&&opt===quizSelected&&opt!==q.a?'❌ ':''}${opt}
-      </button>`;
-    }).join('')}
-  </div>`;
+  const q=QUIZ[qi];const pct=Math.round(qi/QUIZ.length*100);
+  a.innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span class="tm fs11">Q '+(qi+1)+'/'+QUIZ.length+'</span><span class="tg fs11 mono">'+qs+'/'+qi+'</span></div>'+
+    '<div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div>'+
+    '<div style="font-size:15px;font-weight:600;margin-bottom:14px;line-height:1.5">'+q.q+'</div>'+
+    q.opts.map(o=>{let cls='qopt';if(qsel){if(o===q.a)cls+=' ok';else if(o===qsel)cls+=' no';}
+    return '<button class="'+cls+'" onclick="ansQ(\''+o.replace(/'/g,"\\'")+'\')">'+(qsel&&o===q.a?'&#10003; ':'')+(qsel&&o===qsel&&o!==q.a?'&#10007; ':'')+o+'</button>';}).join('')+'</div>';
 }
-
-function answerQuiz(opt) {
-  if(quizSelected) return;
-  quizSelected = opt;
-  if(opt===QUIZ[quizIdx].a) quizScore++;
-  renderQuiz();
-  setTimeout(()=>{
-    if(quizIdx<QUIZ.length-1){ quizIdx++; quizSelected=null; } else quizDone=true;
-    renderQuiz();
-  },1300);
-}
-
-// ============================================================
-// PRINT
-// ============================================================
-function printSection(section) {
-  if(section==='invoice') { renderInvoice(); }
-  window.print();
-}
+function ansQ(o){if(qsel)return;qsel=o;if(o===QUIZ[qi].a)qs++;rQuiz();setTimeout(()=>{if(qi<QUIZ.length-1){qi++;qsel=null;}else qd=true;rQuiz();},1300);}
 </script>
 </body>
 </html>
