@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LedgerLearn — Free Accounting Education Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --gold:#c9a84c; --gold2:#e8c96d; --bg:#0d1117; --bg2:#12161f;
+  --bg3:#181d2a; --bg4:#1e2538; --border:#252d42; --text:#e2ddd4;
+  --muted:#6b7a99; --blue:#5b9cf6; --green:#5dba7d; --red:#e05c5c;
+  --font-head:'Playfair Display',Georgia,serif;
+  --font-body:'Source Sans 3',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+/* HEADER */
+#header{background:linear-gradient(135deg,#161c2e,#0d1117);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px #00000055}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 18px #c9a84c44}
+.logo-text{font-family:var(--font-head);font-size:20px;color:var(--gold);letter-spacing:.5px}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+select,input{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 12px;font-family:var(--font-body);font-size:13px;outline:none;cursor:pointer}
+select:focus,input:focus{border-color:var(--gold)}
+.tag{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--muted)}
+/* LAYOUT */
+#layout{display:flex;min-height:calc(100vh - 71px)}
+/* SIDEBAR */
+#sidebar{width:190px;background:var(--bg2);border-right:1px solid var(--border);padding:12px 8px;flex-shrink:0}
+.nav-btn{width:100%;background:transparent;border:1px solid transparent;border-radius:10px;padding:10px 12px;margin-bottom:4px;cursor:pointer;text-align:left;transition:all .2s;color:var(--text);font-family:var(--font-body)}
+.nav-btn:hover{background:var(--bg3);border-color:var(--border)}
+.nav-btn.active{background:linear-gradient(135deg,#1d2d4a,#152038);border-color:#c9a84c44}
+.nav-icon{font-size:18px;margin-bottom:2px;display:block}
+.nav-title{font-size:12px;font-weight:700;color:var(--muted);display:block}
+.nav-btn.active .nav-title{color:var(--gold)}
+.nav-desc{font-size:10px;color:#3a4a6a;display:block}
+/* MAIN */
+#main{flex:1;padding:24px;overflow-y:auto}
+.section{display:none}
+.section.active{display:block}
+h2{font-family:var(--font-head);color:var(--gold);font-size:22px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:18px}
+.card-title{font-weight:700;color:var(--gold);margin-bottom:10px;font-size:14px}
+.tip{background:var(--bg3);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--muted);margin-bottom:16px}
+.tip strong{color:var(--gold)}
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 12px;text-align:left;color:var(--gold);border-bottom:1px solid var(--border);font-size:11px;letter-spacing:1px;text-transform:uppercase;background:var(--bg3)}
+td{padding:9px 12px;border-bottom:1px solid #1a2030}
+tr:hover td{background:#161c2a}
+tfoot td{background:var(--bg3);font-weight:700;color:var(--gold);border-top:2px solid #c9a84c44}
+/* BUTTONS */
+.btn{border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-family:var(--font-body);font-weight:700;font-size:13px;transition:all .2s}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0d1117}
+.btn-gold:hover{opacity:.9;transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.btn-print{background:linear-gradient(135deg,#2d4a2d,#1e3a1e);border:1px solid #5dba7d55;color:var(--green);padding:10px 20px;border-radius:10px;cursor:pointer;font-family:var(--font-body);font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.btn-print:hover{background:linear-gradient(135deg,#3a5a3a,#2a4a2a)}
+/* STAT CARDS */
+.stat{background:var(--bg3);border-radius:10px;padding:14px;text-align:center}
+.stat-val{font-size:22px;font-weight:700;color:var(--gold);font-family:var(--font-head)}
+.stat-label{font-size:11px;color:var(--muted);margin-top:3px}
+.stat-hint{font-size:10px;color:#3a4a6a;margin-top:2px}
+/* FORM ROW */
+.form-row{display:grid;gap:8px;margin-bottom:10px}
+.form-row.cols6{grid-template-columns:1fr 2fr 1.5fr 1.5fr 1fr auto}
+.form-row.cols3{grid-template-columns:1fr 1fr 1fr}
+.form-row.cols2{grid-template-columns:1fr 1fr}
+input[type=text],input[type=number],input[type=date]{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 12px;font-family:var(--font-body);font-size:13px;outline:none}
+input:focus{border-color:var(--gold)}
+/* BADGE */
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-asset{background:#1a2d4a;color:var(--blue)}
+.badge-liability{background:#2d1a1a;color:var(--red)}
+.badge-equity{background:#1a2d1a;color:var(--green)}
+.badge-revenue{background:#1a2d1a;color:var(--green)}
+.badge-expense{background:#2d1a1a;color:var(--red)}
+/* AI CHAT */
+#chat-box{height:360px;overflow-y:auto;background:var(--bg3);border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid var(--border)}
+.msg{display:flex;margin-bottom:12px}
+.msg.user{justify-content:flex-end}
+.bubble{max-width:80%;background:var(--bg4);border:1px solid var(--border);border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.6;white-space:pre-wrap}
+.msg.user .bubble{background:#1a2d4a;border-color:#3a5a8f44;color:#9ad4ff}
+.msg-label{font-size:10px;color:var(--gold);font-weight:700;margin-bottom:4px}
+.quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.quick-btn{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--font-body)}
+.quick-btn:hover{border-color:var(--gold);color:var(--gold)}
+.chat-input-row{display:flex;gap:8px}
+.chat-input-row input{flex:1}
+/* QUIZ */
+.quiz-opt{display:block;width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--text);font-size:13px;text-align:left;cursor:pointer;margin-bottom:8px;font-family:var(--font-body);transition:all .2s}
+.quiz-opt:hover{border-color:var(--gold)}
+.quiz-opt.correct{background:#1a3a1a;border-color:var(--green);color:var(--green)}
+.quiz-opt.wrong{background:#3a1a1a;border-color:var(--red);color:var(--red)}
+/* INVOICE PREVIEW */
+.invoice-preview{background:#fff;color:#111;border-radius:12px;padding:32px;font-family:'Source Sans 3',sans-serif;font-size:13px}
+.inv-header{display:flex;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0d5c0}
+.inv-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#b8860b}
+.inv-table th{background:#f5f0e8;color:#555;padding:8px 12px}
+.inv-table td{padding:8px 12px;border-bottom:1px solid #eee}
+/* PRINT */
+@media print{
+  #header,#sidebar,.no-print{display:none!important}
+  #main{padding:0}
+  #layout{display:block}
+  .section{display:block!important}
+  body{background:#fff;color:#000}
+  .card{border:1px solid #ccc;background:#fff}
+  table th{background:#f5f5f5;color:#333}
+  h2{color:#8b6914}
+  .print-only{display:block!important}
+}
+.print-only{display:none}
+/* LAWS TABLE */
+.laws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.law-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px}
+.law-card-country{font-weight:700;color:var(--gold);font-size:14px;margin-bottom:8px}
+.law-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1a2030;font-size:12px}
+.law-row:last-child{border:none}
+.law-key{color:var(--muted)}
+.law-val{color:var(--text);font-weight:600;text-align:right;max-width:55%}
+/* LOADING */
+.loading{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* COLORS */
+.text-gold{color:var(--gold)} .text-green{color:var(--green)} .text-red{color:var(--red)} .text-blue{color:var(--blue)} .text-muted{color:var(--muted)}
+.fw7{font-weight:700} .fs12{font-size:12px} .fs11{font-size:11px} .mb8{margin-bottom:8px} .mb16{margin-bottom:16px} .mt12{margin-top:12px}
+/* PAYSLIP */
+.payslip{background:#fff;color:#111;border-radius:12px;padding:28px;font-size:13px}
+.payslip-header{display:flex;justify-content:space-between;border-bottom:2px solid #c9a84c;padding-bottom:12px;margin-bottom:16px}
+.payslip-title{font-family:'Playfair Display',serif;font-size:22px;color:#8b6914}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="logo">
+    <div class="logo-icon">📚</div>
+    <div>
+      <div class="logo-text">LedgerLearn</div>
+      <div class="logo-sub">Free Accounting Education Platform</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span style="color:var(--muted);font-size:13px">🌍 Country:</span>
+    <select id="countrySelect" onchange="setCountry(this.value)">
+      <option value="USA">🇺🇸 USA</option>
+      <option value="UK">🇬🇧 United Kingdom</option>
+      <option value="EU">🇪🇺 European Union</option>
+      <option value="India">🇮🇳 India</option>
+      <option value="Australia">🇦🇺 Australia</option>
+      <option value="UAE">🇦🇪 UAE</option>
+      <option value="Canada">🇨🇦 Canada</option>
+      <option value="Singapore">🇸🇬 Singapore</option>
+      <option value="SouthAfrica">🇿🇦 South Africa</option>
+      <option value="Nigeria">🇳🇬 Nigeria</option>
+      <option value="Kenya">🇰🇪 Kenya</option>
+      <option value="Pakistan">🇵🇰 Pakistan</option>
+      <option value="Bangladesh">🇧🇩 Bangladesh</option>
+      <option value="Malaysia">🇲🇾 Malaysia</option>
+      <option value="Philippines">🇵🇭 Philippines</option>
+    </select>
+    <div class="tag" id="countryTag">$ · Sales Tax · GAAP</div>
+    <button class="btn btn-print no-print" onclick="window.print()">🖨️ Print Report</button>
+  </div>
+</div>
+
+<div id="layout">
+<!-- SIDEBAR -->
+<div id="sidebar" class="no-print">
+  <script>
+  const NAVS=[
+    {id:'ledger',icon:'📒',title:'General Ledger',desc:'Double-entry'},
+    {id:'trial',icon:'⚖️',title:'Trial Balance',desc:'Verify D=C'},
+    {id:'financial',icon:'📊',title:'Financials',desc:'P&L · Balance Sheet'},
+    {id:'invoice',icon:'🧾',title:'Invoices',desc:'Country templates'},
+    {id:'hr',icon:'👥',title:'HR & Payroll',desc:'Payslips · Tax'},
+    {id:'tax',icon:'🏛️',title:'Tax Calc',desc:'VAT · GST · Corp Tax'},
+    {id:'laws',icon:'⚖️',title:'Country Laws',desc:'All regulations'},
+    {id:'ai',icon:'🤖',title:'AI Tutor',desc:'Ask anything'},
+    {id:'quiz',icon:'🎓',title:'Quiz',desc:'Test knowledge'},
+  ];
+  document.addEventListener('DOMContentLoaded',()=>{
+    const sb=document.getElementById('sidebar');
+    NAVS.forEach(n=>{
+      sb.innerHTML+=`<button class="nav-btn${n.id==='ledger'?' active':''}" onclick="showSection('${n.id}',this)">
+        <span class="nav-icon">${n.icon}</span>
+        <span class="nav-title">${n.title}</span>
+        <span class="nav-desc">${n.desc}</span>
+      </button>`;
+    });
+  });
+  </script>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- ==================== GENERAL LEDGER ==================== -->
+<div id="sec-ledger" class="section active">
+  <h2>📒 General Ledger
+    <button class="btn-print no-print" onclick="printSection('ledger')" style="margin-left:auto">🖨️ Print Ledger</button>
+  </h2>
+  <div class="tip">💡 <strong>Double-Entry Rule:</strong> Every transaction debits one account and credits another. Total Debits always = Total Credits. Assets & Expenses ↑ with Debit. Liabilities, Equity & Revenue ↑ with Credit.</div>
+
+  <div class="card no-print">
+    <div class="card-title">➕ Add Transaction</div>
+    <div class="form-row cols6">
+      <input type="date" id="txnDate"/>
+      <input type="text" id="txnDesc" placeholder="Description"/>
+      <select id="txnDebit"></select>
+      <select id="txnCredit"></select>
+      <input type="number" id="txnAmt" placeholder="Amount" min="0"/>
+      <button class="btn btn-gold" onclick="addTxn()">Add</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <table id="ledgerTable">
+      <thead><tr><th>Date</th><th>Description</th><th>Debit Account</th><th>Credit Account</th><th id="ledgerAmtHeader">Amount</th></tr></thead>
+      <tbody id="ledgerBody"></tbody>
+      <tfoot><tr><td colspan="4">Total Debits = Total Credits ✓</td><td id="ledgerTotal"></td></tr></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== TRIAL BALANCE ==================== -->
+<div id="sec-trial" class="section">
+  <h2>⚖️ Trial Balance
+    <button class="btn-print no-print" onclick="printSection('trial')" style="margin-left:auto">🖨️ Print Trial Balance</button>
+  </h2>
+  <div class="tip">💡 A Trial Balance lists every account and its running balance. If total debits ≠ total credits, there is an error in the ledger.</div>
+  <div class="card">
+    <table id="trialTable">
+      <thead><tr><th>Account Code</th><th>Account Name</th><th>Type</th><th>Debit</th><th>Credit</th></tr></thead>
+      <tbody id="trialBody"></tbody>
+      <tfoot><tr><td colspan="3">TOTALS</td><td id="trialDebit"></td><td id="trialCredit"></td></tr></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== FINANCIAL STATEMENTS ==================== -->
+<div id="sec-financial" class="section">
+  <h2>📊 Financial Statements
+    <button class="btn-print no-print" onclick="printSection('financial')" style="margin-left:auto">🖨️ Print Statements</button>
+  </h2>
+  <div class="grid2">
+    <div class="card" id="incomeStatement">
+      <div class="card-title">Income Statement (Profit & Loss)</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px">For the period ended <span id="fsDate"></span></div>
+      <div id="incomeBody"></div>
+    </div>
+    <div class="card" id="balanceSheet">
+      <div class="card-title">Balance Sheet</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:14px">As of <span id="bsDate"></span></div>
+      <div id="bsBody"></div>
+    </div>
+  </div>
+  <div class="card mt12">
+    <div class="card-title">Key Financial Ratios & Country Info</div>
+    <div class="grid4" id="ratioGrid"></div>
+  </div>
+</div>
+
+<!-- ==================== INVOICE ==================== -->
+<div id="sec-invoice" class="section">
+  <h2>🧾 Invoice Creator
+    <button class="btn-print no-print" onclick="printSection('invoice')" style="margin-left:auto">🖨️ Print Invoice</button>
+  </h2>
+  <div class="grid2 no-print">
+    <div class="card">
+      <div class="card-title">Invoice Details</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input type="text" id="invNo" placeholder="Invoice Number" value="INV-001"/>
+        <input type="date" id="invDate"/>
+        <input type="text" id="invFrom" placeholder="Your Business Name"/>
+        <input type="text" id="invFromAddr" placeholder="Your Address / Registration No."/>
+        <input type="text" id="invTo" placeholder="Client Name"/>
+        <input type="text" id="invToAddr" placeholder="Client Address"/>
+        <div id="invItems"></div>
+        <button class="btn btn-outline" onclick="addInvItem()" style="margin-top:4px">+ Add Line Item</button>
+        <button class="btn btn-gold" onclick="renderInvoice()">Generate Invoice</button>
+      </div>
+    </div>
+    <div id="invoicePreview"></div>
+  </div>
+  <div id="invoicePrintArea" class="print-only"></div>
+</div>
+
+<!-- ==================== HR & PAYROLL ==================== -->
+<div id="sec-hr" class="section">
+  <h2>👥 HR & Payroll
+    <button class="btn-print no-print" onclick="printSection('hr')" style="margin-left:auto">🖨️ Print Payroll Report</button>
+  </h2>
+  <div class="card no-print">
+    <div class="card-title">Add Employee</div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr 1fr 1fr auto">
+      <input type="text" id="empName" placeholder="Full Name"/>
+      <input type="text" id="empRole" placeholder="Job Title"/>
+      <input type="number" id="empSalary" placeholder="Gross Monthly Salary"/>
+      <select id="empCountry"></select>
+      <button class="btn btn-gold" onclick="addEmployee()">Add</button>
+    </div>
+  </div>
+  <div class="card">
+    <table id="hrTable">
+      <thead><tr><th>Employee</th><th>Role</th><th>Country</th><th>Gross</th><th>Income Tax</th><th>Social Contrib.</th><th>Net Pay</th><th class="no-print">Payslip</th></tr></thead>
+      <tbody id="hrBody"></tbody>
+    </table>
+  </div>
+  <div id="payslipArea" class="print-only"></div>
+</div>
+
+<!-- ==================== TAX CALCULATOR ==================== -->
+<div id="sec-tax" class="section">
+  <h2>🏛️ Tax Calculator
+    <button class="btn-print no-print" onclick="printSection('tax')" style="margin-left:auto">🖨️ Print Tax Report</button>
+  </h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title" id="taxTitle">VAT / GST Calculator</div>
+      <div class="tip fs12" id="taxTip"></div>
+      <table>
+        <thead><tr><th>Base Amount</th><th>Tax Rate</th><th>Tax Amount</th><th>Total Inc. Tax</th></tr></thead>
+        <tbody id="taxBody"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title" id="corpTaxTitle">Corporate Income Tax</div>
+      <table>
+        <thead><tr><th>Net Profit</th><th>Tax Rate</th><th>Tax Payable</th><th>After-Tax Profit</th></tr></thead>
+        <tbody id="corpTaxBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Custom Tax Calculator</div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr 1fr auto;align-items:end">
+      <div><div class="fs11 text-muted mb8">Amount</div><input type="number" id="custAmt" placeholder="Enter amount"/></div>
+      <div><div class="fs11 text-muted mb8">Tax Rate %</div><input type="number" id="custRate" placeholder="e.g. 20"/></div>
+      <div><div class="fs11 text-muted mb8">Result</div><div id="custResult" style="padding:9px 12px;background:var(--bg3);border-radius:8px;font-size:13px;color:var(--green);font-weight:700">—</div></div>
+      <button class="btn btn-gold" onclick="calcCustom()">Calculate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== COUNTRY LAWS ==================== -->
+<div id="sec-laws" class="section">
+  <h2>⚖️ Country Laws & Regulations
+    <button class="btn-print no-print" onclick="printSection('laws')" style="margin-left:auto">🖨️ Print Laws Reference</button>
+  </h2>
+  <div class="tip">📋 Reference guide for accounting standards, tax rates, employment law and payroll obligations across all supported countries. Data reflects current legislation — always verify with local authorities for filing.</div>
+  <div class="laws-grid" id="lawsGrid"></div>
+</div>
+
+<!-- ==================== AI TUTOR ==================== -->
+<div id="sec-ai" class="section">
+  <h2>🤖 AI Accounting Tutor</h2>
+  <div class="tip">Powered by Claude AI. Ask about accounting concepts, country-specific tax law, payroll rules, financial statements, or anything in your syllabus. The tutor knows your selected country!</div>
+  <div id="chat-box"></div>
+  <div class="quick-btns" id="quickBtns"></div>
+  <div class="chat-input-row no-print">
+    <input type="text" id="aiInput" placeholder="Ask a question about accounting..." onkeydown="if(event.key==='Enter')sendAI()"/>
+    <button class="btn btn-gold" onclick="sendAI()" id="aiSendBtn">Send</button>
+  </div>
+</div>
+
+<!-- ==================== QUIZ ==================== -->
+<div id="sec-quiz" class="section">
+  <h2>🎓 Accounting Quiz</h2>
+  <div id="quizArea" style="max-width:600px"></div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const COUNTRIES = {
+  USA:{flag:'🇺🇸',currency:'USD',symbol:'$',tax:'Sales Tax',vatRate:0,corpTax:21,incomeTax:'10–37%',socialSec:'6.2% SS + 1.45% Medicare',minWage:'$7.25/hr (federal)',annualLeave:'No federal minimum',standard:'US GAAP',filingBody:'IRS',corpTaxNote:'21% flat federal rate',vatNote:'No federal VAT. State sales tax varies 0–10%',pension:'401(k) optional',currency_code:'USD'},
+  UK:{flag:'🇬🇧',currency:'GBP',symbol:'£',tax:'VAT',vatRate:20,corpTax:25,incomeTax:'20–45%',socialSec:"12% NI (employee)",minWage:'£11.44/hr',annualLeave:'28 days minimum',standard:'UK GAAP / IFRS',filingBody:'HMRC',corpTaxNote:'25% main rate (>£250k profit)',vatNote:'Standard 20%, Reduced 5%, Zero 0%',pension:'Auto-enrolment 5%',currency_code:'GBP'},
+  EU:{flag:'🇪🇺',currency:'EUR',symbol:'€',tax:'VAT',vatRate:21,corpTax:22,incomeTax:'Varies by country',socialSec:'Varies by country',minWage:'Varies by country',annualLeave:'20 days EU minimum',standard:'IFRS',filingBody:'Local tax authority',corpTaxNote:'Average ~22% (varies by country)',vatNote:'Standard 21% (avg), varies 17–27%',pension:'State + supplementary',currency_code:'EUR'},
+  India:{flag:'🇮🇳',currency:'INR',symbol:'₹',tax:'GST',vatRate:18,corpTax:30,incomeTax:'5–30%',socialSec:'12% PF (employee)',minWage:'₹176/day (central)',annualLeave:'15 days minimum',standard:'Ind AS (IFRS-aligned)',filingBody:'Income Tax Dept / GSTN',corpTaxNote:'25% for domestic cos, 30% general',vatNote:'GST: 5%, 12%, 18%, 28% slabs',pension:'EPF 12% employee',currency_code:'INR'},
+  Australia:{flag:'🇦🇺',currency:'AUD',symbol:'A$',tax:'GST',vatRate:10,corpTax:30,incomeTax:'19–45%',socialSec:'N/A (no employee SS)',minWage:'A$23.23/hr',annualLeave:'4 weeks minimum',standard:'AASB (IFRS-aligned)',filingBody:'ATO',corpTaxNote:'30% general, 25% small business',vatNote:'GST 10% on most goods/services',pension:'Superannuation 11% employer',currency_code:'AUD'},
+  UAE:{flag:'🇦🇪',currency:'AED',symbol:'د.إ',tax:'VAT',vatRate:5,corpTax:9,incomeTax:'0% (no personal income tax)',socialSec:'5% (UAE nationals only)',minWage:'No statutory minimum',annualLeave:'30 calendar days',standard:'IFRS',filingBody:'FTA',corpTaxNote:'9% corporate tax (>AED 375k profit)',vatNote:'VAT 5% standard rate',pension:'DEWS / GPSSA for nationals',currency_code:'AED'},
+  Canada:{flag:'🇨🇦',currency:'CAD',symbol:'C$',tax:'GST/HST',vatRate:13,corpTax:26.5,incomeTax:'20.5–33%',socialSec:'5.95% CPP + 1.66% EI',minWage:'C$17.30/hr (federal)',annualLeave:'2 weeks minimum',standard:'ASPE / IFRS',filingBody:'CRA',corpTaxNote:'15% federal + ~11.5% provincial',vatNote:'GST 5% + PST varies, HST up to 15%',pension:'CPP 5.95%',currency_code:'CAD'},
+  Singapore:{flag:'🇸🇬',currency:'SGD',symbol:'S$',tax:'GST',vatRate:9,corpTax:17,incomeTax:'2–24%',socialSec:'20% CPF (employee)',minWage:'S$9/hr (Progressive Wage)',annualLeave:'7–14 days',standard:'SFRS (IFRS-aligned)',filingBody:'IRAS',corpTaxNote:'17% flat with exemptions',vatNote:'GST 9% (from Jan 2024)',pension:'CPF 20% employee + 17% employer',currency_code:'SGD'},
+  SouthAfrica:{flag:'🇿🇦',currency:'ZAR',symbol:'R',tax:'VAT',vatRate:15,corpTax:27,incomeTax:'18–45%',socialSec:'1% UIF (employee)',minWage:'R27.58/hr',annualLeave:'21 consecutive days',standard:'IFRS / IFRS for SMEs',filingBody:'SARS',corpTaxNote:'27% standard rate',vatNote:'VAT 15% standard',pension:'No mandatory occupational pension',currency_code:'ZAR'},
+  Nigeria:{flag:'🇳🇬',currency:'NGN',symbol:'₦',tax:'VAT',vatRate:7.5,corpTax:30,incomeTax:'7–24%',socialSec:'8% Pension (employee)',minWage:'₦70,000/month',annualLeave:'6 working days minimum',standard:'IFRS (FRCN adopted)',filingBody:'FIRS',corpTaxNote:'30% standard, 20% small companies',vatNote:'VAT 7.5% (increased from 5% in 2020)',pension:'8% employee + 10% employer (RSA)',currency_code:'NGN'},
+  Kenya:{flag:'🇰🇪',currency:'KES',symbol:'KSh',tax:'VAT',vatRate:16,corpTax:30,incomeTax:'10–35%',socialSec:'6% NSSF (employee)',minWage:'KSh 15,201/month (Nairobi)',annualLeave:'21 working days',standard:'IFRS',filingBody:'KRA',corpTaxNote:'30% resident companies',vatNote:'VAT 16% standard rate',pension:'NSSF 6%',currency_code:'KES'},
+  Pakistan:{flag:'🇵🇰',currency:'PKR',symbol:'Rs',tax:'GST',vatRate:18,corpTax:29,incomeTax:'5–35%',socialSec:'1% EOBI (employee)',minWage:'Rs 37,000/month',annualLeave:'14 days annual leave',standard:'IFRS / IFRS for SMEs',filingBody:'FBR',corpTaxNote:'29% standard rate',vatNote:'GST 18% (Sales Tax Act)',pension:'EOBI 1% + 5% employer',currency_code:'PKR'},
+  Bangladesh:{flag:'🇧🇩',currency:'BDT',symbol:'৳',tax:'VAT',vatRate:15,corpTax:27.5,incomeTax:'5–25%',socialSec:'N/A (voluntary)',minWage:'৳8,000/month (garments)',annualLeave:'10 days casual leave',standard:'BFRS (IFRS-based)',filingBody:'NBR',corpTaxNote:'27.5% (listed), 30% (unlisted)',vatNote:'VAT 15% standard',pension:'Provident fund (voluntary)',currency_code:'BDT'},
+  Malaysia:{flag:'🇲🇾',currency:'MYR',symbol:'RM',tax:'SST',vatRate:10,corpTax:24,incomeTax:'1–30%',socialSec:'11% EPF (employee)',minWage:'RM1,500/month',annualLeave:'8–16 days',standard:'MFRS (IFRS-aligned)',filingBody:'LHDN / Royal Customs',corpTaxNote:'24% standard, 17% SMEs (first RM600k)',vatNote:'SST: Sales Tax 5–10%, Service Tax 8%',pension:'EPF 11% employee + 13% employer',currency_code:'MYR'},
+  Philippines:{flag:'🇵🇭',currency:'PHP',symbol:'₱',tax:'VAT',vatRate:12,corpTax:25,incomeTax:'15–35%',socialSec:'4.5% SSS (employee)',minWage:'₱610/day (NCR)',annualLeave:'5 days service incentive',standard:'PFRS (IFRS-aligned)',filingBody:'BIR',corpTaxNote:'25% (domestic), 20% (MSME)',vatNote:'VAT 12% standard',pension:'SSS 4.5% + PhilHealth + Pag-IBIG',currency_code:'PHP'},
+};
+
+const ACCOUNTS = [
+  {code:'1000',name:'Cash',type:'Asset',normal:'Debit'},
+  {code:'1100',name:'Accounts Receivable',type:'Asset',normal:'Debit'},
+  {code:'1200',name:'Inventory',type:'Asset',normal:'Debit'},
+  {code:'1300',name:'Prepaid Expenses',type:'Asset',normal:'Debit'},
+  {code:'1500',name:'Equipment',type:'Asset',normal:'Debit'},
+  {code:'1600',name:'Buildings',type:'Asset',normal:'Debit'},
+  {code:'2000',name:'Accounts Payable',type:'Liability',normal:'Credit'},
+  {code:'2100',name:'Bank Loan',type:'Liability',normal:'Credit'},
+  {code:'2200',name:'Tax Payable',type:'Liability',normal:'Credit'},
+  {code:'3000',name:"Owner's Equity",type:'Equity',normal:'Credit'},
+  {code:'3100',name:'Retained Earnings',type:'Equity',normal:'Credit'},
+  {code:'4000',name:'Sales Revenue',type:'Revenue',normal:'Credit'},
+  {code:'4100',name:'Service Revenue',type:'Revenue',normal:'Credit'},
+  {code:'5000',name:'Cost of Goods Sold',type:'Expense',normal:'Debit'},
+  {code:'5100',name:'Salaries Expense',type:'Expense',normal:'Debit'},
+  {code:'5200',name:'Rent Expense',type:'Expense',normal:'Debit'},
+  {code:'5300',name:'Utilities Expense',type:'Expense',normal:'Debit'},
+  {code:'5400',name:'Depreciation Expense',type:'Expense',normal:'Debit'},
+  {code:'5500',name:'Tax Expense',type:'Expense',normal:'Debit'},
+];
+
+const QUIZ = [
+  {q:'What is the fundamental accounting equation?',a:'Assets = Liabilities + Equity',opts:['Assets = Revenue – Expenses','Assets = Liabilities + Equity','Profit = Revenue – Costs','Debit = Credit + Balance']},
+  {q:'Which statement shows a company\'s profitability over a period?',a:'Income Statement (P&L)',opts:['Balance Sheet','Cash Flow Statement','Income Statement (P&L)','Trial Balance']},
+  {q:'A debit entry to an Asset account will:',a:'Increase the account balance',opts:['Decrease the balance','Increase the account balance','Have no effect','Close the account']},
+  {q:'What does IFRS stand for?',a:'International Financial Reporting Standards',opts:['International Financial Reporting Standards','Internal Finance Recording System','International Federal Revenue Standards','Interim Financial Reporting Schedule']},
+  {q:'Depreciation is classified as:',a:'A non-cash operating expense',opts:['A cash payment','A revenue item','A non-cash operating expense','A liability']},
+  {q:'Which account type normally has a Credit balance?',a:'Revenue',opts:['Assets','Expenses','Revenue','Drawings']},
+  {q:'VAT stands for:',a:'Value Added Tax',opts:['Variable Annual Tax','Value Added Tax','Verified Account Transfer','Volume Adjusted Tariff']},
+  {q:'The purpose of a Trial Balance is to:',a:'Verify total debits equal total credits',opts:['Calculate profit','List all assets','Verify total debits equal total credits','Show cash position']},
+  {q:'Gross Profit = ?',a:'Revenue – Cost of Goods Sold',opts:['Revenue – All Expenses','Revenue – Cost of Goods Sold','Net Income + Tax','Revenue + Expenses']},
+  {q:'Which is NOT a financial statement?',a:'Trial Balance',opts:['Income Statement','Balance Sheet','Trial Balance','Cash Flow Statement']},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentCountry = 'USA';
+let transactions = [
+  {id:1,date:'2024-01-15',desc:'Initial Capital Investment',debit:"Owner's Equity",credit:'Cash',amt:50000},
+  {id:2,date:'2024-01-20',desc:'Equipment Purchase',debit:'Equipment',credit:'Cash',amt:15000},
+  {id:3,date:'2024-02-01',desc:'Sales Revenue Received',debit:'Cash',credit:'Sales Revenue',amt:8000},
+  {id:4,date:'2024-02-10',desc:'Rent Payment',debit:'Rent Expense',credit:'Cash',amt:2000},
+  {id:5,date:'2024-02-15',desc:'Salaries Paid',debit:'Salaries Expense',credit:'Cash',amt:3500},
+];
+let employees = [
+  {id:1,name:'Alice Johnson',role:'Finance Manager',salary:6000,country:'USA'},
+  {id:2,name:'Bob Smith',role:'Accountant',salary:4500,country:'UK'},
+];
+let invItems = [{desc:'Professional Services',qty:10,rate:150}];
+let quizIdx=0, quizScore=0, quizDone=false, quizSelected=null;
+let chatHistory = [];
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  populateSelects();
+  document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('txnDate').value = new Date().toISOString().split('T')[0];
+  setCountry('USA');
+  renderLedger();
+  renderTrial();
+  renderFinancials();
+  renderInvoiceItems();
+  renderHR();
+  renderTax();
+  renderLaws();
+  renderQuiz();
+  renderChat([{role:'assistant',text:`👋 Welcome to LedgerLearn AI Tutor!\n\nI'm powered by Claude AI and I know the accounting laws for all 15 countries in this platform.\n\nCurrently showing: 🇺🇸 USA — GAAP · Sales Tax · 21% Corp Tax\n\nAsk me anything — accounting concepts, tax rules, payroll calculations, financial statements, or exam prep!`}]);
+  updateQuickBtns();
+});
+
+function populateSelects() {
+  const accts = ACCOUNTS.map(a=>a.name);
+  ['txnDebit','txnCredit'].forEach(id=>{
+    const sel = document.getElementById(id);
+    sel.innerHTML = accts.map(a=>`<option>${a}</option>`).join('');
+  });
+  const countries = Object.keys(COUNTRIES);
+  const empSel = document.getElementById('empCountry');
+  empSel.innerHTML = countries.map(c=>`<option value="${c}">${COUNTRIES[c].flag} ${c}</option>`).join('');
+}
+
+function setCountry(c) {
+  currentCountry = c;
+  const cfg = COUNTRIES[c];
+  document.getElementById('countryTag').textContent = `${cfg.symbol} · ${cfg.tax} ${cfg.vatRate}% · ${cfg.standard}`;
+  renderLedger(); renderTrial(); renderFinancials();
+  renderTax(); renderLaws();
+  updateQuickBtns();
+}
+
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='financial') renderFinancials();
+  if(id==='trial') renderTrial();
+  if(id==='tax') renderTax();
+}
+
+// ============================================================
+// LEDGER
+// ============================================================
+function addTxn() {
+  const date=document.getElementById('txnDate').value;
+  const desc=document.getElementById('txnDesc').value.trim();
+  const debit=document.getElementById('txnDebit').value;
+  const credit=document.getElementById('txnCredit').value;
+  const amt=parseFloat(document.getElementById('txnAmt').value);
+  if(!date||!desc||!amt||isNaN(amt)) return alert('Please fill all fields');
+  if(debit===credit) return alert('Debit and Credit accounts must be different');
+  transactions.push({id:Date.now(),date,desc,debit,credit,amt});
+  document.getElementById('txnDesc').value='';
+  document.getElementById('txnAmt').value='';
+  renderLedger(); renderTrial(); renderFinancials();
+}
+
+function renderLedger() {
+  const cfg = COUNTRIES[currentCountry];
+  document.getElementById('ledgerAmtHeader').textContent = `Amount (${cfg.symbol})`;
+  const tbody = document.getElementById('ledgerBody');
+  tbody.innerHTML = transactions.map((t,i)=>`
+    <tr>
+      <td class="text-muted">${t.date}</td>
+      <td>${t.desc}</td>
+      <td class="text-blue">${t.debit}</td>
+      <td class="text-green">${t.credit}</td>
+      <td class="fw7">${cfg.symbol}${t.amt.toLocaleString()}</td>
+    </tr>`).join('');
+  const total = transactions.reduce((s,t)=>s+t.amt,0);
+  document.getElementById('ledgerTotal').textContent = `${cfg.symbol}${total.toLocaleString()}`;
+}
+
+// ============================================================
+// TRIAL BALANCE
+// ============================================================
+function renderTrial() {
+  const cfg = COUNTRIES[currentCountry];
+  const balances = {};
+  ACCOUNTS.forEach(a=>{ balances[a.name]={...a,bal:0}; });
+  transactions.forEach(t=>{
+    if(balances[t.debit]) balances[t.debit].bal += t.amt;
+    if(balances[t.credit]) balances[t.credit].bal -= t.amt;
+  });
+  let totalDr=0, totalCr=0;
+  const rows = ACCOUNTS.filter(a=>balances[a.name].bal!==0).map(a=>{
+    const b = balances[a.name].bal;
+    const dr = b>0?b:0, cr = b<0?Math.abs(b):0;
+    totalDr+=dr; totalCr+=cr;
+    const badgeClass = `badge-${a.type.toLowerCase()}`;
+    return `<tr>
+      <td class="text-muted fs11">${a.code}</td>
+      <td>${a.name}</td>
+      <td><span class="badge ${badgeClass}">${a.type}</span></td>
+      <td class="text-blue">${dr?cfg.symbol+dr.toLocaleString():'—'}</td>
+      <td class="text-green">${cr?cfg.symbol+cr.toLocaleString():'—'}</td>
+    </tr>`;
+  });
+  document.getElementById('trialBody').innerHTML = rows.join('');
+  document.getElementById('trialDebit').textContent = cfg.symbol+totalDr.toLocaleString();
+  document.getElementById('trialCredit').textContent = cfg.symbol+totalCr.toLocaleString()+' ✓';
+}
+
+// ============================================================
+// FINANCIALS
+// ============================================================
+function renderFinancials() {
+  const cfg = COUNTRIES[currentCountry];
+  const now = new Date().toLocaleDateString();
+  document.getElementById('fsDate').textContent = now;
+  document.getElementById('bsDate').textContent = now;
+
+  const rev = transactions.filter(t=>['Sales Revenue','Service Revenue'].includes(t.credit)).reduce((s,t)=>s+t.amt,0);
+  const cogs = transactions.filter(t=>t.debit==='Cost of Goods Sold').reduce((s,t)=>s+t.amt,0);
+  const grossProfit = rev - cogs;
+  const opex = transactions.filter(t=>['Salaries Expense','Rent Expense','Utilities Expense','Depreciation Expense'].includes(t.debit)).reduce((s,t)=>s+t.amt,0);
+  const ebit = grossProfit - opex;
+  const taxExp = ebit * cfg.corpTax / 100;
+  const netIncome = ebit - taxExp;
+
+  document.getElementById('incomeBody').innerHTML = `
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">Revenue</span><span class="text-green fw7">${cfg.symbol}${rev.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">Cost of Goods Sold</span><span class="text-red">(${cfg.symbol}${cogs.toLocaleString()})</span></div>
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:2px solid var(--border)"><span class="fw7">Gross Profit</span><span class="fw7 text-green">${cfg.symbol}${grossProfit.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">Operating Expenses</span><span class="text-red">(${cfg.symbol}${opex.toLocaleString()})</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">EBIT</span><span>${cfg.symbol}${ebit.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span class="text-muted fs12">Corp Tax (${cfg.corpTax}%)</span><span class="text-red">(${cfg.symbol}${taxExp.toFixed(0)})</span></div>
+    <div style="display:flex;justify-content:space-between;padding:10px 0;margin-top:4px"><span class="fw7 text-gold" style="font-size:15px">Net Income</span><span class="fw7" style="font-size:18px;color:${netIncome>=0?'var(--green)':'var(--red)'}">${cfg.symbol}${netIncome.toFixed(0)}</span></div>`;
+
+  const cash = transactions.filter(t=>t.credit==='Cash').reduce((s,t)=>s+t.amt,0) - transactions.filter(t=>t.debit==='Cash').reduce((s,t)=>s+t.amt,0);
+  // Flip: Cash debits increase it
+  const cashBal = transactions.filter(t=>t.debit==='Cash').reduce((s,t)=>s+t.amt,0) - transactions.filter(t=>t.credit==='Cash').reduce((s,t)=>s+t.amt,0);
+  const equityBal = transactions.filter(t=>t.credit==="Owner's Equity").reduce((s,t)=>s+t.amt,0);
+  const eqptBal = transactions.filter(t=>t.debit==='Equipment').reduce((s,t)=>s+t.amt,0);
+  const loanBal = transactions.filter(t=>t.credit==='Bank Loan').reduce((s,t)=>s+t.amt,0);
+  const totalAssets = cashBal + eqptBal;
+  const totalEquityLiab = equityBal + netIncome + loanBal;
+
+  document.getElementById('bsBody').innerHTML = `
+    <div class="text-blue fs11" style="text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">ASSETS</div>
+    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px"><span>Cash & Bank</span><span class="text-blue">${cfg.symbol}${cashBal.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:2px solid var(--border);font-size:13px"><span>Equipment</span><span class="text-blue">${cfg.symbol}${eqptBal.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span class="fw7">Total Assets</span><span class="fw7 text-blue">${cfg.symbol}${totalAssets.toLocaleString()}</span></div>
+    <div class="text-green fs11" style="text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">EQUITY & LIABILITIES</div>
+    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px"><span>Owner's Equity</span><span class="text-green">${cfg.symbol}${equityBal.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px"><span>Retained Earnings</span><span class="text-green">${cfg.symbol}${netIncome.toFixed(0)}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:2px solid var(--border);font-size:13px"><span>Bank Loan</span><span class="text-red">${cfg.symbol}${loanBal.toLocaleString()}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:7px 0"><span class="fw7">Total Equity & Liab.</span><span class="fw7 text-green">${cfg.symbol}${totalEquityLiab.toFixed(0)}</span></div>`;
+
+  const margin = rev>0?((netIncome/rev)*100).toFixed(1)+'%':'N/A';
+  document.getElementById('ratioGrid').innerHTML = [
+    {label:'Profit Margin',val:margin,hint:'Net Income ÷ Revenue'},
+    {label:'Corp Tax Rate',val:cfg.corpTax+'%',hint:currentCountry+' rate'},
+    {label:cfg.tax+' Rate',val:cfg.vatRate+'%',hint:'On goods & services'},
+    {label:'Std',val:cfg.standard,hint:'Reporting framework'},
+  ].map(r=>`<div class="stat"><div class="stat-val">${r.val}</div><div class="stat-label">${r.label}</div><div class="stat-hint">${r.hint}</div></div>`).join('');
+}
+
+// ============================================================
+// INVOICE
+// ============================================================
+function renderInvoiceItems() {
+  document.getElementById('invItems').innerHTML = invItems.map((item,i)=>`
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:6px;margin-bottom:6px">
+      <input type="text" placeholder="Description" value="${item.desc}" oninput="invItems[${i}].desc=this.value;renderInvoice()"/>
+      <input type="number" placeholder="Qty" value="${item.qty}" oninput="invItems[${i}].qty=+this.value;renderInvoice()"/>
+      <input type="number" placeholder="Rate" value="${item.rate}" oninput="invItems[${i}].rate=+this.value;renderInvoice()"/>
+      <button class="btn btn-outline" onclick="invItems.splice(${i},1);renderInvoiceItems();renderInvoice()" style="padding:8px 10px">✕</button>
+    </div>`).join('');
+}
+
+function addInvItem() {
+  invItems.push({desc:'',qty:1,rate:0});
+  renderInvoiceItems();
+}
+
+function renderInvoice() {
+  const cfg = COUNTRIES[currentCountry];
+  const from = document.getElementById('invFrom').value || 'Your Business';
+  const fromAddr = document.getElementById('invFromAddr').value || '';
+  const to = document.getElementById('invTo').value || 'Client Name';
+  const toAddr = document.getElementById('invToAddr').value || '';
+  const invNo = document.getElementById('invNo').value || 'INV-001';
+  const invDate = document.getElementById('invDate').value || new Date().toISOString().split('T')[0];
+  const subtotal = invItems.reduce((s,i)=>s+(i.qty*i.rate),0);
+  const taxAmt = subtotal * cfg.vatRate/100;
+  const total = subtotal + taxAmt;
+
+  const html = `<div class="invoice-preview">
+    <div class="inv-header">
+      <div><div class="inv-title">INVOICE</div><div style="color:#888;font-size:12px">#${invNo} · ${invDate}</div></div>
+      <div style="text-align:right"><div style="font-weight:700;font-size:15px">${from}</div><div style="color:#666;font-size:12px">${fromAddr}</div><div style="color:#888;font-size:11px;margin-top:4px">${cfg.standard} · ${cfg.tax}</div></div>
+    </div>
+    <div style="margin-bottom:16px"><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px">Bill To</div><div style="font-weight:700">${to}</div><div style="color:#555;font-size:12px">${toAddr}</div></div>
+    <table class="inv-table" style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px">
+      <thead><tr><th style="text-align:left">Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+      <tbody>${invItems.map(i=>`<tr><td>${i.desc||'—'}</td><td style="text-align:center">${i.qty}</td><td style="text-align:right">${cfg.symbol}${i.rate.toLocaleString()}</td><td style="text-align:right;font-weight:600">${cfg.symbol}${(i.qty*i.rate).toLocaleString()}</td></tr>`).join('')}</tbody>
+    </table>
+    <div style="text-align:right;border-top:1px solid #ddd;padding-top:12px">
+      <div style="color:#666;font-size:13px">Subtotal: ${cfg.symbol}${subtotal.toLocaleString()}</div>
+      ${cfg.vatRate>0?`<div style="color:#666;font-size:13px">${cfg.tax} (${cfg.vatRate}%): ${cfg.symbol}${taxAmt.toFixed(2)}</div>`:''}
+      <div style="font-size:20px;font-weight:900;color:#8b6914;margin-top:6px">TOTAL: ${cfg.symbol}${total.toFixed(2)} ${cfg.currency}</div>
+    </div>
+    <div style="margin-top:20px;font-size:11px;color:#aaa;border-top:1px solid #eee;padding-top:10px">Prepared under ${cfg.standard} standards · ${currentCountry} ${cfg.tax} regulations apply</div>
+  </div>`;
+  document.getElementById('invoicePreview').innerHTML = html;
+  document.getElementById('invoicePrintArea').innerHTML = html;
+}
+
+// ============================================================
+// HR & PAYROLL
+// ============================================================
+function calcPayroll(salary, country) {
+  const c = COUNTRIES[country]||COUNTRIES['USA'];
+  let taxRate, socialRate;
+  switch(country) {
+    case 'USA': taxRate=0.22; socialRate=0.0765; break;
+    case 'UK': taxRate=0.20; socialRate=0.12; break;
+    case 'India': taxRate=0.20; socialRate=0.12; break;
+    case 'Australia': taxRate=0.325; socialRate=0; break;
+    case 'UAE': taxRate=0; socialRate=0.05; break;
+    case 'Singapore': taxRate=0.07; socialRate=0.20; break;
+    case 'Canada': taxRate=0.205; socialRate=0.0761; break;
+    case 'SouthAfrica': taxRate=0.26; socialRate=0.01; break;
+    case 'Nigeria': taxRate=0.15; socialRate=0.08; break;
+    case 'Kenya': taxRate=0.25; socialRate=0.06; break;
+    case 'Pakistan': taxRate=0.20; socialRate=0.01; break;
+    case 'Bangladesh': taxRate=0.15; socialRate=0; break;
+    case 'Malaysia': taxRate=0.13; socialRate=0.11; break;
+    case 'Philippines': taxRate=0.20; socialRate=0.045; break;
+    default: taxRate=0.20; socialRate=0.05;
+  }
+  const incomeTax = salary*taxRate;
+  const social = salary*socialRate;
+  const net = salary - incomeTax - social;
+  return {gross:salary, incomeTax, social, net, taxRate, socialRate};
+}
+
+function addEmployee() {
+  const name=document.getElementById('empName').value.trim();
+  const role=document.getElementById('empRole').value.trim();
+  const salary=parseFloat(document.getElementById('empSalary').value);
+  const country=document.getElementById('empCountry').value;
+  if(!name||!salary||isNaN(salary)) return alert('Please fill all fields');
+  employees.push({id:Date.now(),name,role,salary,country});
+  document.getElementById('empName').value='';
+  document.getElementById('empRole').value='';
+  document.getElementById('empSalary').value='';
+  renderHR();
+}
+
+function renderHR() {
+  const rows = employees.map(e=>{
+    const p = calcPayroll(e.salary, e.country);
+    const cfg = COUNTRIES[e.country]||COUNTRIES['USA'];
+    return `<tr>
+      <td class="fw7">${e.name}</td>
+      <td class="text-muted">${e.role}</td>
+      <td>${cfg.flag} ${e.country}</td>
+      <td>${cfg.symbol}${p.gross.toLocaleString()}</td>
+      <td class="text-red">–${cfg.symbol}${p.incomeTax.toFixed(0)}<div class="fs11 text-muted">${(p.taxRate*100).toFixed(0)}% rate</div></td>
+      <td class="text-red">–${cfg.symbol}${p.social.toFixed(0)}<div class="fs11 text-muted">${(p.socialRate*100).toFixed(0)}% rate</div></td>
+      <td class="fw7 text-green">${cfg.symbol}${p.net.toFixed(0)}</td>
+      <td class="no-print"><button class="btn btn-outline" style="font-size:11px;padding:5px 10px" onclick="printPayslip(${e.id})">🖨️ Payslip</button></td>
+    </tr>`;
+  });
+  document.getElementById('hrBody').innerHTML = rows.join('') || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">No employees added yet</td></tr>`;
+}
+
+function printPayslip(id) {
+  const e = employees.find(x=>x.id===id);
+  if(!e) return;
+  const p = calcPayroll(e.salary, e.country);
+  const cfg = COUNTRIES[e.country]||COUNTRIES['USA'];
+  const html = `<div class="payslip">
+    <div class="payslip-header">
+      <div><div class="payslip-title">PAYSLIP</div><div style="font-size:11px;color:#888">Period: ${new Date().toLocaleDateString('en',{month:'long',year:'numeric'})}</div></div>
+      <div style="text-align:right"><div style="font-weight:700">${e.name}</div><div style="color:#666;font-size:12px">${e.role}</div><div style="font-size:11px;color:#aaa">${cfg.flag} ${e.country}</div></div>
+    </div>
+    <table style="width:100%;font-size:13px;border-collapse:collapse">
+      <tr style="background:#f5f0e8"><td style="padding:8px"><strong>Earnings</strong></td><td></td><td style="padding:8px"><strong>Deductions</strong></td><td></td></tr>
+      <tr><td style="padding:6px 8px;color:#555">Gross Salary</td><td style="padding:6px 8px;font-weight:700">${cfg.symbol}${p.gross.toLocaleString()}</td><td style="padding:6px 8px;color:#555">Income Tax (${(p.taxRate*100).toFixed(0)}%)</td><td style="padding:6px 8px;color:#c00">–${cfg.symbol}${p.incomeTax.toFixed(0)}</td></tr>
+      <tr><td></td><td></td><td style="padding:6px 8px;color:#555">Social Contrib. (${(p.socialRate*100).toFixed(0)}%)</td><td style="padding:6px 8px;color:#c00">–${cfg.symbol}${p.social.toFixed(0)}</td></tr>
+      <tr style="border-top:2px solid #c9a84c;background:#fffdf5"><td style="padding:10px 8px;font-weight:700">NET PAY</td><td style="padding:10px 8px;font-weight:900;font-size:18px;color:#2d7a2d">${cfg.symbol}${p.net.toFixed(0)}</td><td></td><td></td></tr>
+    </table>
+    <div style="font-size:10px;color:#aaa;margin-top:16px">Calculated under ${e.country} tax law · ${cfg.standard} · This is an educational document</div>
+  </div>`;
+  document.getElementById('payslipArea').innerHTML = html;
+  window.print();
+}
+
+// ============================================================
+// TAX
+// ============================================================
+function renderTax() {
+  const cfg = COUNTRIES[currentCountry];
+  document.getElementById('taxTitle').textContent = `${cfg.tax} Calculator — ${currentCountry}`;
+  document.getElementById('taxTip').innerHTML = `<strong>${cfg.tax}</strong> rate in ${currentCountry}: <strong>${cfg.vatRate}%</strong>${cfg.vatRate===0?' (No federal indirect tax — state/local rates apply)':''}. Standard: ${cfg.standard}`;
+  document.getElementById('corpTaxTitle').textContent = `Corporate Tax — ${currentCountry} (${cfg.corpTax}%)`;
+  const amts = [100,500,1000,5000,10000,50000];
+  document.getElementById('taxBody').innerHTML = amts.map(a=>`<tr>
+    <td>${cfg.symbol}${a.toLocaleString()}</td>
+    <td>${cfg.vatRate}%</td>
+    <td class="text-red">${cfg.symbol}${(a*cfg.vatRate/100).toFixed(2)}</td>
+    <td class="text-green fw7">${cfg.symbol}${(a*(1+cfg.vatRate/100)).toFixed(2)}</td>
+  </tr>`).join('');
+  const profits = [50000,100000,250000,500000,1000000,5000000];
+  document.getElementById('corpTaxBody').innerHTML = profits.map(p=>`<tr>
+    <td>${cfg.symbol}${p.toLocaleString()}</td>
+    <td>${cfg.corpTax}%</td>
+    <td class="text-red">${cfg.symbol}${(p*cfg.corpTax/100).toLocaleString()}</td>
+    <td class="text-green fw7">${cfg.symbol}${(p*(1-cfg.corpTax/100)).toLocaleString()}</td>
+  </tr>`).join('');
+}
+
+function calcCustom() {
+  const amt = parseFloat(document.getElementById('custAmt').value);
+  const rate = parseFloat(document.getElementById('custRate').value);
+  if(isNaN(amt)||isNaN(rate)) return;
+  const cfg = COUNTRIES[currentCountry];
+  const tax = amt*rate/100;
+  document.getElementById('custResult').textContent = `Tax: ${cfg.symbol}${tax.toFixed(2)} → Total: ${cfg.symbol}${(amt+tax).toFixed(2)}`;
+}
+
+// ============================================================
+// LAWS
+// ============================================================
+function renderLaws() {
+  document.getElementById('lawsGrid').innerHTML = Object.entries(COUNTRIES).map(([c,d])=>`
+    <div class="law-card">
+      <div class="law-card-country">${d.flag} ${c}</div>
+      <div class="law-row"><span class="law-key">Currency</span><span class="law-val">${d.currency} (${d.symbol})</span></div>
+      <div class="law-row"><span class="law-key">Tax System</span><span class="law-val">${d.tax} ${d.vatRate}%</span></div>
+      <div class="law-row"><span class="law-key">Corp Tax</span><span class="law-val">${d.corpTaxNote}</span></div>
+      <div class="law-row"><span class="law-key">Income Tax</span><span class="law-val">${d.incomeTax}</span></div>
+      <div class="law-row"><span class="law-key">Social Security</span><span class="law-val">${d.socialSec}</span></div>
+      <div class="law-row"><span class="law-key">Min Wage</span><span class="law-val">${d.minWage}</span></div>
+      <div class="law-row"><span class="law-key">Annual Leave</span><span class="law-val">${d.annualLeave}</span></div>
+      <div class="law-row"><span class="law-key">Pension</span><span class="law-val">${d.pension}</span></div>
+      <div class="law-row"><span class="law-key">Standard</span><span class="law-val">${d.standard}</span></div>
+      <div class="law-row"><span class="law-key">Filing Body</span><span class="law-val">${d.filingBody}</span></div>
+    </div>`).join('');
+}
+
+// ============================================================
+// AI TUTOR
+// ============================================================
+function renderChat(msgs) {
+  const box = document.getElementById('chat-box');
+  box.innerHTML = msgs.map(m=>`
+    <div class="msg ${m.role}">
+      <div class="bubble">
+        ${m.role==='assistant'?'<div class="msg-label">🤖 AI Tutor</div>':''}
+        ${m.text.replace(/</g,'&lt;').replace(/\n/g,'<br/>')}
+      </div>
+    </div>`).join('');
+  box.scrollTop = box.scrollHeight;
+}
+
+function updateQuickBtns() {
+  const cfg = COUNTRIES[currentCountry];
+  const qs = [
+    `Explain double-entry bookkeeping`,
+    `How does ${cfg.tax} work in ${currentCountry}?`,
+    `What is the ${currentCountry} corporate tax rate?`,
+    `How to read a Balance Sheet?`,
+    `Explain depreciation`,
+    `${currentCountry} minimum wage and leave laws`,
+  ];
+  document.getElementById('quickBtns').innerHTML = qs.map(q=>`<button class="quick-btn" onclick="document.getElementById('aiInput').value='${q}';sendAI()">${q}</button>`).join('');
+}
+
+async function sendAI() {
+  const input = document.getElementById('aiInput');
+  const msg = input.value.trim();
+  if(!msg) return;
+  const cfg = COUNTRIES[currentCountry];
+  chatHistory.push({role:'user',content:msg});
+  input.value='';
+  document.getElementById('aiSendBtn').disabled=true;
+  document.getElementById('aiSendBtn').textContent='...';
+  const displayMsgs = [{role:'assistant',text:`👋 Welcome to LedgerLearn AI Tutor!\n\nI'm powered by Claude AI and I know the accounting laws for all 15 countries in this platform.\n\nCurrently showing: ${cfg.flag} ${currentCountry} — ${cfg.standard} · ${cfg.tax} · ${cfg.corpTax}% Corp Tax\n\nAsk me anything — accounting concepts, tax rules, payroll calculations, financial statements, or exam prep!`}];
+  chatHistory.forEach(m=>{ if(m.role==='user') displayMsgs.push({role:'user',text:m.content}); else displayMsgs.push({role:'assistant',text:m.content}); });
+  displayMsgs.push({role:'assistant',text:'⏳ Thinking...'});
+  renderChat(displayMsgs);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`You are an expert accounting tutor for students. Selected country: ${currentCountry}.
+Laws for ${currentCountry}: Currency ${cfg.currency} (${cfg.symbol}), ${cfg.tax} at ${cfg.vatRate}%, Corporate Tax ${cfg.corpTax}%, Income Tax ${cfg.incomeTax}, Social Security: ${cfg.socialSec}, Min Wage: ${cfg.minWage}, Annual Leave: ${cfg.annualLeave}, Accounting Standard: ${cfg.standard}, Filing Body: ${cfg.filingBody}.
+Explain concepts clearly for students. Use ${cfg.symbol} for examples. Be encouraging, concise, and accurate. For complex topics, use numbered steps. Always relate to ${currentCountry} where relevant.`,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(b=>b.text||'').join('')||'Sorry, could not get a response.';
+    chatHistory.push({role:'assistant',content:reply});
+    const finalMsgs = [{role:'assistant',text:`👋 Welcome to LedgerLearn AI Tutor!\n\nI'm powered by Claude AI and I know the accounting laws for all 15 countries in this platform.\n\nCurrently showing: ${cfg.flag} ${currentCountry} — ${cfg.standard} · ${cfg.tax} · ${cfg.corpTax}% Corp Tax\n\nAsk me anything!`}];
+    chatHistory.forEach(m=>{ finalMsgs.push({role:m.role==='user'?'user':'assistant', text:m.content}); });
+    renderChat(finalMsgs);
+  } catch(e) {
+    chatHistory.push({role:'assistant',content:'Connection error. Please try again.'});
+  }
+  document.getElementById('aiSendBtn').disabled=false;
+  document.getElementById('aiSendBtn').textContent='Send';
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function renderQuiz() {
+  const area = document.getElementById('quizArea');
+  if(quizDone) {
+    area.innerHTML=`<div class="card" style="text-align:center;padding:40px">
+      <div style="font-size:48px;margin-bottom:12px">🏆</div>
+      <div style="font-family:var(--font-head);font-size:24px;color:var(--gold);margin-bottom:8px">Quiz Complete!</div>
+      <div style="font-size:40px;font-weight:700;color:var(--green);margin-bottom:8px">${quizScore}/${QUIZ.length}</div>
+      <div style="color:var(--muted);margin-bottom:24px">${quizScore===QUIZ.length?'🎉 Perfect score!':quizScore>=7?'Great job!':quizScore>=5?'Good effort — keep practicing!':'Keep studying — you can do it!'}</div>
+      <button class="btn btn-gold" onclick="quizIdx=0;quizScore=0;quizDone=false;quizSelected=null;renderQuiz()">Try Again</button>
+    </div>`;
+    return;
+  }
+  const q = QUIZ[quizIdx];
+  const progress = Math.round((quizIdx/QUIZ.length)*100);
+  area.innerHTML=`<div class="card">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+      <span class="text-muted fs13">Question ${quizIdx+1} of ${QUIZ.length}</span>
+      <span class="text-gold fs13">Score: ${quizScore}/${quizIdx}</span>
+    </div>
+    <div style="background:var(--bg3);border-radius:4px;height:4px;margin-bottom:18px"><div style="background:var(--gold);height:4px;border-radius:4px;width:${progress}%;transition:width .3s"></div></div>
+    <div style="font-size:17px;font-weight:600;margin-bottom:20px;line-height:1.5">${q.q}</div>
+    ${q.opts.map(opt=>{
+      let cls='quiz-opt';
+      if(quizSelected){ if(opt===q.a) cls+=' correct'; else if(opt===quizSelected) cls+=' wrong'; }
+      return `<button class="${cls}" onclick="answerQuiz('${opt.replace(/'/g,"\\'")}')">
+        ${quizSelected&&opt===q.a?'✅ ':''}${quizSelected&&opt===quizSelected&&opt!==q.a?'❌ ':''}${opt}
+      </button>`;
+    }).join('')}
+  </div>`;
+}
+
+function answerQuiz(opt) {
+  if(quizSelected) return;
+  quizSelected = opt;
+  if(opt===QUIZ[quizIdx].a) quizScore++;
+  renderQuiz();
+  setTimeout(()=>{
+    if(quizIdx<QUIZ.length-1){ quizIdx++; quizSelected=null; } else quizDone=true;
+    renderQuiz();
+  },1300);
+}
+
+// ============================================================
+// PRINT
+// ============================================================
+function printSection(section) {
+  if(section==='invoice') { renderInvoice(); }
+  window.print();
+}
+</script>
+</body>
+</html>
