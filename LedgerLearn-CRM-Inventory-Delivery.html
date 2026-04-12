@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>LedgerLearn ERP — CRM, Inventory, Delivery & Sales</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#d4a843;--gold2:#f0c96a;--bg:#090c13;--bg2:#0d1119;--bg3:#131820;--bg4:#1a2030;
+  --border:#1e2840;--text:#ddd8cc;--muted:#5a6a88;
+  --blue:#5b9cf6;--green:#4db87a;--red:#e05c5c;--orange:#e8904a;--purple:#a78bfa;--teal:#2dd4bf;
+  --fh:'Playfair Display',Georgia,serif;--fb:'Source Sans 3',Arial,sans-serif;--fm:'IBM Plex Mono','Courier New',monospace;
+}
+html,body{height:100%;font-family:var(--fb);background:var(--bg);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* HEADER */
+#hdr{background:linear-gradient(90deg,#0d1119,#090c13);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:0;z-index:999;box-shadow:0 2px 20px rgba(0,0,0,.6)}
+.logo-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-box{width:36px;height:36px;min-width:36px;background:linear-gradient(135deg,#d4a843,#f0c96a);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 14px rgba(212,168,67,.35)}
+.logo-name{font-family:var(--fh);font-size:17px;color:var(--gold)}
+.logo-sub{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.hdr-right{display:flex;align-items:center;gap:6px}
+.savemsg{font-size:10px;color:var(--green);font-family:var(--fm);opacity:0;transition:opacity .5s}
+.savemsg.vis{opacity:1}
+.hbtn{border:1px solid var(--border);border-radius:7px;padding:6px 13px;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:12px;background:var(--bg3);color:var(--muted);white-space:nowrap;transition:all .15s}
+.hbtn:hover{border-color:var(--gold);color:var(--gold)}
+.hbtn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#090c13;border-color:transparent}
+.hbtn.danger:hover{border-color:var(--red);color:var(--red)}
+
+/* ALERT BANNER */
+#alert-banner{display:none;background:#2d1515;border-bottom:1px solid rgba(224,92,92,.3);padding:6px 16px;font-size:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+#alert-banner.has-alerts{display:flex}
+.abadge{background:rgba(224,92,92,.2);border:1px solid rgba(224,92,92,.4);border-radius:20px;padding:2px 10px;font-size:11px;cursor:pointer;white-space:nowrap}
+.abadge.orange{background:rgba(232,144,74,.2);border-color:rgba(232,144,74,.4);color:var(--orange)}
+.abadge.red{color:var(--red)}
+.abadge.blue{background:rgba(91,156,246,.15);border-color:rgba(91,156,246,.3);color:var(--blue)}
+
+/* LAYOUT */
+#wrap{display:flex;height:calc(100vh - 56px);overflow:hidden}
+#sidebar{width:176px;min-width:176px;background:var(--bg2);border-right:1px solid var(--border);padding:8px 6px;overflow-y:auto;flex-shrink:0}
+#content{flex:1;overflow-y:auto;padding:20px 22px}
+.nav-group{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:10px 10px 4px;font-family:var(--fm)}
+.nb{width:100%;background:transparent;border:1px solid transparent;border-radius:8px;padding:8px 10px;margin-bottom:2px;cursor:pointer;text-align:left;font-family:var(--fb);color:var(--text);transition:all .15s;display:block;position:relative}
+.nb:hover{background:var(--bg3)}
+.nb.on{background:linear-gradient(135deg,#182840,#0f1c30);border-color:rgba(212,168,67,.2)}
+.nb-icon{font-size:16px;display:block;line-height:1.3}
+.nb-title{font-size:11px;font-weight:700;color:var(--muted);display:block}
+.nb.on .nb-title{color:var(--gold)}
+.nb-desc{font-size:9px;color:#1e2a3a;display:block;margin-top:1px}
+.nb-badge{position:absolute;top:6px;right:8px;background:var(--red);color:#fff;border-radius:20px;padding:1px 6px;font-size:9px;font-weight:700;font-family:var(--fm)}
+.nb-badge.orange{background:var(--orange)}
+
+/* SECTIONS */
+.sec{display:none}.sec.on{display:block}
+h2{font-family:var(--fh);color:var(--gold);font-size:20px;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h3{font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;font-family:var(--fm)}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+.tip{background:var(--bg3);border-left:3px solid var(--gold);border-radius:0 7px 7px 0;padding:8px 12px;font-size:11px;color:var(--muted);margin-bottom:12px}
+.tip b{color:var(--gold)}
+
+/* INPUTS */
+input[type=text],input[type=number],input[type=date],input[type=email],input[type=tel],select.inp,textarea{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:7px 10px;font-family:var(--fb);font-size:12px;outline:none;width:100%;-webkit-appearance:none;transition:border .15s}
+input:focus,select.inp:focus,textarea:focus{border-color:var(--gold)}
+
+/* BUTTONS */
+.btn{border:none;border-radius:7px;padding:7px 14px;cursor:pointer;font-family:var(--fb);font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#090c13}
+.btn-gold:hover{opacity:.9}
+.btn-green{background:linear-gradient(135deg,#1a3a1a,#0f2a0f);border:1px solid rgba(77,184,122,.3);color:var(--green)}
+.btn-blue{background:linear-gradient(135deg,#1a3a6a,#122050);border:1px solid rgba(91,156,246,.3);color:var(--blue)}
+.btn-red{background:transparent;border:1px solid rgba(224,92,92,.3);color:var(--red);padding:4px 9px;font-size:11px;border-radius:6px;cursor:pointer;font-family:var(--fb);font-weight:700}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 12px}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.btn-sm{padding:3px 8px;font-size:10px;border-radius:5px}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}
+th{padding:8px 10px;text-align:left;color:var(--gold);border-bottom:1px solid var(--border);font-size:9px;letter-spacing:1px;text-transform:uppercase;background:var(--bg3);font-family:var(--fm);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid rgba(20,27,40,.7);vertical-align:middle}
+tr:hover td{background:rgba(15,20,32,.7)}
+tfoot td{background:var(--bg3);font-weight:700;color:var(--gold);border-top:2px solid rgba(212,168,67,.15);font-family:var(--fm)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:800px){.g3,.g4,.g5{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3,.g4,.g5{grid-template-columns:1fr}}
+
+/* KPI */
+.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:13px;text-align:center;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc,var(--gold))}
+.kpi-v{font-size:20px;font-weight:700;font-family:var(--fh);color:var(--kc,var(--gold))}
+.kpi-l{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.kpi-s{font-size:10px;color:var(--muted);margin-top:1px}
+.good{--kc:var(--green)}.warn{--kc:var(--orange)}.bad{--kc:var(--red)}.blue{--kc:var(--blue)}.purple{--kc:var(--purple)}.teal{--kc:var(--teal)}
+
+/* BADGES & PILLS */
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.p-green{background:#152515;color:var(--green)}
+.p-red{background:#2d1515;color:var(--red)}
+.p-orange{background:#2d1a0a;color:var(--orange)}
+.p-blue{background:#152035;color:var(--blue)}
+.p-purple{background:#1a1528;color:var(--purple)}
+.p-teal{background:#0f2525;color:var(--teal)}
+.p-grey{background:var(--bg3);color:var(--muted)}
+
+/* PIPELINE STAGES */
+.pipeline{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px}
+.stage-col{min-width:180px;background:var(--bg3);border-radius:10px;padding:10px}
+.stage-header{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-family:var(--fm)}
+.stage-count{background:var(--bg4);border-radius:20px;padding:1px 7px;font-size:10px}
+.lead-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
+.lead-card:hover{border-color:var(--gold)}
+.lead-name{font-size:12px;font-weight:700;margin-bottom:2px}
+.lead-val{font-size:11px;color:var(--green);font-family:var(--fm)}
+.lead-meta{font-size:10px;color:var(--muted);margin-top:3px}
+
+/* INVENTORY ALERT ROWS */
+tr.alert-red td{background:rgba(224,92,92,.06)}
+tr.alert-orange td{background:rgba(232,144,74,.06)}
+tr.alert-low td{background:rgba(91,156,246,.05)}
+
+/* DELIVERY STATUS */
+.del-flow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.del-step{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;background:var(--bg3);border:1px solid var(--border);color:var(--muted)}
+.del-step.done{background:#152515;border-color:rgba(77,184,122,.3);color:var(--green)}
+.del-step.active{background:#1a2d1a;border-color:var(--gold);color:var(--gold)}
+.del-arrow{color:var(--muted);font-size:11px}
+
+/* FORM */
+.frow{display:grid;gap:6px;align-items:end;margin-bottom:8px}
+.fl{font-size:10px;color:var(--muted);margin-bottom:2px;display:block}
+.req::after{content:' *';color:var(--red)}
+
+/* PROGRESS BAR */
+.pbar-wrap{background:var(--bg3);border-radius:4px;height:6px;overflow:hidden}
+.pbar-fill{height:6px;border-radius:4px;transition:width .5s}
+
+/* COLORS */
+.tg{color:var(--gold)}.tgr{color:var(--green)}.tr{color:var(--red)}.tb{color:var(--blue)}.tm{color:var(--muted)}.tp{color:var(--purple)}.tt{color:var(--teal)}
+.fw7{font-weight:700}.mono{font-family:var(--fm)}.fs10{font-size:10px}.fs11{font-size:11px}.fs12{font-size:12px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mt10{margin-top:10px}
+
+/* PRINT */
+@media print{
+  #hdr,#sidebar,#alert-banner,.noprint{display:none!important}
+  #wrap{display:block;height:auto}#content{padding:0;overflow:visible}
+  .sec{display:block!important}body{background:#fff;color:#000}
+  .card{border:1px solid #ddd;background:#fff;page-break-inside:avoid}
+  th{background:#f5f0e0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h2{color:#8b6914}
+}
+.po{display:none}@media print{.po{display:block!important}}
+@media(max-width:600px){#sidebar{width:130px;min-width:130px}.nb-desc{display:none}#content{padding:12px}}
+</style>
+</head>
+<body>
+
+<!-- ALERT BANNER -->
+<div id="alert-banner">
+  <span style="font-size:11px;font-weight:700;color:var(--red)">&#9888; ALERTS:</span>
+  <div id="alert-items" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+</div>
+
+<!-- HEADER -->
+<div id="hdr">
+  <div class="logo-wrap">
+    <div class="logo-box">&#128218;</div>
+    <div><div class="logo-name">LedgerLearn ERP</div><div class="logo-sub">CRM &bull; Inventory &bull; Delivery &bull; Sales</div></div>
+  </div>
+  <div class="hdr-right">
+    <span class="savemsg" id="sv">&#10003; Saved</span>
+    <button class="hbtn primary noprint" onclick="window.print()">&#128424; Print</button>
+    <button class="hbtn noprint" onclick="exportCSV()">&#128196; Export</button>
+    <button class="hbtn danger noprint" onclick="if(confirm('Reset all data?'))clearAll()">&#128465; Reset</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div id="wrap">
+<div id="sidebar" class="noprint">
+  <div class="nav-group">Overview</div>
+  <button class="nb on" onclick="go('overview',this)"><span class="nb-icon">&#127968;</span><span class="nb-title">Overview</span><span class="nb-desc">Alerts &amp; KPIs</span><span id="nb-alerts" class="nb-badge" style="display:none">0</span></button>
+
+  <div class="nav-group">CRM</div>
+  <button class="nb" onclick="go('customers',this)"><span class="nb-icon">&#127968;</span><span class="nb-title">Customers</span><span class="nb-desc">Master list</span></button>
+  <button class="nb" onclick="go('leads',this)"><span class="nb-icon">&#128204;</span><span class="nb-title">Lead Pipeline</span><span class="nb-desc">Stages &amp; deals</span></button>
+  <button class="nb" onclick="go('followups',this)"><span class="nb-icon">&#128197;</span><span class="nb-title">Follow-ups</span><span class="nb-desc">Tasks &amp; reminders</span><span id="nb-overdue" class="nb-badge orange" style="display:none">0</span></button>
+
+  <div class="nav-group">Inventory</div>
+  <button class="nb" onclick="go('products',this)"><span class="nb-icon">&#128230;</span><span class="nb-title">Products</span><span class="nb-desc">SKU master</span></button>
+  <button class="nb" onclick="go('stock',this)"><span class="nb-icon">&#128202;</span><span class="nb-title">Stock Levels</span><span class="nb-desc">Qty &amp; alerts</span><span id="nb-stock" class="nb-badge" style="display:none">0</span></button>
+  <button class="nb" onclick="go('stockmove',this)"><span class="nb-icon">&#128260;</span><span class="nb-title">Stock Movement</span><span class="nb-desc">Receive &amp; issue</span></button>
+
+  <div class="nav-group">Delivery</div>
+  <button class="nb" onclick="go('orders',this)"><span class="nb-icon">&#128203;</span><span class="nb-title">Sales Orders</span><span class="nb-desc">Customer orders</span></button>
+  <button class="nb" onclick="go('delivery',this)"><span class="nb-icon">&#128666;</span><span class="nb-title">Deliveries</span><span class="nb-desc">Shipment tracking</span></button>
+
+  <div class="nav-group">Analytics</div>
+  <button class="nb" onclick="go('salesmetrics',this)"><span class="nb-icon">&#128200;</span><span class="nb-title">Sales Metrics</span><span class="nb-desc">Revenue &amp; pipeline</span></button>
+  <button class="nb" onclick="go('crmreports',this)"><span class="nb-icon">&#128203;</span><span class="nb-title">CRM Reports</span><span class="nb-desc">Customer analytics</span></button>
+</div>
+
+<div id="content">
+
+<!-- ═══ OVERVIEW ═══ -->
+<div id="s-overview" class="sec on">
+  <h2>&#127968; Operations Overview</h2>
+  <div id="ov-alerts" style="margin-bottom:16px"></div>
+  <div id="ov-kpis" class="g5 mb12"></div>
+  <div class="g2">
+    <div class="card"><h3>&#128204; Pipeline Summary</h3><div id="ov-pipeline"></div></div>
+    <div class="card"><h3>&#128666; Delivery Status</h3><div id="ov-delivery"></div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><h3>&#9888; Inventory Alerts</h3><div id="ov-inventory"></div></div>
+    <div class="card"><h3>&#128197; Overdue Follow-ups</h3><div id="ov-followups"></div></div>
+  </div>
+</div>
+
+<!-- ═══ CUSTOMERS ═══ -->
+<div id="s-customers" class="sec">
+  <h2>&#127968; Customer Master</h2>
+  <div class="card noprint">
+    <h3>Add Customer</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <div><label class="fl req">Company Name</label><input type="text" id="c-name" placeholder="Company / Customer Name"/></div>
+      <div><label class="fl req">Contact Person</label><input type="text" id="c-contact" placeholder="Full Name"/></div>
+      <div><label class="fl req">Email</label><input type="email" id="c-email" placeholder="email@company.com"/></div>
+      <div><label class="fl">Phone</label><input type="tel" id="c-phone" placeholder="+65 9123 4567"/></div>
+    </div>
+    <div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr auto">
+      <div><label class="fl">Country</label><input type="text" id="c-country" placeholder="Singapore"/></div>
+      <div><label class="fl">Segment</label><select id="c-segment" class="inp" style="width:100%"><option>Enterprise</option><option>SME</option><option>Startup</option><option>Government</option><option>Individual</option></select></div>
+      <div><label class="fl">Status</label><select id="c-status" class="inp" style="width:100%"><option>Active</option><option>Inactive</option><option>Prospect</option><option>VIP</option></select></div>
+      <div><label class="fl">Credit Limit</label><input type="number" id="c-credit" placeholder="0"/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addCustomer()" style="width:100%;justify-content:center">Add</button></div>
+    </div>
+  </div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>#</th><th>Company</th><th>Contact</th><th>Email</th><th>Country</th><th>Segment</th><th>Status</th><th>Credit Limit</th><th>Total Orders</th><th class="noprint">Actions</th></tr></thead>
+    <tbody id="custbody"></tbody>
+  </table></div></div>
+</div>
+
+<!-- ═══ LEADS / PIPELINE ═══ -->
+<div id="s-leads" class="sec">
+  <h2>&#128204; Lead Pipeline</h2>
+  <div class="card noprint">
+    <h3>Add New Lead</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr auto">
+      <div><label class="fl req">Lead / Company</label><input type="text" id="l-name" placeholder="Company or contact name"/></div>
+      <div><label class="fl req">Contact Person</label><input type="text" id="l-contact" placeholder="Name"/></div>
+      <div><label class="fl req">Deal Value</label><input type="number" id="l-value" placeholder="0"/></div>
+      <div><label class="fl">Product/Service</label><input type="text" id="l-product" placeholder="What they need"/></div>
+      <div><label class="fl">Stage</label><select id="l-stage" class="inp" style="width:100%"><option>New</option><option>Contacted</option><option>Qualified</option><option>Proposal</option><option>Negotiation</option><option>Won</option><option>Lost</option></select></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addLead()" style="width:100%;justify-content:center">Add</button></div>
+    </div>
+  </div>
+  <div id="pipeline-board"></div>
+  <div class="card mt10">
+    <h3>All Leads</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Lead</th><th>Contact</th><th>Value</th><th>Product</th><th>Stage</th><th>Created</th><th class="noprint">Actions</th></tr></thead>
+      <tbody id="leadbody"></tbody>
+      <tfoot><tr><td colspan="2">Total Pipeline Value</td><td id="lead-total" class="mono"></td><td colspan="4"></td></tr></tfoot>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══ FOLLOW-UPS ═══ -->
+<div id="s-followups" class="sec">
+  <h2>&#128197; Follow-up Tasks</h2>
+  <div class="card noprint">
+    <h3>Add Follow-up</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 130px 130px 1fr auto">
+      <div><label class="fl req">Customer / Lead</label><input type="text" id="f-who" placeholder="Customer or lead name"/></div>
+      <div><label class="fl req">Task</label><input type="text" id="f-task" placeholder="e.g. Send proposal, Follow up call"/></div>
+      <div><label class="fl req">Due Date</label><input type="date" id="f-due"/></div>
+      <div><label class="fl">Priority</label><select id="f-priority" class="inp" style="width:100%"><option>High</option><option>Medium</option><option>Low</option></select></div>
+      <div><label class="fl">Notes</label><input type="text" id="f-notes" placeholder="Optional notes"/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addFollowup()" style="width:100%;justify-content:center">Add</button></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;font-family:var(--fm);text-transform:uppercase;letter-spacing:1px">&#9888; OVERDUE</div>
+      <div id="f-overdue"></div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:6px;font-family:var(--fm);text-transform:uppercase;letter-spacing:1px">&#128197; DUE TODAY &amp; THIS WEEK</div>
+      <div id="f-upcoming"></div>
+    </div>
+  </div>
+  <div class="card mt10">
+    <h3>All Follow-ups</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Customer/Lead</th><th>Task</th><th>Due Date</th><th>Priority</th><th>Notes</th><th>Status</th><th class="noprint">Actions</th></tr></thead>
+      <tbody id="followbody"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══ PRODUCTS ═══ -->
+<div id="s-products" class="sec">
+  <h2>&#128230; Product Master</h2>
+  <div class="card noprint">
+    <h3>Add Product / SKU</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
+      <div><label class="fl req">SKU</label><input type="text" id="p-sku" placeholder="SKU-001"/></div>
+      <div><label class="fl req">Product Name</label><input type="text" id="p-name" placeholder="Product name"/></div>
+      <div><label class="fl req">Category</label><input type="text" id="p-cat" placeholder="Category"/></div>
+      <div><label class="fl req">Unit</label><select id="p-unit" class="inp" style="width:100%"><option>pcs</option><option>kg</option><option>g</option><option>L</option><option>mL</option><option>box</option><option>carton</option><option>pack</option><option>set</option><option>unit</option></select></div>
+      <div><label class="fl">Has Expiry Date</label><select id="p-hasexpiry" class="inp" style="width:100%"><option value="0">No</option><option value="1">Yes (Food/Pharma)</option></select></div>
+    </div>
+    <div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr auto">
+      <div><label class="fl req">Cost Price</label><input type="number" id="p-cost" placeholder="0.00" min="0" step="0.01"/></div>
+      <div><label class="fl req">Selling Price</label><input type="number" id="p-sell" placeholder="0.00" min="0" step="0.01"/></div>
+      <div><label class="fl req">Opening Stock</label><input type="number" id="p-qty" placeholder="0" min="0"/></div>
+      <div><label class="fl req">Reorder Point</label><input type="number" id="p-reorder" placeholder="10" min="0"/></div>
+      <div><label class="fl">Max Stock</label><input type="number" id="p-max" placeholder="100" min="0"/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addProduct()" style="width:100%;justify-content:center">Add</button></div>
+    </div>
+  </div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>SKU</th><th>Name</th><th>Category</th><th>Unit</th><th>Cost</th><th>Sell Price</th><th>Margin %</th><th>Stock</th><th>Reorder At</th><th>Status</th><th class="noprint">Del</th></tr></thead>
+    <tbody id="prodbody"></tbody>
+    <tfoot><tr><td colspan="7">Total Inventory Value (Cost)</td><td id="inv-val" class="mono"></td><td colspan="3"></td></tr></tfoot>
+  </table></div></div>
+</div>
+
+<!-- ═══ STOCK LEVELS ═══ -->
+<div id="s-stock" class="sec">
+  <h2>&#128202; Stock Levels &amp; Alerts</h2>
+  <div id="stock-alert-summary" class="g3 mb12"></div>
+  <div class="tip"><b>Alerts:</b> <span style="color:var(--red)">&#9888; Expired</span> = past expiry date &nbsp;|&nbsp; <span style="color:var(--orange)">&#9888; Expiring Soon</span> = within 30 days &nbsp;|&nbsp; <span style="color:var(--blue)">&#9888; Low Stock</span> = at or below reorder point</div>
+  <div class="card noprint">
+    <h3>Update Stock / Set Expiry Batch</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 130px auto">
+      <div><label class="fl">Product</label><select id="st-product" class="inp" style="width:100%"></select></div>
+      <div><label class="fl">Batch / Lot Number</label><input type="text" id="st-batch" placeholder="BATCH-001 (optional)"/></div>
+      <div><label class="fl">Expiry Date (if applicable)</label><input type="date" id="st-expiry"/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="setExpiry()" style="width:100%;justify-content:center">Set Expiry</button></div>
+    </div>
+  </div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>SKU</th><th>Product</th><th>Category</th><th>Stock</th><th>Reorder At</th><th>Stock Status</th><th>Batch</th><th>Expiry Date</th><th>Expiry Status</th><th>Value (Cost)</th></tr></thead>
+    <tbody id="stockbody"></tbody>
+  </table></div></div>
+</div>
+
+<!-- ═══ STOCK MOVEMENT ═══ -->
+<div id="s-stockmove" class="sec">
+  <h2>&#128260; Stock Movement</h2>
+  <div class="card noprint">
+    <h3>Record Stock Movement</h3>
+    <div class="frow" style="grid-template-columns:1fr 120px 100px 130px 1fr auto">
+      <div><label class="fl req">Product</label><select id="sm-prod" class="inp" style="width:100%"></select></div>
+      <div><label class="fl req">Type</label><select id="sm-type" class="inp" style="width:100%"><option>Receive</option><option>Issue</option><option>Adjustment</option><option>Return</option><option>Write-off</option></select></div>
+      <div><label class="fl req">Quantity</label><input type="number" id="sm-qty" placeholder="0" min="1"/></div>
+      <div><label class="fl req">Date</label><input type="date" id="sm-date"/></div>
+      <div><label class="fl">Reference / Note</label><input type="text" id="sm-ref" placeholder="PO-001, SO-001, reason..."/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="addStockMove()" style="width:100%;justify-content:center">Record</button></div>
+    </div>
+  </div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>Date</th><th>Product</th><th>Type</th><th>Qty</th><th>Reference</th><th>Stock After</th></tr></thead>
+    <tbody id="smovebody"></tbody>
+  </table></div></div>
+</div>
+
+<!-- ═══ SALES ORDERS ═══ -->
+<div id="s-orders" class="sec">
+  <h2>&#128203; Sales Orders</h2>
+  <div class="card noprint">
+    <h3>Create Sales Order</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 130px 1fr">
+      <div><label class="fl req">Customer</label><select id="so-cust" class="inp" style="width:100%"></select></div>
+      <div><label class="fl req">Product</label><select id="so-prod" class="inp" style="width:100%"></select></div>
+      <div><label class="fl req">Quantity</label><input type="number" id="so-qty" placeholder="1" min="1"/></div>
+      <div><label class="fl">Notes</label><input type="text" id="so-notes" placeholder="Special instructions"/></div>
+    </div>
+    <button class="btn btn-gold mt10" onclick="createOrder()">&#10133; Create Sales Order</button>
+  </div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>Order #</th><th>Date</th><th>Customer</th><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>Status</th><th class="noprint">Actions</th></tr></thead>
+    <tbody id="orderbody"></tbody>
+    <tfoot><tr><td colspan="6">Total Order Value</td><td id="order-total" class="mono"></td><td colspan="2"></td></tr></tfoot>
+  </table></div></div>
+</div>
+
+<!-- ═══ DELIVERY ═══ -->
+<div id="s-delivery" class="sec">
+  <h2>&#128666; Delivery Management</h2>
+  <div class="tip"><b>Flow:</b> Sales Order &#8594; Confirm &#8594; Picking &#8594; Packed &#8594; Shipped &#8594; Delivered. Update status below as delivery progresses.</div>
+  <div class="card noprint">
+    <h3>Create Delivery Order from Sales Order</h3>
+    <div class="frow" style="grid-template-columns:1fr 1fr 130px 1fr auto">
+      <div><label class="fl req">Sales Order</label><select id="del-so" class="inp" style="width:100%"></select></div>
+      <div><label class="fl">Carrier / Courier</label><input type="text" id="del-carrier" placeholder="DHL, FedEx, SingPost..."/></div>
+      <div><label class="fl">Expected Delivery</label><input type="date" id="del-eta"/></div>
+      <div><label class="fl">Tracking Number</label><input type="text" id="del-tracking" placeholder="Optional tracking no."/></div>
+      <div><label class="fl">&nbsp;</label><button class="btn btn-gold" onclick="createDelivery()" style="width:100%;justify-content:center">Create DO</button></div>
+    </div>
+  </div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>DO #</th><th>SO #</th><th>Customer</th><th>Product</th><th>Qty</th><th>Carrier</th><th>Tracking</th><th>ETA</th><th>Status</th><th class="noprint">Update</th></tr></thead>
+    <tbody id="delbody"></tbody>
+  </table></div></div>
+</div>
+
+<!-- ═══ SALES METRICS ═══ -->
+<div id="s-salesmetrics" class="sec">
+  <h2>&#128200; Sales Metrics &amp; Analytics</h2>
+  <div id="sm-kpis" class="g5 mb12"></div>
+  <div class="g2">
+    <div class="card"><h3>&#128099; Revenue by Customer (Top 10)</h3><div id="sm-bycust"></div></div>
+    <div class="card"><h3>&#128204; Pipeline by Stage</h3><div id="sm-pipeline"></div></div>
+  </div>
+  <div class="g2 mt10">
+    <div class="card"><h3>&#128230; Top Products by Revenue</h3><div id="sm-prods"></div></div>
+    <div class="card"><h3>&#128666; Delivery Performance</h3><div id="sm-delivery"></div></div>
+  </div>
+</div>
+
+<!-- ═══ CRM REPORTS ═══ -->
+<div id="s-crmreports" class="sec">
+  <h2>&#128203; CRM Reports</h2>
+  <div class="g2">
+    <div class="card"><h3>Customer Segments</h3><div id="crm-segments"></div></div>
+    <div class="card"><h3>Lead Conversion Rate</h3><div id="crm-conversion"></div></div>
+  </div>
+  <div class="card mt10"><h3>Customer 360 — Select Customer</h3>
+    <select id="crm-cust-select" class="inp" style="width:280px;margin-bottom:12px" onchange="rCustomer360(this.value)"></select>
+    <div id="crm-360"></div>
+  </div>
+</div>
+
+</div></div>
+
+<script>
+'use strict';
+// ════════════════════════════════════════════════════
+// STORAGE
+// ════════════════════════════════════════════════════
+const SK='ll_crm_v1';
+function defaultData(){
+  const today=new Date().toISOString().split('T')[0];
+  const d7=new Date(Date.now()+7*864e5).toISOString().split('T')[0];
+  const d30=new Date(Date.now()+30*864e5).toISOString().split('T')[0];
+  const exp5=new Date(Date.now()+5*864e5).toISOString().split('T')[0];
+  const expOld=new Date(Date.now()-3*864e5).toISOString().split('T')[0];
+  const exp25=new Date(Date.now()+25*864e5).toISOString().split('T')[0];
+  return{
+    customers:[
+      {id:'C001',name:'ABC Technology Corp',contact:'John Tan',email:'john@abc.com',phone:'+65 9123 4567',country:'Singapore',segment:'Enterprise',status:'Active',credit:50000},
+      {id:'C002',name:'XYZ International',contact:'Sarah Lim',email:'sarah@xyz.com',phone:'+60 12 345 6789',country:'Malaysia',segment:'SME',status:'VIP',credit:30000},
+      {id:'C003',name:'Global Trade Solutions',contact:'Ravi Kumar',email:'ravi@gts.com',phone:'+91 98765 43210',country:'India',segment:'Enterprise',status:'Active',credit:75000},
+      {id:'C004',name:'Pacific Retail Group',contact:'Emily Wong',email:'emily@prg.com',phone:'+65 9234 5678',country:'Singapore',segment:'Enterprise',status:'Active',credit:100000},
+    ],
+    leads:[
+      {id:'L001',name:'TechStart Pte Ltd',contact:'Michael Ong',value:45000,product:'ERP Implementation',stage:'Proposal',created:today},
+      {id:'L002',name:'MegaCorp Holdings',contact:'Lisa Chen',value:120000,product:'Annual Maintenance',stage:'Negotiation',created:today},
+      {id:'L003',name:'SmallBiz Solutions',contact:'James Tan',value:8000,product:'Software License',stage:'Qualified',created:today},
+      {id:'L004',name:'Enterprise Plus',contact:'Amanda Koh',value:200000,product:'Full ERP Suite',stage:'Won',created:today},
+      {id:'L005',name:'Startup Hub',contact:'David Lim',value:5000,product:'Starter Pack',stage:'Lost',created:today},
+    ],
+    followups:[
+      {id:'F001',who:'ABC Technology Corp',task:'Send updated proposal with pricing',due:d7,priority:'High',notes:'Client requested custom module',done:false},
+      {id:'F002',who:'TechStart Pte Ltd',task:'Follow up on proposal response',due:today,priority:'High',notes:'Deadline this week',done:false},
+      {id:'F003',who:'Global Trade Solutions',task:'Schedule product demo',due:new Date(Date.now()-2*864e5).toISOString().split('T')[0],priority:'Medium',notes:'Interested in inventory module',done:false},
+    ],
+    products:[
+      {id:'P001',sku:'SKU-001',name:'Premium Widget A',cat:'Electronics',unit:'pcs',cost:45,sell:89,qty:150,reorder:30,max:300,hasExpiry:false,batch:'',expiry:''},
+      {id:'P002',sku:'SKU-002',name:'Industrial Component B',cat:'Hardware',unit:'pcs',cost:120,sell:220,qty:25,reorder:30,max:200,hasExpiry:false,batch:'',expiry:''},
+      {id:'P003',sku:'SKU-003',name:'Organic Supplement X',cat:'Health',unit:'box',cost:18,sell:38,qty:80,reorder:50,max:500,hasExpiry:true,batch:'BATCH-2024-01',expiry:exp25},
+      {id:'P004',sku:'SKU-004',name:'Vitamin Pack Y',cat:'Pharmacy',unit:'pack',cost:12,sell:28,qty:200,reorder:100,max:1000,hasExpiry:true,batch:'BATCH-2023-12',expiry:expOld},
+      {id:'P005',sku:'SKU-005',name:'Protein Bar Z',cat:'Food',unit:'carton',cost:35,sell:65,qty:15,reorder:20,max:200,hasExpiry:true,batch:'BATCH-2024-02',expiry:exp5},
+    ],
+    stockMoves:[
+      {id:'SM001',date:today,product:'Premium Widget A',type:'Receive',qty:50,ref:'PO-2024-001',stockAfter:150},
+      {id:'SM002',date:today,product:'Industrial Component B',type:'Issue',qty:5,ref:'SO-2024-001',stockAfter:25},
+    ],
+    orders:[
+      {id:'SO-001',date:today,customer:'ABC Technology Corp',product:'Premium Widget A',qty:10,price:89,status:'Confirmed'},
+      {id:'SO-002',date:today,customer:'XYZ International',product:'Industrial Component B',qty:5,price:220,status:'Shipped'},
+      {id:'SO-003',date:today,customer:'Global Trade Solutions',product:'Organic Supplement X',qty:20,price:38,status:'Delivered'},
+    ],
+    deliveries:[
+      {id:'DO-001',soId:'SO-001',customer:'ABC Technology Corp',product:'Premium Widget A',qty:10,carrier:'DHL',tracking:'DHL123456789',eta:d7,status:'Picking'},
+      {id:'DO-002',soId:'SO-002',customer:'XYZ International',product:'Industrial Component B',qty:5,carrier:'FedEx',tracking:'FX987654321',eta:d7,status:'Shipped'},
+    ],
+    orderCounter:4,
+    deliveryCounter:3,
+    customerCounter:5,
+    leadCounter:6,
+    followCounter:4,
+    productCounter:6,
+    smCounter:3,
+  };
+}
+
+let D=function(){try{const d=localStorage.getItem(SK);if(d)return JSON.parse(d);}catch(e){}return defaultData();}();
+
+function save(){
+  try{localStorage.setItem(SK,JSON.stringify(D));}catch(e){}
+  const el=document.getElementById('sv');
+  if(el){el.classList.add('vis');setTimeout(()=>el.classList.remove('vis'),1800);}
+}
+function clearAll(){localStorage.removeItem(SK);location.reload();}
+
+// ════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════
+function id(s){return document.getElementById(s);}
+function fmt(n,sym=''){return sym+(+n||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fmtd(n,sym=''){return sym+(+n||0).toFixed(2);}
+function daysDiff(dateStr){if(!dateStr)return 9999;return Math.round((new Date(dateStr)-new Date())/(1000*60*60*24));}
+function today(){return new Date().toISOString().split('T')[0];}
+
+const STAGE_ORDER=['New','Contacted','Qualified','Proposal','Negotiation','Won','Lost'];
+const STAGE_COLORS={New:'p-grey',Contacted:'p-blue',Qualified:'p-teal',Proposal:'p-purple',Negotiation:'p-orange',Won:'p-green',Lost:'p-red'};
+const DEL_STATUSES=['Draft','Confirmed','Picking','Packed','Shipped','Delivered'];
+const DEL_COLORS={Draft:'p-grey',Confirmed:'p-blue',Picking:'p-purple',Packed:'p-teal',Shipped:'p-orange',Delivered:'p-green'};
+
+// ════════════════════════════════════════════════════
+// ALERTS
+// ════════════════════════════════════════════════════
+function getAlerts(){
+  const lowStock=D.products.filter(p=>p.qty<=p.reorder);
+  const expired=D.products.filter(p=>p.hasExpiry&&p.expiry&&daysDiff(p.expiry)<0);
+  const expiringSoon=D.products.filter(p=>p.hasExpiry&&p.expiry&&daysDiff(p.expiry)>=0&&daysDiff(p.expiry)<=30);
+  const overdueAR=0; // linked from main ERP
+  const overdueFollowups=D.followups.filter(f=>!f.done&&daysDiff(f.due)<0);
+  const pendingDeliveries=D.deliveries.filter(d=>!['Delivered'].includes(d.status));
+  return{lowStock,expired,expiringSoon,overdueFollowups,pendingDeliveries};
+}
+
+function updateAlerts(){
+  const a=getAlerts();
+  const total=a.lowStock.length+a.expired.length+a.expiringSoon.length+a.overdueFollowups.length;
+  // Update sidebar badges
+  const nb=id('nb-alerts');if(nb){if(total>0){nb.textContent=total;nb.style.display='block';}else nb.style.display='none';}
+  const ns=id('nb-stock');if(ns){const n=a.lowStock.length+a.expired.length+a.expiringSoon.length;if(n>0){ns.textContent=n;ns.style.display='block';}else ns.style.display='none';}
+  const nf=id('nb-overdue');if(nf){if(a.overdueFollowups.length>0){nf.textContent=a.overdueFollowups.length;nf.style.display='block';}else nf.style.display='none';}
+  // Alert banner
+  const banner=id('alert-banner');
+  const items=id('alert-items');
+  if(total>0&&banner){
+    banner.classList.add('has-alerts');
+    items.innerHTML=
+      (a.expired.length?'<span class="abadge red" onclick="go(\'stock\',null)">&#9888; '+a.expired.length+' EXPIRED product'+(a.expired.length>1?'s':'')+'</span>':'')+
+      (a.expiringSoon.length?'<span class="abadge orange" onclick="go(\'stock\',null)">&#9202; '+a.expiringSoon.length+' expiring within 30 days</span>':'')+
+      (a.lowStock.length?'<span class="abadge blue" onclick="go(\'stock\',null)">&#128200; '+a.lowStock.length+' low stock item'+(a.lowStock.length>1?'s':'')+'</span>':'')+
+      (a.overdueFollowups.length?'<span class="abadge red" onclick="go(\'followups\',null)">&#128197; '+a.overdueFollowups.length+' overdue follow-up'+(a.overdueFollowups.length>1?'s':'')+'</span>':'');
+  } else if(banner) banner.classList.remove('has-alerts');
+}
+
+// ════════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',function(){
+  const t=today();
+  ['f-due','sm-date','del-eta'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});
+  const d7=new Date(Date.now()+7*864e5).toISOString().split('T')[0];
+  const delEta=id('del-eta');if(delEta)delEta.value=d7;
+  populateSelects();
+  renderAll();
+  updateAlerts();
+});
+
+function populateSelects(){
+  const custOpts=D.customers.map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join('');
+  ['so-cust','crm-cust-select'].forEach(sid=>{const el=id(sid);if(el)el.innerHTML='<option value="">-- Select Customer --</option>'+custOpts;});
+  const prodOpts=D.products.map(p=>'<option value="'+p.id+'">'+p.sku+' — '+p.name+'</option>').join('');
+  ['st-product','sm-prod','so-prod'].forEach(sid=>{const el=id(sid);if(el)el.innerHTML='<option value="">-- Select Product --</option>'+prodOpts;});
+  const soOpts=D.orders.filter(o=>o.status!=='Delivered').map(o=>'<option value="'+o.id+'">'+o.id+' — '+o.customer+' | '+o.product+'</option>').join('');
+  const delSO=id('del-so');if(delSO)delSO.innerHTML='<option value="">-- Select Sales Order --</option>'+soOpts;
+}
+
+function go(secId,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  const sec=id('s-'+secId);if(sec)sec.classList.add('on');
+  if(btn)btn.classList.add('on');
+  const fn={overview:rOverview,customers:rCustomers,leads:rLeads,followups:rFollowups,products:rProducts,stock:rStock,stockmove:rStockMove,orders:rOrders,delivery:rDelivery,salesmetrics:rSalesMetrics,crmreports:rCRMReports};
+  if(fn[secId])fn[secId]();
+}
+
+function renderAll(){rOverview();rCustomers();rLeads();rFollowups();rProducts();rStock();rStockMove();rOrders();rDelivery();rSalesMetrics();rCRMReports();}
+
+// ════════════════════════════════════════════════════
+// OVERVIEW
+// ════════════════════════════════════════════════════
+function rOverview(){
+  const a=getAlerts();
+  const totalPipelineValue=D.leads.filter(l=>!['Won','Lost'].includes(l.stage)).reduce((s,l)=>s+(+l.value),0);
+  const wonValue=D.leads.filter(l=>l.stage==='Won').reduce((s,l)=>s+(+l.value),0);
+  const orderValue=D.orders.reduce((s,o)=>s+(+o.qty*(+o.price)),0);
+  const pendingDel=D.deliveries.filter(d=>d.status!=='Delivered').length;
+  id('ov-kpis').innerHTML=[
+    {v:D.customers.length,l:'Customers',s:'Active accounts',cls:'blue'},
+    {v:'$'+totalPipelineValue.toLocaleString(),l:'Pipeline Value',s:D.leads.filter(l=>!['Won','Lost'].includes(l.stage)).length+' open leads',cls:'purple'},
+    {v:'$'+wonValue.toLocaleString(),l:'Won Deals',s:D.leads.filter(l=>l.stage==='Won').length+' deals closed',cls:'good'},
+    {v:D.orders.length,l:'Sales Orders',s:'$'+orderValue.toLocaleString()+' total',cls:'teal'},
+    {v:pendingDel,l:'Pending Deliveries',s:D.deliveries.filter(d=>d.status==='Shipped').length+' in transit',cls:pendingDel>0?'warn':'good'},
+  ].map(k=>'<div class="kpi '+k.cls+'"><div class="kpi-v">'+k.v+'</div><div class="kpi-l">'+k.l+'</div><div class="kpi-s">'+k.s+'</div></div>').join('');
+
+  // Alert summary
+  const alerts=[];
+  if(a.expired.length)alerts.push('<div style="background:#2d1515;border:1px solid rgba(224,92,92,.3);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:20px">&#9888;</span><div><div style="font-weight:700;color:var(--red)">'+a.expired.length+' EXPIRED Product'+(a.expired.length>1?'s'||'')+'</div><div class="fs11 tm">'+a.expired.map(p=>p.name).join(', ')+'</div></div></div>');
+  if(a.expiringSoon.length)alerts.push('<div style="background:#2d1a0a;border:1px solid rgba(232,144,74,.3);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:20px">&#9202;</span><div><div style="font-weight:700;color:var(--orange)">'+a.expiringSoon.length+' Product'+(a.expiringSoon.length>1?'s':'')+' Expiring Within 30 Days</div><div class="fs11 tm">'+a.expiringSoon.map(p=>p.name+' ('+daysDiff(p.expiry)+'d)').join(', ')+'</div></div></div>');
+  if(a.lowStock.length)alerts.push('<div style="background:#152035;border:1px solid rgba(91,156,246,.3);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:20px">&#128200;</span><div><div style="font-weight:700;color:var(--blue)">'+a.lowStock.length+' Low Stock Item'+(a.lowStock.length>1?'s':'')+'</div><div class="fs11 tm">'+a.lowStock.map(p=>p.name+' ('+p.qty+' left, reorder at '+p.reorder+')').join(', ')+'</div></div></div>');
+  if(a.overdueFollowups.length)alerts.push('<div style="background:#2d1515;border:1px solid rgba(224,92,92,.3);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:20px">&#128197;</span><div><div style="font-weight:700;color:var(--red)">'+a.overdueFollowups.length+' Overdue Follow-up'+(a.overdueFollowups.length>1?'s':'')+'</div><div class="fs11 tm">'+a.overdueFollowups.map(f=>f.who+': '+f.task).join(', ')+'</div></div></div>');
+  id('ov-alerts').innerHTML=alerts.length?alerts.join(''):'<div class="alert-success" style="background:#152515;border:1px solid rgba(77,184,122,.3);border-radius:8px;padding:10px 14px;color:var(--green);font-size:12px">&#10003; No alerts — all systems normal</div>';
+
+  // Pipeline summary
+  const stages=['New','Contacted','Qualified','Proposal','Negotiation'];
+  id('ov-pipeline').innerHTML=stages.map(s=>{
+    const leads=D.leads.filter(l=>l.stage===s);
+    const val=leads.reduce((t,l)=>t+(+l.value),0);
+    return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span><span class="pill '+STAGE_COLORS[s]+'">'+s+'</span></span><span class="tm fs11">'+leads.length+' leads</span><span class="mono tp">$'+val.toLocaleString()+'</span></div>';
+  }).join('');
+
+  // Delivery summary
+  id('ov-delivery').innerHTML=DEL_STATUSES.filter(s=>s!=='Draft').map(s=>{
+    const dels=D.deliveries.filter(d=>d.status===s);
+    return dels.length?'<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span><span class="pill '+DEL_COLORS[s]+'">'+s+'</span></span><span class="mono">'+dels.length+' order'+(dels.length>1?'s':'')+'</span></div>':'';
+  }).join('')||'<div class="tm fs11">No active deliveries</div>';
+
+  // Inventory summary
+  id('ov-inventory').innerHTML=[
+    {l:'Expired',v:a.expired.length,cls:'tr',items:a.expired},
+    {l:'Expiring Soon (30d)',v:a.expiringSoon.length,cls:'orange',items:a.expiringSoon},
+    {l:'Low Stock',v:a.lowStock.length,cls:'tb',items:a.lowStock},
+    {l:'OK',v:D.products.length-a.expired.length-a.expiringSoon.length-a.lowStock.length,cls:'tgr',items:[]},
+  ].map(x=>'<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span class="'+x.cls+'">'+x.l+'</span><span class="mono fw7 '+x.cls+'">'+x.v+' products</span></div>').join('');
+
+  // Overdue followups
+  id('ov-followups').innerHTML=a.overdueFollowups.length?
+    a.overdueFollowups.map(f=>'<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12px"><div class="fw7 tr">'+f.who+'</div><div class="tm">'+f.task+' &mdash; due '+f.due+'</div></div>').join(''):
+    '<div class="tm fs11">No overdue follow-ups &#10003;</div>';
+}
+
+// ════════════════════════════════════════════════════
+// CUSTOMERS
+// ════════════════════════════════════════════════════
+function addCustomer(){
+  const name=id('c-name').value.trim();
+  const contact=id('c-contact').value.trim();
+  const email=id('c-email').value.trim();
+  if(!name||!contact||!email){alert('Company, Contact and Email are required');return;}
+  const cid='C'+String(D.customerCounter++).padStart(3,'0');
+  D.customers.push({id:cid,name,contact,email,phone:id('c-phone').value.trim(),country:id('c-country').value.trim()||'—',segment:id('c-segment').value,status:id('c-status').value,credit:+(id('c-credit').value||0)});
+  save();populateSelects();rCustomers();rSalesMetrics();rCRMReports();
+  ['c-name','c-contact','c-email','c-phone','c-country','c-credit'].forEach(x=>{const el=id(x);if(el)el.value='';});
+}
+function delCustomer(cid){if(!confirm('Delete customer?'))return;D.customers=D.customers.filter(c=>c.id!==cid);save();populateSelects();rCustomers();}
+
+function rCustomers(){
+  id('custbody').innerHTML=D.customers.map(c=>{
+    const orders=D.orders.filter(o=>o.customer===c.name).length;
+    return '<tr>'+
+      '<td class="mono fs10 tb fw7">'+c.id+'</td><td class="fw7">'+c.name+'</td>'+
+      '<td class="fs11">'+c.contact+'</td><td class="tm fs11">'+c.email+'</td>'+
+      '<td class="tm fs11">'+c.country+'</td>'+
+      '<td><span class="pill p-blue">'+c.segment+'</span></td>'+
+      '<td><span class="pill '+(c.status==='Active'?'p-green':c.status==='VIP'?'p-purple':c.status==='Prospect'?'p-teal':'p-grey')+'">'+c.status+'</span></td>'+
+      '<td class="mono">$'+c.credit.toLocaleString()+'</td>'+
+      '<td class="tc mono">'+orders+'</td>'+
+      '<td class="noprint" style="display:flex;gap:4px"><button class="btn-red" onclick="delCustomer(\''+c.id+'\')">X</button></td></tr>';
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+// LEADS & PIPELINE
+// ════════════════════════════════════════════════════
+function addLead(){
+  const name=id('l-name').value.trim();
+  const contact=id('l-contact').value.trim();
+  const value=+id('l-value').value;
+  if(!name||!contact||!value){alert('Lead name, contact and value are required');return;}
+  const lid='L'+String(D.leadCounter++).padStart(3,'0');
+  D.leads.push({id:lid,name,contact,value,product:id('l-product').value.trim(),stage:id('l-stage').value,created:today()});
+  save();rLeads();rSalesMetrics();updateAlerts();
+  ['l-name','l-contact','l-value','l-product'].forEach(x=>{const el=id(x);if(el)el.value='';});
+}
+function moveLead(lid,stage){const l=D.leads.find(x=>x.id===lid);if(l)l.stage=stage;save();rLeads();rSalesMetrics();updateAlerts();}
+function delLead(lid){if(!confirm('Delete lead?'))return;D.leads=D.leads.filter(l=>l.id!==lid);save();rLeads();rSalesMetrics();}
+
+function rLeads(){
+  // Pipeline board
+  const stages=['New','Contacted','Qualified','Proposal','Negotiation'];
+  id('pipeline-board').innerHTML='<div class="pipeline">'+stages.map(s=>{
+    const leads=D.leads.filter(l=>l.stage===s);
+    const val=leads.reduce((t,l)=>t+(+l.value),0);
+    return '<div class="stage-col">'+
+      '<div class="stage-header"><span class="'+STAGE_COLORS[s]+'" style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700">'+s+'</span>'+
+      '<span class="stage-count">'+leads.length+' &middot; $'+val.toLocaleString()+'</span></div>'+
+      leads.map(l=>'<div class="lead-card">'+
+        '<div class="lead-name">'+l.name+'</div>'+
+        '<div class="lead-val">$'+l.value.toLocaleString()+'</div>'+
+        '<div class="lead-meta">'+l.contact+(l.product?' &bull; '+l.product:'')+'</div>'+
+        '<div style="margin-top:6px;display:flex;gap:3px;flex-wrap:wrap">'+
+        stages.concat(['Won','Lost']).filter(st=>st!==s).slice(0,3).map(st=>'<button style="font-size:9px;padding:2px 6px;border:1px solid var(--border);background:var(--bg4);color:var(--muted);border-radius:4px;cursor:pointer" onclick="moveLead(\''+l.id+'\',\''+st+'\')">&#8594;'+st+'</button>').join('')+
+        '</div></div>'
+      ).join('')+
+    '</div>';
+  }).join('')+'</div>';
+
+  // Table
+  id('leadbody').innerHTML=D.leads.map(l=>'<tr>'+
+    '<td class="fw7">'+l.name+'</td><td class="tm">'+l.contact+'</td>'+
+    '<td class="mono fw7 tgr">$'+l.value.toLocaleString()+'</td>'+
+    '<td class="tm fs11">'+l.product+'</td>'+
+    '<td><span class="pill '+STAGE_COLORS[l.stage]+'">'+l.stage+'</span></td>'+
+    '<td class="tm fs11">'+l.created+'</td>'+
+    '<td class="noprint"><button class="btn-red" onclick="delLead(\''+l.id+'\')">X</button></td></tr>'
+  ).join('');
+  const total=D.leads.filter(l=>!['Won','Lost'].includes(l.stage)).reduce((s,l)=>s+(+l.value),0);
+  id('lead-total').textContent='$'+total.toLocaleString()+' active';
+}
+
+// ════════════════════════════════════════════════════
+// FOLLOW-UPS
+// ════════════════════════════════════════════════════
+function addFollowup(){
+  const who=id('f-who').value.trim();
+  const task=id('f-task').value.trim();
+  const due=id('f-due').value;
+  if(!who||!task||!due){alert('Customer/Lead, Task and Due Date are required');return;}
+  const fid='F'+String(D.followCounter++).padStart(3,'0');
+  D.followups.push({id:fid,who,task,due,priority:id('f-priority').value,notes:id('f-notes').value.trim(),done:false});
+  save();rFollowups();updateAlerts();
+  ['f-who','f-task','f-notes'].forEach(x=>{const el=id(x);if(el)el.value='';});
+}
+function doneFollowup(fid){const f=D.followups.find(x=>x.id===fid);if(f)f.done=!f.done;save();rFollowups();updateAlerts();}
+function delFollowup(fid){if(!confirm('Delete?'))return;D.followups=D.followups.filter(f=>f.id!==fid);save();rFollowups();updateAlerts();}
+
+function rFollowups(){
+  const overdue=D.followups.filter(f=>!f.done&&daysDiff(f.due)<0);
+  const upcoming=D.followups.filter(f=>!f.done&&daysDiff(f.due)>=0&&daysDiff(f.due)<=7);
+  const fCard=(f,cls)=>'<div class="card" style="margin-bottom:6px;border-color:'+cls+'44">'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start">'+
+    '<div><div class="fw7 fs12">'+f.who+'</div><div class="tm fs11">'+f.task+'</div>'+
+    (f.notes?'<div class="tm fs10">'+f.notes+'</div>':'')+
+    '</div><div style="text-align:right"><div class="fs11" style="color:'+cls+'">'+
+    (daysDiff(f.due)<0?Math.abs(daysDiff(f.due))+'d overdue':'Due: '+f.due)+'</div>'+
+    '<span class="pill '+(f.priority==='High'?'p-red':f.priority==='Medium'?'p-orange':'p-grey')+'">'+f.priority+'</span></div></div>'+
+    '<div style="margin-top:8px;display:flex;gap:6px">'+
+    '<button class="btn btn-green btn-sm" onclick="doneFollowup(\''+f.id+'\')">&#10003; Done</button>'+
+    '<button class="btn-red btn-sm" onclick="delFollowup(\''+f.id+'\')">Delete</button></div></div>';
+  id('f-overdue').innerHTML=overdue.length?overdue.map(f=>fCard(f,'var(--red)')).join(''):'<div class="tm fs11 card" style="text-align:center;padding:12px">No overdue tasks &#10003;</div>';
+  id('f-upcoming').innerHTML=upcoming.length?upcoming.map(f=>fCard(f,'var(--orange)')).join(''):'<div class="tm fs11 card" style="text-align:center;padding:12px">No tasks due this week</div>';
+  id('followbody').innerHTML=D.followups.map(f=>{
+    const d=daysDiff(f.due);
+    return '<tr style="opacity:'+(f.done?.5:1)+'">'+
+      '<td class="fw7">'+f.who+'</td><td>'+f.task+'</td>'+
+      '<td class="mono fs11">'+f.due+'</td>'+
+      '<td><span class="pill '+(f.priority==='High'?'p-red':f.priority==='Medium'?'p-orange':'p-grey')+'">'+f.priority+'</span></td>'+
+      '<td class="tm fs11">'+f.notes+'</td>'+
+      '<td>'+(f.done?'<span class="pill p-green">Done</span>':d<0?'<span class="pill p-red">'+Math.abs(d)+'d overdue</span>':d===0?'<span class="pill p-orange">Due today</span>':'<span class="pill p-blue">Due in '+d+'d</span>')+'</td>'+
+      '<td class="noprint" style="display:flex;gap:4px">'+
+      '<button class="btn btn-green btn-sm" onclick="doneFollowup(\''+f.id+'\')">'+(f.done?'Undone':'Done')+'</button>'+
+      '<button class="btn-red btn-sm" onclick="delFollowup(\''+f.id+'\')">X</button></td></tr>';
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+// PRODUCTS
+// ════════════════════════════════════════════════════
+function addProduct(){
+  const sku=id('p-sku').value.trim();
+  const name=id('p-name').value.trim();
+  const cost=+id('p-cost').value;
+  const sell=+id('p-sell').value;
+  const qty=+id('p-qty').value;
+  const reorder=+id('p-reorder').value;
+  if(!sku||!name||!cost||!sell){alert('SKU, Name, Cost and Sell Price are required');return;}
+  if(D.products.find(p=>p.sku===sku)){alert('SKU already exists');return;}
+  const pid='P'+String(D.productCounter++).padStart(3,'0');
+  D.products.push({id:pid,sku,name,cat:id('p-cat').value.trim()||'General',unit:id('p-unit').value,cost,sell,qty,reorder,max:+(id('p-max').value||0),hasExpiry:id('p-hasexpiry').value==='1',batch:'',expiry:''});
+  save();populateSelects();rProducts();rStock();updateAlerts();
+  ['p-sku','p-name','p-cat','p-cost','p-sell','p-qty','p-reorder','p-max'].forEach(x=>{const el=id(x);if(el)el.value='';});
+}
+function delProduct(pid){if(!confirm('Delete product?'))return;D.products=D.products.filter(p=>p.id!==pid);save();populateSelects();rProducts();rStock();updateAlerts();}
+
+function rProducts(){
+  const totVal=D.products.reduce((s,p)=>s+(p.qty*p.cost),0);
+  id('prodbody').innerHTML=D.products.map(p=>{
+    const margin=p.sell>0?((p.sell-p.cost)/p.sell*100).toFixed(1)+'%':'—';
+    const stockStatus=p.qty<=0?'<span class="pill p-red">Out of Stock</span>':p.qty<=p.reorder?'<span class="pill p-orange">Low Stock</span>':'<span class="pill p-green">OK</span>';
+    return '<tr class="'+(p.qty<=0?'alert-red':p.qty<=p.reorder?'alert-orange':'')+'">'+
+      '<td class="mono fs10 tb">'+p.sku+'</td><td class="fw7">'+p.name+'</td>'+
+      '<td class="tm fs11">'+p.cat+'</td><td class="tm fs11">'+p.unit+'</td>'+
+      '<td class="mono">$'+p.cost.toFixed(2)+'</td><td class="mono tgr">$'+p.sell.toFixed(2)+'</td>'+
+      '<td class="mono tg">'+margin+'</td>'+
+      '<td class="mono fw7">'+p.qty+'</td><td class="mono tm">'+p.reorder+'</td>'+
+      '<td>'+stockStatus+'</td>'+
+      '<td class="noprint"><button class="btn-red" onclick="delProduct(\''+p.id+'\')">X</button></td></tr>';
+  }).join('');
+  id('inv-val').textContent='$'+totVal.toLocaleString();
+}
+
+// ════════════════════════════════════════════════════
+// STOCK
+// ════════════════════════════════════════════════════
+function setExpiry(){
+  const pid=id('st-product').value;
+  const batch=id('st-batch').value.trim();
+  const expiry=id('st-expiry').value;
+  if(!pid){alert('Select a product');return;}
+  const p=D.products.find(x=>x.id===pid);
+  if(!p){return;}
+  if(batch)p.batch=batch;
+  if(expiry)p.expiry=expiry;
+  save();rStock();updateAlerts();
+}
+
+function rStock(){
+  const a=getAlerts();
+  const expired=a.expired.length;
+  const expSoon=a.expiringSoon.length;
+  const low=a.lowStock.length;
+  const totVal=D.products.reduce((s,p)=>s+(p.qty*p.cost),0);
+  id('stock-alert-summary').innerHTML=[
+    {v:expired,l:'Expired Products',s:'Immediate action required',cls:expired>0?'bad':'good'},
+    {v:expSoon,l:'Expiring ≤30 Days',s:'Review and action',cls:expSoon>0?'warn':'good'},
+    {v:low,l:'Low Stock Items',s:'At or below reorder point',cls:low>0?'blue':'good'},
+    {v:'$'+totVal.toLocaleString(),l:'Inventory Value',s:'Total cost value',cls:'teal'},
+  ].map(k=>'<div class="kpi '+k.cls+'"><div class="kpi-v">'+k.v+'</div><div class="kpi-l">'+k.l+'</div><div class="kpi-s">'+k.s+'</div></div>').join('');
+
+  id('stockbody').innerHTML=D.products.map(p=>{
+    const exDays=p.hasExpiry&&p.expiry?daysDiff(p.expiry):null;
+    const isExpired=exDays!==null&&exDays<0;
+    const isExpSoon=exDays!==null&&exDays>=0&&exDays<=30;
+    const isLow=p.qty<=p.reorder;
+    const rowCls=isExpired?'alert-red':isExpSoon?'alert-orange':isLow?'alert-low':'';
+    const stockStatus=p.qty<=0?'<span class="pill p-red">Out of Stock</span>':isLow?'<span class="pill p-orange">&#9888; Low Stock</span>':'<span class="pill p-green">OK</span>';
+    const expiryStatus=!p.hasExpiry?'<span class="pill p-grey">N/A</span>':!p.expiry?'<span class="pill p-grey">Not set</span>':isExpired?'<span class="pill p-red">&#9888; EXPIRED '+Math.abs(exDays)+'d ago</span>':isExpSoon?'<span class="pill p-orange">&#9202; '+exDays+'d left</span>':'<span class="pill p-green">OK ('+exDays+'d)</span>';
+    return '<tr class="'+rowCls+'">'+
+      '<td class="mono fs10 tb">'+p.sku+'</td><td class="fw7">'+p.name+'</td>'+
+      '<td class="tm fs11">'+p.cat+'</td>'+
+      '<td class="mono fw7 '+(isLow?'tr':isLow?'tg':'')+'">'+p.qty+' '+p.unit+'</td>'+
+      '<td class="mono tm">'+p.reorder+'</td>'+
+      '<td>'+stockStatus+'</td>'+
+      '<td class="tm fs11">'+p.batch+'</td>'+
+      '<td class="mono fs11">'+p.expiry+'</td>'+
+      '<td>'+expiryStatus+'</td>'+
+      '<td class="mono">'+'$'+(p.qty*p.cost).toLocaleString()+'</td></tr>';
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+// STOCK MOVEMENT
+// ════════════════════════════════════════════════════
+function addStockMove(){
+  const pid=id('sm-prod').value;
+  const type=id('sm-type').value;
+  const qty=+id('sm-qty').value;
+  const date=id('sm-date').value;
+  const ref=id('sm-ref').value.trim();
+  if(!pid||!qty||!date){alert('Product, Quantity and Date are required');return;}
+  const p=D.products.find(x=>x.id===pid);if(!p)return;
+  const delta=type==='Receive'||type==='Return'?qty:(type==='Issue'||type==='Write-off'?-qty:qty);
+  const newQty=Math.max(0,p.qty+delta);
+  if((type==='Issue'||type==='Write-off')&&qty>p.qty){if(!confirm('Issuing more than available stock ('+p.qty+'). Continue?'))return;}
+  p.qty=newQty;
+  const mid='SM'+String(D.smCounter++).padStart(3,'0');
+  D.stockMoves.push({id:mid,date,product:p.name,type,qty:Math.abs(delta),ref,stockAfter:newQty});
+  save();rStockMove();rStock();rProducts();updateAlerts();
+  id('sm-qty').value='';id('sm-ref').value='';
+}
+
+function rStockMove(){
+  id('smovebody').innerHTML=D.stockMoves.slice().reverse().map(m=>'<tr>'+
+    '<td class="mono fs11 tm">'+m.date+'</td>'+
+    '<td class="fw7">'+m.product+'</td>'+
+    '<td><span class="pill '+(m.type==='Receive'||m.type==='Return'?'p-green':m.type==='Issue'?'p-orange':'p-red')+'">'+m.type+'</span></td>'+
+    '<td class="mono '+(m.type==='Receive'||m.type==='Return'?'tgr':'tr')+'">'+
+    (m.type==='Receive'||m.type==='Return'?'+':'-')+m.qty+'</td>'+
+    '<td class="tm fs11">'+m.ref+'</td>'+
+    '<td class="mono fw7">'+m.stockAfter+'</td></tr>'
+  ).join('');
+}
+
+// ════════════════════════════════════════════════════
+// SALES ORDERS
+// ════════════════════════════════════════════════════
+function createOrder(){
+  const custId=id('so-cust').value;
+  const prodId=id('so-prod').value;
+  const qty=+id('so-qty').value;
+  if(!custId||!prodId||!qty||qty<=0){alert('Customer, Product and Quantity are required');return;}
+  const cust=D.customers.find(c=>c.id===custId);
+  const prod=D.products.find(p=>p.id===prodId);
+  if(!cust||!prod)return;
+  if(qty>prod.qty){if(!confirm('Order qty ('+qty+') exceeds available stock ('+prod.qty+'). Continue?'))return;}
+  const oid='SO-'+String(D.orderCounter++).padStart(3,'0');
+  D.orders.push({id:oid,date:today(),customer:cust.name,product:prod.name,qty,price:prod.sell,notes:id('so-notes').value.trim(),status:'Confirmed'});
+  // Deduct stock
+  prod.qty=Math.max(0,prod.qty-qty);
+  D.stockMoves.push({id:'SM'+String(D.smCounter++).padStart(3,'0'),date:today(),product:prod.name,type:'Issue',qty,ref:oid,stockAfter:prod.qty});
+  save();populateSelects();rOrders();rStock();rProducts();updateAlerts();
+  id('so-notes').value='';id('so-qty').value='';
+}
+function updateOrderStatus(oid,status){const o=D.orders.find(x=>x.id===oid);if(o)o.status=status;save();rOrders();}
+function delOrder(oid){if(!confirm('Delete order?'))return;D.orders=D.orders.filter(o=>o.id!==oid);save();populateSelects();rOrders();}
+
+function rOrders(){
+  const tot=D.orders.reduce((s,o)=>s+(o.qty*o.price),0);
+  id('orderbody').innerHTML=D.orders.map(o=>'<tr>'+
+    '<td class="mono fw7 tb">'+o.id+'</td>'+
+    '<td class="tm fs11">'+o.date+'</td>'+
+    '<td class="fw7">'+o.customer+'</td>'+
+    '<td>'+o.product+'</td>'+
+    '<td class="mono tc">'+o.qty+'</td>'+
+    '<td class="mono">$'+o.price.toFixed(2)+'</td>'+
+    '<td class="mono fw7 tgr">$'+(o.qty*o.price).toLocaleString()+'</td>'+
+    '<td><span class="pill '+statusPill(o.status)+'">'+o.status+'</span></td>'+
+    '<td class="noprint" style="display:flex;gap:3px">'+
+    ['Confirmed','Shipped','Delivered'].filter(s=>s!==o.status).map(s=>'<button class="btn-outline btn-sm" onclick="updateOrderStatus(\''+o.id+'\',\''+s+'\')">'+s+'</button>').join('')+
+    '<button class="btn-red btn-sm" onclick="delOrder(\''+o.id+'\')">X</button></td></tr>'
+  ).join('');
+  id('order-total').textContent='$'+tot.toLocaleString();
+}
+function statusPill(s){return{Draft:'p-grey',Confirmed:'p-blue',Picking:'p-purple',Packed:'p-teal',Shipped:'p-orange',Delivered:'p-green'}[s]||'p-grey';}
+
+// ════════════════════════════════════════════════════
+// DELIVERY
+// ════════════════════════════════════════════════════
+function createDelivery(){
+  const soId=id('del-so').value;
+  if(!soId){alert('Select a Sales Order');return;}
+  const so=D.orders.find(o=>o.id===soId);if(!so)return;
+  if(D.deliveries.find(d=>d.soId===soId)){alert('Delivery order already exists for this sales order');return;}
+  const did='DO-'+String(D.deliveryCounter++).padStart(3,'0');
+  D.deliveries.push({id:did,soId,customer:so.customer,product:so.product,qty:so.qty,carrier:id('del-carrier').value.trim()||'—',tracking:id('del-tracking').value.trim()||'—',eta:id('del-eta').value,status:'Confirmed'});
+  save();populateSelects();rDelivery();rOverview();
+  ['del-carrier','del-tracking'].forEach(x=>{const el=id(x);if(el)el.value='';});
+}
+function updateDelivery(did,status){const d=D.deliveries.find(x=>x.id===did);if(d){d.status=status;if(status==='Delivered'){const o=D.orders.find(o=>o.id===d.soId);if(o)o.status='Delivered';}}save();rDelivery();rOrders();rOverview();updateAlerts();}
+function delDelivery(did){if(!confirm('Delete delivery order?'))return;D.deliveries=D.deliveries.filter(d=>d.id!==did);save();rDelivery();}
+
+function rDelivery(){
+  id('delbody').innerHTML=D.deliveries.map(d=>{
+    const etaDays=d.eta?daysDiff(d.eta):null;
+    const etaLabel=etaDays===null?'—':etaDays<0&&d.status!=='Delivered'?'<span style="color:var(--red)">'+Math.abs(etaDays)+'d late</span>':d.eta;
+    const nextStatuses=DEL_STATUSES.filter(s=>s!==d.status&&DEL_STATUSES.indexOf(s)>DEL_STATUSES.indexOf(d.status));
+    return '<tr>'+
+      '<td class="mono fw7 tb">'+d.id+'</td>'+
+      '<td class="mono fs10">'+d.soId+'</td>'+
+      '<td class="fw7">'+d.customer+'</td>'+
+      '<td class="fs11">'+d.product+'</td>'+
+      '<td class="mono tc">'+d.qty+'</td>'+
+      '<td class="tm fs11">'+d.carrier+'</td>'+
+      '<td class="mono fs10">'+d.tracking+'</td>'+
+      '<td class="fs11">'+etaLabel+'</td>'+
+      '<td><span class="pill '+DEL_COLORS[d.status]+'">'+d.status+'</span></td>'+
+      '<td class="noprint" style="display:flex;gap:3px;flex-wrap:wrap">'+
+      nextStatuses.slice(0,2).map(s=>'<button class="btn-outline btn-sm" onclick="updateDelivery(\''+d.id+'\',\''+s+'\')">'+s+'</button>').join('')+
+      '<button class="btn-red btn-sm" onclick="delDelivery(\''+d.id+'\')">X</button></td></tr>';
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+// SALES METRICS
+// ════════════════════════════════════════════════════
+function rSalesMetrics(){
+  const totalOrders=D.orders.reduce((s,o)=>s+(o.qty*o.price),0);
+  const wonValue=D.leads.filter(l=>l.stage==='Won').reduce((s,l)=>s+(+l.value),0);
+  const pipelineValue=D.leads.filter(l=>!['Won','Lost'].includes(l.stage)).reduce((s,l)=>s+(+l.value),0);
+  const totalLeads=D.leads.length;
+  const wonLeads=D.leads.filter(l=>l.stage==='Won').length;
+  const convRate=totalLeads>0?((wonLeads/totalLeads)*100).toFixed(1)+'%':'0%';
+  const avgDeal=wonLeads>0?(wonValue/wonLeads).toFixed(0):'0';
+
+  id('sm-kpis').innerHTML=[
+    {v:'$'+totalOrders.toLocaleString(),l:'Total Order Revenue',s:D.orders.length+' orders',cls:'good'},
+    {v:'$'+pipelineValue.toLocaleString(),l:'Active Pipeline',s:D.leads.filter(l=>!['Won','Lost'].includes(l.stage)).length+' open leads',cls:'purple'},
+    {v:convRate,l:'Lead Conversion Rate',s:wonLeads+' won of '+totalLeads,cls:parseFloat(convRate)>30?'good':parseFloat(convRate)>15?'warn':'bad'},
+    {v:'$'+avgDeal,l:'Avg Deal Size (Won)',s:'Per closed deal',cls:'teal'},
+    {v:D.customers.length,l:'Total Customers',s:'In CRM',cls:'blue'},
+  ].map(k=>'<div class="kpi '+k.cls+'"><div class="kpi-v">'+k.v+'</div><div class="kpi-l">'+k.l+'</div><div class="kpi-s">'+k.s+'</div></div>').join('');
+
+  // Revenue by customer
+  const byCustomer={};
+  D.orders.forEach(o=>{if(!byCustomer[o.customer])byCustomer[o.customer]=0;byCustomer[o.customer]+=(o.qty*o.price);});
+  const custRanked=Object.entries(byCustomer).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxCustRev=custRanked[0]?custRanked[0][1]:1;
+  id('sm-bycust').innerHTML=custRanked.length?custRanked.map(([name,rev],i)=>
+    '<div style="margin-bottom:8px">'+
+    '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">'+
+    '<span>'+(i+1)+'. <b>'+name+'</b></span><span class="mono tgr fw7">$'+rev.toLocaleString()+'</span></div>'+
+    '<div class="pbar-wrap"><div class="pbar-fill" style="width:'+(rev/maxCustRev*100).toFixed(0)+'%;background:'+(i===0?'var(--green)':i===1?'var(--blue)':'var(--purple)')+'"></div></div>'+
+    '</div>'
+  ).join(''):'<div class="tm fs11">No orders yet</div>';
+
+  // Pipeline by stage
+  const maxPipeline=Math.max(...STAGE_ORDER.map(s=>D.leads.filter(l=>l.stage===s).reduce((t,l)=>t+(+l.value),0)),1);
+  id('sm-pipeline').innerHTML=STAGE_ORDER.map(s=>{
+    const leads=D.leads.filter(l=>l.stage===s);
+    const val=leads.reduce((t,l)=>t+(+l.value),0);
+    return '<div style="margin-bottom:8px">'+
+      '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">'+
+      '<span><span class="pill '+STAGE_COLORS[s]+'">'+s+'</span></span>'+
+      '<span class="tm fs11">'+leads.length+' leads &bull; <span class="mono tg">$'+val.toLocaleString()+'</span></span></div>'+
+      '<div class="pbar-wrap"><div class="pbar-fill" style="width:'+(val/maxPipeline*100).toFixed(0)+'%;background:var(--gold)"></div></div></div>';
+  }).join('');
+
+  // Top products
+  const byProduct={};
+  D.orders.forEach(o=>{if(!byProduct[o.product])byProduct[o.product]={rev:0,qty:0};byProduct[o.product].rev+=(o.qty*o.price);byProduct[o.product].qty+=o.qty;});
+  const prodRanked=Object.entries(byProduct).sort((a,b)=>b[1].rev-a[1].rev).slice(0,6);
+  id('sm-prods').innerHTML=prodRanked.length?prodRanked.map(([name,data],i)=>
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px">'+
+    '<span>'+(i+1)+'. '+name+'</span>'+
+    '<span><span class="tm fs11">'+data.qty+' sold &bull; </span><span class="mono tgr fw7">$'+data.rev.toLocaleString()+'</span></span></div>'
+  ).join(''):'<div class="tm fs11">No orders yet</div>';
+
+  // Delivery performance
+  const delivered=D.deliveries.filter(d=>d.status==='Delivered').length;
+  const late=D.deliveries.filter(d=>d.status!=='Delivered'&&d.eta&&daysDiff(d.eta)<0).length;
+  const onTime=D.deliveries.filter(d=>d.status==='Delivered'||!d.eta||daysDiff(d.eta)>=0).length;
+  id('sm-delivery').innerHTML=
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span>Total Deliveries</span><span class="mono">'+D.deliveries.length+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span class="tgr">Delivered</span><span class="mono tgr">'+delivered+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span class="tr">Overdue / Late</span><span class="mono tr">'+late+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;font-weight:700;font-size:12px"><span class="tg">On-Time Rate</span><span class="mono tg">'+(D.deliveries.length>0?((1-late/D.deliveries.length)*100).toFixed(0)+'%':'N/A')+'</span></div>';
+}
+
+// ════════════════════════════════════════════════════
+// CRM REPORTS
+// ════════════════════════════════════════════════════
+function rCRMReports(){
+  // Segments
+  const segs={};
+  D.customers.forEach(c=>{if(!segs[c.segment])segs[c.segment]=0;segs[c.segment]++;});
+  id('crm-segments').innerHTML=Object.entries(segs).map(([s,n])=>
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px">'+
+    '<span><span class="pill p-blue">'+s+'</span></span>'+
+    '<span><span class="mono">'+n+' customers</span> &bull; <span class="mono tm">'+(n/D.customers.length*100).toFixed(0)+'%</span></span></div>'
+  ).join('');
+
+  // Conversion funnel
+  const total=D.leads.length;
+  id('crm-conversion').innerHTML=STAGE_ORDER.map(s=>{
+    const n=D.leads.filter(l=>l.stage===s).length;
+    return '<div style="margin-bottom:6px">'+
+      '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:2px">'+
+      '<span><span class="pill '+STAGE_COLORS[s]+'">'+s+'</span></span>'+
+      '<span class="mono">'+n+' ('+(total>0?(n/total*100).toFixed(0):0)+'%)</span></div>'+
+      '<div class="pbar-wrap"><div class="pbar-fill" style="width:'+(total>0?n/total*100:0).toFixed(0)+'%;background:var(--gold)"></div></div></div>';
+  }).join('');
+
+  // Customer select
+  const custOpts=D.customers.map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join('');
+  const sel=id('crm-cust-select');if(sel)sel.innerHTML='<option value="">-- Select Customer --</option>'+custOpts;
+}
+
+function rCustomer360(custId){
+  if(!custId){id('crm-360').innerHTML='';return;}
+  const c=D.customers.find(x=>x.id===custId);if(!c)return;
+  const orders=D.orders.filter(o=>o.customer===c.name);
+  const totalRev=orders.reduce((s,o)=>s+(o.qty*o.price),0);
+  const leads=D.leads.filter(l=>l.name===c.name||l.contact===c.contact);
+  const followups=D.followups.filter(f=>f.who===c.name);
+  const deliveries=D.deliveries.filter(d=>d.customer===c.name);
+  id('crm-360').innerHTML=
+    '<div class="g4 mb12">'+
+    [
+      {v:'$'+totalRev.toLocaleString(),l:'Total Revenue',cls:'good'},
+      {v:orders.length,l:'Orders',cls:'blue'},
+      {v:deliveries.filter(d=>d.status==='Delivered').length,l:'Delivered',cls:'teal'},
+      {v:followups.filter(f=>!f.done).length,l:'Open Tasks',cls:'warn'},
+    ].map(k=>'<div class="kpi '+k.cls+'"><div class="kpi-v">'+k.v+'</div><div class="kpi-l">'+k.l+'</div></div>').join('')+'</div>'+
+    '<div class="g2">'+
+    '<div><h3>Recent Orders</h3>'+
+    (orders.length?orders.slice(-5).map(o=>'<div style="padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between"><span>'+o.product+' ×'+o.qty+'</span><span class="mono tgr">$'+(o.qty*o.price).toLocaleString()+'</span></div>').join(''):'<div class="tm fs11">No orders</div>')+
+    '</div>'+
+    '<div><h3>Follow-ups</h3>'+
+    (followups.length?followups.map(f=>'<div style="padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between"><span>'+(f.done?'<s>':'')+f.task+(f.done?'</s>':'')+'</span><span class="'+(daysDiff(f.due)<0&&!f.done?'tr':'tm')+' fs11">'+f.due+'</span></div>').join(''):'<div class="tm fs11">No follow-ups</div>')+
+    '</div></div>';
+}
+
+// ════════════════════════════════════════════════════
+// EXPORT
+// ════════════════════════════════════════════════════
+function exportCSV(){
+  const rows=[['=== CUSTOMERS ==='],['ID','Name','Contact','Email','Country','Segment','Status']];
+  D.customers.forEach(c=>rows.push([c.id,c.name,c.contact,c.email,c.country,c.segment,c.status]));
+  rows.push([],[['=== LEADS ==='],['ID','Name','Contact','Value','Product','Stage','Created']]);
+  D.leads.forEach(l=>rows.push([l.id,l.name,l.contact,l.value,l.product,l.stage,l.created]));
+  rows.push([],[['=== STOCK ==='],['SKU','Name','Category','Qty','Reorder','Expiry']]);
+  D.products.forEach(p=>rows.push([p.sku,p.name,p.cat,p.qty,p.reorder,p.expiry||'N/A']));
+  rows.push([],[['=== ORDERS ==='],['Order#','Date','Customer','Product','Qty','Price','Total','Status']]);
+  D.orders.forEach(o=>rows.push([o.id,o.date,o.customer,o.product,o.qty,o.price,o.qty*o.price,o.status]));
+  const csv=rows.map(r=>r.map?r.map(c=>'"'+(String(c||'').replace(/"/g,'""'))+'"').join(','):'').join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='LedgerLearn_CRM_Export.csv';a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
