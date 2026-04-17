@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Opus ERP + LMS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body style="font-family: Arial; padding:20px;">
+
+<h2>Opus ERP + LMS Platform</h2>
+
+<!-- NAV -->
+<button onclick="show('accounting')">Accounting</button>
+<button onclick="show('payroll')">Payroll</button>
+<button onclick="show('lms')">LMS</button>
+
+<hr>
+
+<!-- COUNTRY -->
+<label>Country:</label>
+<select id="country" onchange="updateCountry()">
+  <option>Singapore</option>
+  <option>USA</option>
+  <option>UK</option>
+</select>
+
+<p id="config"></p>
+
+<!-- ACCOUNTING -->
+<div id="accounting">
+  <h3>Accounting</h3>
+
+  <input type="date" id="date"><br><br>
+  <input placeholder="Description" id="desc"><br><br>
+  <input placeholder="Debit" id="debit"><br><br>
+  <input placeholder="Credit" id="credit"><br><br>
+  <input type="number" placeholder="Amount" id="amount"><br><br>
+
+  <button onclick="addTx()">Add Transaction</button>
+
+  <h4>Transactions</h4>
+  <table border="1" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Date</th><th>Description</th><th>Debit</th><th>Credit</th><th>Amount</th>
+      </tr>
+    </thead>
+    <tbody id="table"></tbody>
+  </table>
+
+  <h4>Summary</h4>
+  <p id="revenue"></p>
+  <p id="tax"></p>
+</div>
+
+<!-- PAYROLL -->
+<div id="payroll" style="display:none;">
+  <h3>Payroll (CPF)</h3>
+
+  <input type="number" id="salary" placeholder="Salary"><br><br>
+
+  <button onclick="calcCPF()">Calculate</button>
+
+  <p id="empCpf"></p>
+  <p id="employerCpf"></p>
+</div>
+
+<!-- LMS -->
+<div id="lms" style="display:none;">
+  <h3>LMS Students</h3>
+
+  <input id="studentEmail" placeholder="Student Email">
+  <button onclick="addStudent()">Add</button>
+
+  <ul id="students"></ul>
+</div>
+
+<script>
+const COUNTRIES = {
+  Singapore: { symbol: "S$", taxRate: 0.09 },
+  USA: { symbol: "$", taxRate: 0.07 },
+  UK: { symbol: "£", taxRate: 0.2 }
+};
+
+let transactions = [];
+let students = [];
+
+// NAVIGATION
+function show(module) {
+  document.getElementById("accounting").style.display = "none";
+  document.getElementById("payroll").style.display = "none";
+  document.getElementById("lms").style.display = "none";
+
+  document.getElementById(module).style.display = "block";
+}
+
+// COUNTRY
+function updateCountry() {
+  const c = document.getElementById("country").value;
+  const cfg = COUNTRIES[c];
+
+  document.getElementById("config").innerText =
+    "Currency: " + cfg.symbol + " | Tax: " + (cfg.taxRate * 100) + "%";
+}
+
+updateCountry();
+
+// ACCOUNTING
+function addTx() {
+  const date = document.getElementById("date").value;
+  const desc = document.getElementById("desc").value;
+  const debit = document.getElementById("debit").value;
+  const credit = document.getElementById("credit").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+
+  if (!date || !desc || !amount) {
+    alert("Fill all fields");
+    return;
+  }
+
+  transactions.push({ date, desc, debit, credit, amount });
+
+  render();
+}
+
+function render() {
+  const table = document.getElementById("table");
+  table.innerHTML = "";
+
+  const cfg = COUNTRIES[document.getElementById("country").value];
+
+  let revenue = 0;
+
+  transactions.forEach(t => {
+    if (t.credit === "Revenue") revenue += t.amount;
+
+    table.innerHTML += `
+      <tr>
+        <td>${t.date}</td>
+        <td>${t.desc}</td>
+        <td>${t.debit}</td>
+        <td>${t.credit}</td>
+        <td>${cfg.symbol} ${t.amount.toFixed(2)}</td>
+      </tr>
+    `;
+  });
+
+  const tax = revenue * cfg.taxRate;
+
+  document.getElementById("revenue").innerText =
+    "Revenue: " + cfg.symbol + " " + revenue.toFixed(2);
+
+  document.getElementById("tax").innerText =
+    "Tax: " + cfg.symbol + " " + tax.toFixed(2);
+}
+
+// PAYROLL
+function calcCPF() {
+  const salary = parseFloat(document.getElementById("salary").value) || 0;
+
+  const emp = salary * 0.20;
+  const employer = salary * 0.17;
+
+  document.getElementById("empCpf").innerText =
+    "Employee CPF: " + emp.toFixed(2);
+
+  document.getElementById("employerCpf").innerText =
+    "Employer CPF: " + employer.toFixed(2);
+}
+
+// LMS
+function addStudent() {
+  const email = document.getElementById("studentEmail").value;
+
+  if (!email) return;
+
+  students.push(email);
+
+  const list = document.getElementById("students");
+  list.innerHTML = "";
+
+  students.forEach(s => {
+    list.innerHTML += "<li>" + s + "</li>";
+  });
+
+  document.getElementById("studentEmail").value = "";
+}
+</script>
+
+</body>
+</html>
